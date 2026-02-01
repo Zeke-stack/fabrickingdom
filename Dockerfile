@@ -15,10 +15,8 @@ RUN wget -O /tmp/paper.jar https://api.papermc.io/v2/projects/paper/versions/1.2
 # Create simple working plugin JAR
 RUN mkdir -p /tmp/plugin && \
     echo "Building Simple Kingdom Plugin..." && \
-    # Create a minimal plugin Java file without Unicode
-    printf 'import org.bukkit.plugin.java.JavaPlugin;\nimport org.bukkit.entity.Player;\nimport org.bukkit.event.EventHandler;\nimport org.bukkit.event.Listener;\nimport org.bukkit.event.player.PlayerJoinEvent;\nimport org.bukkit.command.Command;\nimport org.bukkit.command.CommandSender;\nimport org.bukkit.ChatColor;\n\npublic class SimpleKingdomPlugin extends JavaPlugin implements Listener {\n    @Override\n    public void onEnable() {\n        getLogger().info("Kingdom Plugin Enabled!");\n        getServer().getPluginManager().registerEvents(this, this);\n    }\n    @EventHandler\n    public void onPlayerJoin(PlayerJoinEvent event) {\n        Player player = event.getPlayer();\n        event.setJoinMessage(ChatColor.GOLD + " [Kingdom] " + player.getName() + " has joined!");\n        player.sendMessage(ChatColor.GOLD + "Welcome to the Kingdom Server!");\n        player.sendMessage(ChatColor.YELLOW + "Type /kingdom for commands!");\n    }\n    @Override\n    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {\n        if (command.getName().equalsIgnoreCase("kingdom")) {\n            sender.sendMessage(ChatColor.GOLD + "Kingdom Commands:");\n            sender.sendMessage(ChatColor.YELLOW + "/kingdom - Show this help");\n            sender.sendMessage(ChatColor.YELLOW + "/coins - Check your coins");\n            return true;\n        }\n        if (command.getName().equalsIgnoreCase("coins")) {\n            sender.sendMessage(ChatColor.GOLD + "Coins: 0");\n            return true;\n        }\n        return false;\n    }\n}' > /tmp/plugin/SimpleKingdomPlugin.java && \
-    # Create the plugin.yml
-    printf 'name: KingdomCommands\nversion: 1.0.0\nmain: SimpleKingdomPlugin\napi-version: 1.21\nauthor: KingdomCraft\ndescription: A kingdom-themed Minecraft server commands plugin\ncommands:\n  kingdom:\n    description: Kingdom commands\n    usage: /kingdom\n  coins:\n    description: Check your coins\n    usage: /coins\n' > /tmp/plugin/plugin.yml && \
+    # Copy plugin files from repository
+    cp -r plugin/* /tmp/plugin/ && \
     # Compile the plugin
     cd /tmp/plugin && \
     javac -cp "/app/paper.jar" SimpleKingdomPlugin.java && \
