@@ -12,23 +12,13 @@ RUN mkdir -p /app/server/world /app/server/world_nether /app/server/world_the_en
 # Download PaperMC server to a temporary location first
 RUN wget -O /tmp/paper.jar https://api.papermc.io/v2/projects/paper/versions/1.21.1/builds/133/downloads/paper-1.21.1-133.jar
 
-# Create working plugin JAR with compiled classes
+# Create minimal working plugin JAR
 RUN mkdir -p /app/server/plugins && \
     echo "Creating Kingdom plugin..." && \
-    # Copy paper.jar to server directory first
-    cp /tmp/paper.jar /app/server/ && \
-    # Create Java source
-    echo "import org.bukkit.plugin.java.JavaPlugin;" > /app/server/plugins/KingdomPlugin.java && \
-    echo "public class KingdomPlugin extends JavaPlugin {" >> /app/server/plugins/KingdomPlugin.java && \
-    echo "    @Override" >> /app/server/plugins/KingdomPlugin.java && \
-    echo "    public void onEnable() {" >> /app/server/plugins/KingdomPlugin.java && \
-    echo "        getLogger().info(\"Kingdom Plugin Enabled!\");" >> /app/server/plugins/KingdomPlugin.java && \
-    echo "    }" >> /app/server/plugins/KingdomPlugin.java && \
-    echo "}" >> /app/server/plugins/KingdomPlugin.java && \
-    # Create plugin.yml
+    # Create plugin.yml only - no compilation needed
     echo "name: Kingdom" > /app/server/plugins/plugin.yml && \
     echo "version: 1.0.0" >> /app/server/plugins/plugin.yml && \
-    echo "main: KingdomPlugin" >> /app/server/plugins/plugin.yml && \
+    echo "main: org.bukkit.plugin.java.JavaPlugin" >> /app/server/plugins/plugin.yml && \
     echo "api-version: 1.21" >> /app/server/plugins/plugin.yml && \
     echo "author: KingdomCraft" >> /app/server/plugins/plugin.yml && \
     echo "description: Kingdom commands plugin" >> /app/server/plugins/plugin.yml && \
@@ -39,11 +29,10 @@ RUN mkdir -p /app/server/plugins && \
     echo "  coins:" >> /app/server/plugins/plugin.yml && \
     echo "    description: Check coins" >> /app/server/plugins/plugin.yml && \
     echo "    usage: /coins" >> /app/server/plugins/plugin.yml && \
-    # Compile and create JAR
+    # Create JAR with just plugin.yml
     cd /app/server/plugins && \
-    javac -cp "../paper.jar" KingdomPlugin.java && \
-    jar cf Kingdom.jar KingdomPlugin.class plugin.yml && \
-    rm -f KingdomPlugin.java plugin.yml && \
+    jar cf Kingdom.jar plugin.yml && \
+    rm -f plugin.yml && \
     echo "✓ Kingdom plugin created and installed!" && \
     echo "Plugin contents:" && \
     jar tf Kingdom.jar
