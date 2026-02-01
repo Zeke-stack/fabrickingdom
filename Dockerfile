@@ -13,7 +13,6 @@ RUN mkdir -p /app/server/world /app/server/world_nether /app/server/world_the_en
 COPY paper.jar /tmp/paper.jar
 COPY eula.txt /tmp/eula.txt
 COPY server.properties /tmp/server.properties
-COPY plugins/KingdomCommands-1.0.0.jar /tmp/plugin/
 
 # Create a simple working KingdomCommands plugin JAR (no compilation needed)
 RUN mkdir -p /tmp/plugin/META-INF && \
