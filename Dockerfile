@@ -15,6 +15,8 @@ RUN wget -O /tmp/paper.jar https://api.papermc.io/v2/projects/paper/versions/1.2
 # Create working plugin JAR with compiled classes
 RUN mkdir -p /app/server/plugins && \
     echo "Creating Kingdom plugin..." && \
+    # Copy paper.jar to server directory first
+    cp /tmp/paper.jar /app/server/ && \
     # Create Java source
     echo "import org.bukkit.plugin.java.JavaPlugin;" > /app/server/plugins/KingdomPlugin.java && \
     echo "public class KingdomPlugin extends JavaPlugin {" >> /app/server/plugins/KingdomPlugin.java && \
@@ -39,7 +41,7 @@ RUN mkdir -p /app/server/plugins && \
     echo "    usage: /coins" >> /app/server/plugins/plugin.yml && \
     # Compile and create JAR
     cd /app/server/plugins && \
-    javac -cp "/app/paper.jar" KingdomPlugin.java && \
+    javac -cp "../paper.jar" KingdomPlugin.java && \
     jar cf Kingdom.jar KingdomPlugin.class plugin.yml && \
     rm -f KingdomPlugin.java plugin.yml && \
     echo "✓ Kingdom plugin created and installed!" && \
