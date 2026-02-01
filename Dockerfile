@@ -12,21 +12,10 @@ RUN mkdir -p /app/server/world /app/server/world_nether /app/server/world_the_en
 # Download PaperMC server to a temporary location first
 RUN wget -O /tmp/paper.jar https://api.papermc.io/v2/projects/paper/versions/1.21.1/builds/133/downloads/paper-1.21.1-133.jar
 
-# Create simple working plugin JAR
-RUN mkdir -p /tmp/plugin && \
-    echo "Building Simple Kingdom Plugin..." && \
-    # Copy plugin files from repository
-    cp -r plugin/* /tmp/plugin/ && \
-    # Compile the plugin
-    cd /tmp/plugin && \
-    javac -cp "/app/paper.jar" SimpleKingdomPlugin.java && \
-    # Create the JAR
-    jar cf KingdomCommands-1.0.0.jar SimpleKingdomPlugin.class plugin.yml && \
-    cp KingdomCommands-1.0.0.jar /app/server/plugins/ && \
-    echo "✓ Simple Kingdom Plugin built and installed!" && \
-    echo "Plugin contents:" && \
-    jar tf KingdomCommands-1.0.0.jar && \
-    rm -rf /tmp/plugin
+# Copy pre-built plugin JAR
+RUN mkdir -p /app/server/plugins && \
+    echo "Copying Kingdom plugin..." && \
+    cp plugin/KingdomCommands-1.0.0.jar /app/server/plugins/ 2>/dev/null || echo "Plugin not found, server will start without plugin"
 
 # Create startup script with auto-save
 RUN echo '#!/bin/sh' > /app/start.sh && \
