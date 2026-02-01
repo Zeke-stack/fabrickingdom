@@ -31,12 +31,80 @@ RUN echo "server-port=25565" > server.properties && \
     echo "max-chained-neighbor-updates=500" >> server.properties && \
     echo "max-entity-collisions=2" >> server.properties
 
-# Create KingdomCommands plugin JAR from resources
-RUN mkdir -p /tmp/plugin && \
+# Create a minimal KingdomCommands plugin JAR
+RUN mkdir -p /tmp/plugin/META-INF && \
     echo "Manifest-Version: 1.0" > /tmp/plugin/META-INF/MANIFEST.MF && \
-    echo "Main-Class: com.kingdom.commands.KingdomCommands" >> /tmp/plugin/META-INF/MANIFEST.MF && \
-    cp plugins/KingdomCommands/src/main/resources/plugin.yml /tmp/plugin/ && \
-    cp plugins/KingdomCommands/src/main/resources/config.yml /tmp/plugin/ && \
+    echo "Created-By: KingdomCommands" >> /tmp/plugin/META-INF/MANIFEST.MF && \
+    echo "name: KingdomCommands" > /tmp/plugin/plugin.yml && \
+    echo "version: '1.0.0'" >> /tmp/plugin/plugin.yml && \
+    echo "main: com.kingdom.commands.KingdomCommands" >> /tmp/plugin/plugin.yml && \
+    echo "api-version: 1.21" >> /tmp/plugin/plugin.yml && \
+    echo "author: KingdomCraft" >> /tmp/plugin/plugin.yml && \
+    echo "description: A kingdom-themed Minecraft server commands plugin" >> /tmp/plugin/plugin.yml && \
+    echo "commands:" >> /tmp/plugin/plugin.yml && \
+    echo "  kban:" >> /tmp/plugin/plugin.yml && \
+    echo "    description: Ban a player with kingdom style" >> /tmp/plugin/plugin.yml && \
+    echo "    usage: /kban <player> [reason]" >> /tmp/plugin/plugin.yml && \
+    echo "    permission: kingdom.commands.ban" >> /tmp/plugin/plugin.yml && \
+    echo "  kkick:" >> /tmp/plugin/plugin.yml && \
+    echo "    description: Kick a player with kingdom style" >> /tmp/plugin/plugin.yml && \
+    echo "    usage: /kkick <player> [reason]" >> /tmp/plugin/plugin.yml && \
+    echo "    permission: kingdom.commands.kick" >> /tmp/plugin/plugin.yml && \
+    echo "  kop:" >> /tmp/plugin/plugin.yml && \
+    echo "    description: Op a player with kingdom style" >> /tmp/plugin/plugin.yml && \
+    echo "    usage: /kop <player>" >> /tmp/plugin/plugin.yml && \
+    echo "    permission: kingdom.commands.op" >> /tmp/plugin/plugin.yml && \
+    echo "  kdeop:" >> /tmp/plugin/plugin.yml && \
+    echo "    description: Deop a player with kingdom style" >> /tmp/plugin/plugin.yml && \
+    echo "    usage: /kdeop <player>" >> /tmp/plugin/plugin.yml && \
+    echo "    permission: kingdom.commands.deop" >> /tmp/plugin/plugin.yml && \
+    echo "  coins:" >> /tmp/plugin/plugin.yml && \
+    echo "    description: Check your total coins" >> /tmp/plugin/plugin.yml && \
+    echo "    usage: /coins" >> /tmp/plugin/plugin.yml && \
+    echo "    permission: kingdom.commands.coins" >> /tmp/plugin/plugin.yml && \
+    echo "  balance:" >> /tmp/plugin/plugin.yml && \
+    echo "    description: Quick balance check" >> /tmp/plugin/plugin.yml && \
+    echo "    usage: /balance" >> /tmp/plugin/plugin.yml && \
+    echo "    permission: kingdom.commands.balance" >> /tmp/plugin/plugin.yml && \
+    echo "permissions:" >> /tmp/plugin/plugin.yml && \
+    echo "  kingdom.commands.*:" >> /tmp/plugin/plugin.yml && \
+    echo "    description: All kingdom commands" >> /tmp/plugin/plugin.yml && \
+    echo "    children:" >> /tmp/plugin/plugin.yml && \
+    echo "      kingdom.commands.ban: true" >> /tmp/plugin/plugin.yml && \
+    echo "      kingdom.commands.kick: true" >> /tmp/plugin/plugin.yml && \
+    echo "      kingdom.commands.op: true" >> /tmp/plugin/plugin.yml && \
+    echo "      kingdom.commands.deop: true" >> /tmp/plugin/plugin.yml && \
+    echo "      kingdom.commands.coins: true" >> /tmp/plugin/plugin.yml && \
+    echo "      kingdom.commands.balance: true" >> /tmp/plugin/plugin.yml && \
+    echo "  kingdom.commands.ban:" >> /tmp/plugin/plugin.yml && \
+    echo "    description: Allow banning players" >> /tmp/plugin/plugin.yml && \
+    echo "    default: op" >> /tmp/plugin/plugin.yml && \
+    echo "  kingdom.commands.kick:" >> /tmp/plugin/plugin.yml && \
+    echo "    description: Allow kicking players" >> /tmp/plugin/plugin.yml && \
+    echo "    default: op" >> /tmp/plugin/plugin.yml && \
+    echo "  kingdom.commands.op:" >> /tmp/plugin/plugin.yml && \
+    echo "    description: Allow opping players" >> /tmp/plugin/plugin.yml && \
+    echo "    default: op" >> /tmp/plugin/plugin.yml && \
+    echo "  kingdom.commands.deop:" >> /tmp/plugin/plugin.yml && \
+    echo "    description: Allow deopping players" >> /tmp/plugin/plugin.yml && \
+    echo "    default: op" >> /tmp/plugin/plugin.yml && \
+    echo "  kingdom.commands.coins:" >> /tmp/plugin/plugin.yml && \
+    echo "    description: Allow using coin commands" >> /tmp/plugin/plugin.yml && \
+    echo "    default: true" >> /tmp/plugin/plugin.yml && \
+    echo "  kingdom.commands.balance:" >> /tmp/plugin/plugin.yml && \
+    echo "    description: Allow checking balance" >> /tmp/plugin/plugin.yml && \
+    echo "    default: true" >> /tmp/plugin/plugin.yml && \
+    echo "prefix: \"&6[&e✦&6Kingdom&e✦&6] &r\"" > /tmp/plugin/config.yml && \
+    echo "coin_economy:" >> /tmp/plugin/config.yml && \
+    echo "  enabled: true" >> /tmp/plugin/config.yml && \
+    echo "  gold_nugget_value: 1" >> /tmp/plugin/config.yml && \
+    echo "  gold_ingot_value: 9" >> /tmp/plugin/config.yml && \
+    echo "  gold_block_value: 81" >> /tmp/plugin/config.yml && \
+    echo "  count_ender_chest: true" >> /tmp/plugin/config.yml && \
+    echo "auto-save:" >> /tmp/plugin/config.yml && \
+    echo "  enabled: true" >> /tmp/plugin/config.yml && \
+    echo "  interval: 60" >> /tmp/plugin/config.yml && \
+    echo "  notify-admins: false" >> /tmp/plugin/config.yml && \
     cd /tmp/plugin && \
     jar cf KingdomCommands-1.0.0.jar * && \
     cp KingdomCommands-1.0.0.jar /app/server/plugins/ && \

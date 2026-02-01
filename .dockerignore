@@ -23,12 +23,11 @@ versions/
 *.ipr
 *.iws
 
-# Ignore built JAR (we'll build it in Docker)
+# Ignore plugin source (we build it in Docker)
+plugins/KingdomCommands/
 KingdomCommands-1.0.0.jar
 
 # Keep essential files for build
-!plugins/KingdomCommands/src/
-!plugins/KingdomCommands/pom.xml
 !Dockerfile
 !railway.toml
 !README.md
