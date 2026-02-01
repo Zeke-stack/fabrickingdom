@@ -1,0 +1,13 @@
+name: Kingdom
+version: 1.0.0
+main: PluginMain
+api-version: 1.21
+author: KingdomCraft
+description: A kingdom-themed Minecraft server commands plugin
+commands:
+  kingdom:
+    description: Kingdom commands
+    usage: /kingdom
+  coins:
+    description: Check your coins
+    usage: /coins
