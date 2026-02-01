@@ -24,10 +24,15 @@ versions/
 *.iws
 
 # Ignore plugin source (we build it in Docker)
-plugins/KingdomCommands/
-KingdomCommands-1.0.0.jar
+plugins/KingdomCommands/src/
+plugins/KingdomCommands/pom.xml
+plugins/KingdomCommands/target/
 
 # Keep essential files for build
+!paper.jar
+!eula.txt
+!server.properties
+!plugins/KingdomCommands-1.0.0.jar
 !Dockerfile
 !railway.toml
 !README.md
