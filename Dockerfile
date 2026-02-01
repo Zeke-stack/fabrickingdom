@@ -12,64 +12,21 @@ RUN mkdir -p /app/server/world /app/server/world_nether /app/server/world_the_en
 # Download PaperMC server to a temporary location first
 RUN wget -O /tmp/paper.jar https://api.papermc.io/v2/projects/paper/versions/1.21.1/builds/133/downloads/paper-1.21.1-133.jar
 
-# Create plugin JAR with actual Java code
+# Create simple working plugin JAR
 RUN mkdir -p /tmp/plugin && \
-    echo "Building KingdomCommands plugin with Java code..." && \
-    # Copy all Java source files
-    mkdir -p /tmp/plugin/src/main/java/com/kingdom/commands && \
-    mkdir -p /tmp/plugin/src/main/java/com/kingdom/commands/commands && \
-    mkdir -p /tmp/plugin/src/main/java/com/kingdom/commands/listeners && \
-    mkdir -p /tmp/plugin/src/main/java/com/kingdom/commands/utils && \
-    mkdir -p /tmp/plugin/src/main/resources && \
-    # Copy Java source files
-    cp plugins/KingdomCommands/src/main/java/com/kingdom/commands/*.java /tmp/plugin/src/main/java/com/kingdom/commands/ 2>/dev/null || echo "No main Java files found" && \
-    cp plugins/KingdomCommands/src/main/java/com/kingdom/commands/commands/*.java /tmp/plugin/src/main/java/com/kingdom/commands/commands/ 2>/dev/null || echo "No command Java files found" && \
-    cp plugins/KingdomCommands/src/main/java/com/kingdom/commands/listeners/*.java /tmp/plugin/src/main/java/com/kingdom/commands/listeners/ 2>/dev/null || echo "No listener Java files found" && \
-    cp plugins/KingdomCommands/src/main/java/com/kingdom/commands/utils/*.java /tmp/plugin/src/main/java/com/kingdom/commands/utils/ 2>/dev/null || echo "No util Java files found" && \
-    # Copy resources including the complete plugin.yml
-    cp plugins/KingdomCommands/src/main/resources/* /tmp/plugin/src/main/resources/ 2>/dev/null || echo "No resources found" && \
-    # Copy all assets recursively
-    cp -r plugins/KingdomCommands/src/main/resources/assets /tmp/plugin/src/main/resources/ 2>/dev/null || echo "No assets found" && \
-    # List what we have
-    echo "Java files found:" && \
-    find /tmp/plugin/src/main/java -name "*.java" 2>/dev/null || echo "No Java files found" && \
-    echo "Resources found:" && \
-    ls -la /tmp/plugin/src/main/resources/ 2>/dev/null || echo "No resources found" && \
-    # Compile Java code
+    echo "Building Simple Kingdom Plugin..." && \
+    # Copy the simple plugin files
+    cp SimpleKingdomPlugin.java /tmp/plugin/ && \
+    cp simple-plugin.yml /tmp/plugin/plugin.yml && \
+    # Compile the simple plugin
     cd /tmp/plugin && \
-    javac -cp "/app/paper.jar" -d . src/main/java/com/kingdom/commands/*.java src/main/java/com/kingdom/commands/commands/*.java src/main/java/com/kingdom/commands/listeners/*.java src/main/java/com/kingdom/commands/utils/*.java 2>/dev/null || echo "Java compilation completed with warnings" && \
-    # Create plugin JAR with compiled classes and resources
-    mkdir -p com/kingdom/commands com/kingdom/commands/commands com/kingdom/commands/listeners com/kingdom/commands/utils && \
-    cp -r src/main/java/com/kingdom/commands/*.class com/kingdom/commands/ 2>/dev/null || echo "No main class files found" && \
-    cp -r src/main/java/com/kingdom/commands/commands/*.class com/kingdom/commands/commands/ 2>/dev/null || echo "No command class files found" && \
-    cp -r src/main/java/com/kingdom/commands/listeners/*.class com/kingdom/commands/listeners/ 2>/dev/null || echo "No listener class files found" && \
-    cp -r src/main/java/com/kingdom/commands/utils/*.class com/kingdom/commands/utils/ 2>/dev/null || echo "No util class files found" && \
-    cp -r src/main/resources/* . 2>/dev/null || echo "No resources to copy" && \
-    # Create a simple plugin.yml if the existing one doesn't work
-    if [ ! -f "plugin.yml" ]; then \
-        echo "name: KingdomCommands" > plugin.yml && \
-        echo "version: '1.0.0'" >> plugin.yml && \
-        echo "main: com.kingdom.commands.KingdomCommands" >> plugin.yml && \
-        echo "api-version: 1.21" >> plugin.yml && \
-        echo "author: KingdomCraft" >> plugin.yml && \
-        echo "description: A kingdom-themed Minecraft server commands plugin" >> plugin.yml && \
-        echo "commands:" >> plugin.yml && \
-        echo "  kingdom:" >> plugin.yml && \
-        echo "    description: Kingdom commands" >> plugin.yml && \
-        echo "    usage: /kingdom" >> plugin.yml && \
-        echo "  coins:" >> plugin.yml && \
-        echo "    description: Check coins" >> plugin.yml && \
-        echo "    usage: /coins" >> plugin.yml && \
-        echo "permissions:" >> plugin.yml && \
-        echo "  kingdom.commands.*:" >> plugin.yml && \
-        echo "    default: op" >> plugin.yml; \
-    fi && \
+    javac -cp "/app/paper.jar" SimpleKingdomPlugin.java && \
     # Create the JAR
-    jar cf KingdomCommands-1.0.0.jar * && \
+    jar cf KingdomCommands-1.0.0.jar SimpleKingdomPlugin.class plugin.yml && \
     cp KingdomCommands-1.0.0.jar /app/server/plugins/ && \
-    echo "✓ KingdomCommands plugin built and installed!" && \
+    echo "✓ Simple Kingdom Plugin built and installed!" && \
     echo "Plugin contents:" && \
-    jar tf KingdomCommands-1.0.0.jar | head -20 && \
+    jar tf KingdomCommands-1.0.0.jar && \
     rm -rf /tmp/plugin
 
 # Create startup script with auto-save
@@ -139,6 +96,7 @@ RUN echo '#!/bin/sh' > /app/start.sh && \
     echo 'rcon.password=changeme' >> /app/start.sh && \
     echo 'rcon.address=0.0.0.0' >> /app/start.sh && \
     echo 'rcon.broadcast=true' >> /app/start.sh && \
+    echo 'query.port=25565' >> /app/start.sh && \
     echo 'motd=Kingdom Server - Medieval Roleplay' >> /app/start.sh && \
     echo 'difficulty=normal' >> /app/start.sh && \
     echo 'gamemode=survival' >> /app/start.sh && \
@@ -156,6 +114,8 @@ RUN echo '#!/bin/sh' > /app/start.sh && \
     echo 'online-mode=false' >> /app/start.sh && \
     echo 'pvp=true' >> /app/start.sh && \
     echo 'allow-flight=false' >> /app/start.sh && \
+    echo 'debug=false' >> /app/start.sh && \
+    echo 'broadcast-rcon-to-ops=true' >> /app/start.sh && \
     echo 'EOF' >> /app/start.sh && \
     echo 'fi' >> /app/start.sh && \
     echo '# List files to debug' >> /app/start.sh && \
