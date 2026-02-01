@@ -37,12 +37,16 @@ pom.xml.releaseBackup
 pom.xml.versionsBackup
 pom.xml.next
 release.properties
-dependency-reduced-pom.xml
-buildNumber.properties
-.mvn/timing.properties
-.mvn/wrapper/maven-wrapper.jar
 
-# Build outputs
+# Ignore build artifacts
+target/
 build/
-dist/
+*.class
+*.jar
+
+# Keep working plugin
+!plugin/Kingdom.jar
+
+# Ignore other build outputs
 out/
+dist/

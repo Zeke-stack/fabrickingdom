@@ -15,7 +15,7 @@ RUN wget -O /tmp/paper.jar https://api.papermc.io/v2/projects/paper/versions/1.2
 # Copy pre-built plugin JAR
 RUN mkdir -p /app/server/plugins && \
     echo "Copying Kingdom plugin..." && \
-    cp plugin/Kingdom.jar /app/server/plugins/ 2>/dev/null || echo "Plugin not found, server will start without plugin"
+    cp plugin/working.jar /app/server/plugins/Kingdom.jar 2>/dev/null || echo "Plugin not found, server will start without plugin"
 
 # Create startup script with auto-save
 RUN echo '#!/bin/sh' > /app/start.sh && \
