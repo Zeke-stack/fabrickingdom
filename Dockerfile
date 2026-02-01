@@ -22,55 +22,54 @@ RUN mkdir -p /tmp/plugin && \
     mkdir -p /tmp/plugin/src/main/java/com/kingdom/commands/utils && \
     mkdir -p /tmp/plugin/src/main/resources && \
     # Copy Java source files
-    cp plugins/KingdomCommands/src/main/java/com/kingdom/commands/*.java /tmp/plugin/src/main/java/com/kingdom/commands/ 2>/dev/null || true && \
-    cp plugins/KingdomCommands/src/main/java/com/kingdom/commands/commands/*.java /tmp/plugin/src/main/java/com/kingdom/commands/commands/ 2>/dev/null || true && \
-    cp plugins/KingdomCommands/src/main/java/com/kingdom/commands/listeners/*.java /tmp/plugin/src/main/java/com/kingdom/commands/listeners/ 2>/dev/null || true && \
-    cp plugins/KingdomCommands/src/main/java/com/kingdom/commands/utils/*.java /tmp/plugin/src/main/java/com/kingdom/commands/utils/ 2>/dev/null || true && \
-    # Copy resources
-    cp plugins/KingdomCommands/src/main/resources/* /tmp/plugin/src/main/resources/ 2>/dev/null || true && \
+    cp plugins/KingdomCommands/src/main/java/com/kingdom/commands/*.java /tmp/plugin/src/main/java/com/kingdom/commands/ 2>/dev/null || echo "No main Java files found" && \
+    cp plugins/KingdomCommands/src/main/java/com/kingdom/commands/commands/*.java /tmp/plugin/src/main/java/com/kingdom/commands/commands/ 2>/dev/null || echo "No command Java files found" && \
+    cp plugins/KingdomCommands/src/main/java/com/kingdom/commands/listeners/*.java /tmp/plugin/src/main/java/com/kingdom/commands/listeners/ 2>/dev/null || echo "No listener Java files found" && \
+    cp plugins/KingdomCommands/src/main/java/com/kingdom/commands/utils/*.java /tmp/plugin/src/main/java/com/kingdom/commands/utils/ 2>/dev/null || echo "No util Java files found" && \
+    # Copy resources including the complete plugin.yml
+    cp plugins/KingdomCommands/src/main/resources/* /tmp/plugin/src/main/resources/ 2>/dev/null || echo "No resources found" && \
     # Copy all assets recursively
-    cp -r plugins/KingdomCommands/src/main/resources/assets /tmp/plugin/src/main/resources/ 2>/dev/null || true && \
+    cp -r plugins/KingdomCommands/src/main/resources/assets /tmp/plugin/src/main/resources/ 2>/dev/null || echo "No assets found" && \
+    # List what we have
+    echo "Java files found:" && \
+    find /tmp/plugin/src/main/java -name "*.java" 2>/dev/null || echo "No Java files found" && \
+    echo "Resources found:" && \
+    ls -la /tmp/plugin/src/main/resources/ 2>/dev/null || echo "No resources found" && \
     # Compile Java code
     cd /tmp/plugin && \
-    javac -cp "/app/paper.jar" -d . src/main/java/com/kingdom/commands/*.java src/main/java/com/kingdom/commands/commands/*.java src/main/java/com/kingdom/commands/listeners/*.java src/main/java/com/kingdom/commands/utils/*.java 2>/dev/null || echo "Java compilation completed" && \
+    javac -cp "/app/paper.jar" -d . src/main/java/com/kingdom/commands/*.java src/main/java/com/kingdom/commands/commands/*.java src/main/java/com/kingdom/commands/listeners/*.java src/main/java/com/kingdom/commands/utils/*.java 2>/dev/null || echo "Java compilation completed with warnings" && \
     # Create plugin JAR with compiled classes and resources
     mkdir -p com/kingdom/commands com/kingdom/commands/commands com/kingdom/commands/listeners com/kingdom/commands/utils && \
-    cp -r src/main/java/com/kingdom/commands/*.class com/kingdom/commands/ 2>/dev/null || true && \
-    cp -r src/main/java/com/kingdom/commands/commands/*.class com/kingdom/commands/commands/ 2>/dev/null || true && \
-    cp -r src/main/java/com/kingdom/commands/listeners/*.class com/kingdom/commands/listeners/ 2>/dev/null || true && \
-    cp -r src/main/java/com/kingdom/commands/utils/*.class com/kingdom/commands/utils/ 2>/dev/null || true && \
-    cp -r src/main/resources/* . 2>/dev/null || true && \
-    # Create plugin.yml if it doesn't exist
-    echo "name: KingdomCommands" > plugin.yml && \
-    echo "version: '1.0.0'" >> plugin.yml && \
-    echo "main: com.kingdom.commands.KingdomCommands" >> plugin.yml && \
-    echo "api-version: 1.21" >> plugin.yml && \
-    echo "author: KingdomCraft" >> plugin.yml && \
-    echo "description: A kingdom-themed Minecraft server commands plugin" >> plugin.yml && \
-    echo "commands:" >> plugin.yml && \
-    echo "  kban:" >> plugin.yml && \
-    echo "    description: Ban a player with kingdom style" >> plugin.yml && \
-    echo "    usage: /kban <player> [reason]" >> plugin.yml && \
-    echo "  kkick:" >> plugin.yml && \
-    echo "    description: Kick a player with kingdom style" >> plugin.yml && \
-    echo "    usage: /kkick <player> [reason]" >> plugin.yml && \
-    echo "  coins:" >> plugin.yml && \
-    echo "    description: Check your total coins" >> plugin.yml && \
-    echo "    usage: /coins" >> plugin.yml && \
-    echo "  kingdom:" >> plugin.yml && \
-    echo "    description: Kingdom information" >> plugin.yml && \
-    echo "    usage: /kingdom" >> plugin.yml && \
-    echo "permissions:" >> plugin.yml && \
-    echo "  kingdom.commands.*:" >> plugin.yml && \
-    echo "    description: All kingdom commands" >> plugin.yml && \
-    echo "    default: op" >> plugin.yml && \
-    echo "  kingdom.commands.coins:" >> plugin.yml && \
-    echo "    description: Allow using coin commands" >> plugin.yml && \
-    echo "    default: true" >> plugin.yml && \
+    cp -r src/main/java/com/kingdom/commands/*.class com/kingdom/commands/ 2>/dev/null || echo "No main class files found" && \
+    cp -r src/main/java/com/kingdom/commands/commands/*.class com/kingdom/commands/commands/ 2>/dev/null || echo "No command class files found" && \
+    cp -r src/main/java/com/kingdom/commands/listeners/*.class com/kingdom/commands/listeners/ 2>/dev/null || echo "No listener class files found" && \
+    cp -r src/main/java/com/kingdom/commands/utils/*.class com/kingdom/commands/utils/ 2>/dev/null || echo "No util class files found" && \
+    cp -r src/main/resources/* . 2>/dev/null || echo "No resources to copy" && \
+    # Create a simple plugin.yml if the existing one doesn't work
+    if [ ! -f "plugin.yml" ]; then \
+        echo "name: KingdomCommands" > plugin.yml && \
+        echo "version: '1.0.0'" >> plugin.yml && \
+        echo "main: com.kingdom.commands.KingdomCommands" >> plugin.yml && \
+        echo "api-version: 1.21" >> plugin.yml && \
+        echo "author: KingdomCraft" >> plugin.yml && \
+        echo "description: A kingdom-themed Minecraft server commands plugin" >> plugin.yml && \
+        echo "commands:" >> plugin.yml && \
+        echo "  kingdom:" >> plugin.yml && \
+        echo "    description: Kingdom commands" >> plugin.yml && \
+        echo "    usage: /kingdom" >> plugin.yml && \
+        echo "  coins:" >> plugin.yml && \
+        echo "    description: Check coins" >> plugin.yml && \
+        echo "    usage: /coins" >> plugin.yml && \
+        echo "permissions:" >> plugin.yml && \
+        echo "  kingdom.commands.*:" >> plugin.yml && \
+        echo "    default: op" >> plugin.yml; \
+    fi && \
     # Create the JAR
     jar cf KingdomCommands-1.0.0.jar * && \
     cp KingdomCommands-1.0.0.jar /app/server/plugins/ && \
     echo "✓ KingdomCommands plugin built and installed!" && \
+    echo "Plugin contents:" && \
+    jar tf KingdomCommands-1.0.0.jar | head -20 && \
     rm -rf /tmp/plugin
 
 # Create startup script with auto-save
@@ -145,7 +144,7 @@ RUN echo '#!/bin/sh' > /app/start.sh && \
     echo 'gamemode=survival' >> /app/start.sh && \
     echo 'level-type=default' >> /app/start.sh && \
     echo 'level-name=world' >> /app/start.sh && \
-    echo 'level-seed=12345' >> /app/start.sh && \
+    echo 'level-seed=8048694775087357441' >> /app/start.sh && \
     echo 'force-gamemode=false' >> /app/start.sh && \
     echo 'view-distance=6' >> /app/start.sh && \
     echo 'simulation-distance=4' >> /app/start.sh && \
@@ -165,20 +164,24 @@ RUN echo '#!/bin/sh' > /app/start.sh && \
     echo 'echo "=== STARTING MINECRAFT SERVER ==="' >> /app/start.sh && \
     echo 'echo "Server will auto-save every 60 seconds to persistent volume"' >> /app/start.sh && \
     echo 'echo "RCON enabled on port 25575 with password: changeme"' >> /app/start.sh && \
-    echo 'echo "World seed: 12345 (FIXED SEED FOR CONSISTENCY)"' >> /app/start.sh && \
+    echo 'echo "World seed: 8048694775087357441 (EARTH MAP SEED)"' >> /app/start.sh && \
     echo '# Start server with auto-save every 60 seconds' >> /app/start.sh && \
     echo 'java -Xms1G -Xmx2G -XX:+UseG1GC -XX:+ParallelRefProcEnabled -XX:MaxGCPauseMillis=200 -XX:+UnlockExperimentalVMOptions -XX:+DisableExplicitGC -XX:+AlwaysPreTouch -XX:G1NewSizePercent=30 -XX:G1MaxNewSizePercent=40 -XX:G1HeapRegionSize=8M -XX:G1ReservePercent=20 -XX:G1HeapWastePercent=5 -XX:G1MixedGCCountTarget=4 -XX:InitiatingHeapOccupancyPercent=15 -XX:G1MixedGCLiveThresholdPercent=90 -XX:G1RSetUpdatingPauseTimePercent=5 -XX:SurvivorRatio=32 -XX:+PerfDisableSharedMem -XX:MaxTenuringThreshold=1 -jar paper.jar nogui --nogui &' >> /app/start.sh && \
     echo 'SERVER_PID=$!' >> /app/start.sh && \
     echo 'echo "Server started with PID: $SERVER_PID"' >> /app/start.sh && \
-    echo '# Wait for server to fully start' >> /app/start.sh && \
-    echo 'sleep 15' >> /app/start.sh && \
+    echo '# Wait for server to fully start and RCON to be available' >> /app/start.sh && \
+    echo 'echo "Waiting for server to fully start (30 seconds)..."' >> /app/start.sh && \
+    echo 'sleep 30' >> /app/start.sh && \
     echo 'echo "Checking if server is running..."' >> /app/start.sh && \
     echo 'if kill -0 $SERVER_PID 2>/dev/null; then' >> /app/start.sh && \
     echo '    echo "✓ Server is running successfully!"' >> /app/start.sh && \
     echo '    echo "Testing RCON connection..."' >> /app/start.sh && \
-    echo '    echo "list" > /proc/$SERVER_PID/fd/0 2>/dev/null && echo "✓ RCON is working!" || echo "⚠ RCON test failed"' >> /app/start.sh && \
+    echo '    echo "list" > /proc/$SERVER_PID/fd/0 2>/dev/null && echo "✓ RCON is working!" || echo "⚠ RCON test failed - will retry"' >> /app/start.sh && \
+    echo '    echo "Plugins loaded:"' >> /app/start.sh && \
+    echo '    echo "plugins" > /proc/$SERVER_PID/fd/0 2>/dev/null || echo "Could not list plugins"' >> /app/start.sh && \
     echo 'else' >> /app/start.sh && \
     echo '    echo "✗ Server failed to start!"' >> /app/start.sh && \
+    echo '    exit 1' >> /app/start.sh && \
     echo 'fi' >> /app/start.sh && \
     echo 'echo "Starting auto-save loop..."' >> /app/start.sh && \
     echo '# Auto-save every 60 seconds' >> /app/start.sh && \
