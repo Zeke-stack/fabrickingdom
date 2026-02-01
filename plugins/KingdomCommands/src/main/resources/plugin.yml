@@ -3,7 +3,7 @@ version: '1.0.0'
 main: com.kingdom.commands.KingdomCommands
 api-version: 1.21
 author: KingdomCraft
-description: A kingdom-themed Minecraft server commands plugin with beautiful UI and coin economy
+description: A kingdom-themed Minecraft server commands plugin with beautiful UI, coin economy, and comprehensive staff management
 commands:
   kban:
     description: Ban a player with kingdom style
@@ -29,6 +29,114 @@ commands:
     description: Quick balance check
     usage: /balance
     permission: kingdom.commands.balance
+  spectate:
+    description: Enter spectator mode
+    usage: /spectate
+    permission: kingdom.staff.moderator
+  survival:
+    description: Enter survival mode
+    usage: /survival
+    permission: kingdom.staff.moderator
+  to:
+    description: Teleport to a player
+    usage: /to <player>
+    permission: kingdom.staff.moderator
+  bring:
+    description: Bring a player to you
+    usage: /bring <player>
+    permission: kingdom.staff.moderator
+  kick:
+    description: Kick a player with reason
+    usage: /kick <player> [reason]
+    permission: kingdom.staff.moderator
+  freeze:
+    description: Freeze/unfreeze a player
+    usage: /freeze <player>
+    permission: kingdom.staff.moderator
+  invsee:
+    description: View a player's inventory
+    usage: /invsee <player>
+    permission: kingdom.staff.moderator
+  history:
+    description: View a player's chat history
+    usage: /history <player>
+    permission: kingdom.staff.moderator
+  ban:
+    description: Ban a player with time and reason
+    usage: /ban <player> <time> <reason>
+    permission: kingdom.staff.administrator
+  pardon:
+    description: Pardon a banned player
+    usage: /pardon <player>
+    permission: kingdom.staff.administrator
+  ipban:
+    description: IP ban a player
+    usage: /ipban <player> <time> <reason>
+    permission: kingdom.staff.administrator
+  vanish:
+    description: Vanish from player list
+    usage: /vanish
+    permission: kingdom.staff.administrator
+  hint:
+    description: Send italic gold hint message
+    usage: /hint <message>
+    permission: kingdom.staff.administrator
+  announce:
+    description: Send bold red announcement
+    usage: /announce <message>
+    permission: kingdom.staff.administrator
+  chatannounce:
+    description: Send formatted chat announcement
+    usage: /chatannounce <message>
+    permission: kingdom.staff.administrator
+  give:
+    description: Give items to yourself
+    usage: /give <item> <quantity>
+    permission: kingdom.staff.event_staff
+  summon:
+    description: Summon an entity
+    usage: /summon <entity>
+    permission: kingdom.staff.event_staff
+  reload:
+    description: Reload the server
+    usage: /reload
+    permission: kingdom.staff.event_staff
+  restart:
+    description: Restart the server
+    usage: /restart
+    permission: kingdom.staff.event_staff
+  stop:
+    description: Stop the server
+    usage: /stop
+    permission: kingdom.staff.event_staff
+  gamemode:
+    description: Change gamemode
+    usage: /gamemode <mode> [player]
+    permission: kingdom.staff.event_staff
+  kill:
+    description: Kill a player
+    usage: /kill [player]
+    permission: kingdom.staff.event_staff
+  banlist:
+    description: View ban list
+    usage: /banlist
+    permission: kingdom.staff.event_staff
+  audit:
+    description: Audit a player
+    usage: /audit <player>
+    permission: kingdom.staff.founder
+  op:
+    description: OP a player
+    usage: /op <player>
+    permission: kingdom.staff.founder
+  deop:
+    description: Deop a player
+    usage: /deop <player>
+    permission: kingdom.staff.founder
+  staff:
+    description: Manage staff members
+    usage: /staff <add|remove|list> <player> [rank]
+    permission: kingdom.staff.manage
 permissions:
   kingdom.commands.*:
     description: All kingdom commands
@@ -39,6 +147,7 @@ permissions:
       kingdom.commands.deop: true
       kingdom.commands.coins: true
       kingdom.commands.balance: true
+      kingdom.staff.*: true
   kingdom.commands.ban:
     description: Allow banning players
     default: op
@@ -57,3 +166,26 @@ permissions:
   kingdom.commands.balance:
     description: Allow checking balance
     default: true
+  kingdom.staff.*:
+    description: All staff permissions
+    children:
+      kingdom.staff.moderator: true
+      kingdom.staff.administrator: true
+      kingdom.staff.event_staff: true
+      kingdom.staff.founder: true
+      kingdom.staff.manage: true
+  kingdom.staff.moderator:
+    description: Moderator permissions
+    default: false
+  kingdom.staff.administrator:
+    description: Administrator permissions
+    default: false
+  kingdom.staff.event_staff:
+    description: Event staff permissions
+    default: false
+  kingdom.staff.founder:
+    description: Founder permissions
+    default: false
+  kingdom.staff.manage:
+    description: Manage staff members
+    default: op
