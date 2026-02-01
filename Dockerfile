@@ -12,7 +12,7 @@ RUN mkdir -p /app/server/world /app/server/world_nether /app/server/world_the_en
 # Download PaperMC server to a temporary location first
 RUN wget -O /tmp/paper.jar https://api.papermc.io/v2/projects/paper/versions/1.21.1/builds/133/downloads/paper-1.21.1-133.jar
 
-# Create a simple working KingdomCommands plugin JAR
+# Create a simple working KingdomCommands plugin JAR (no compilation needed)
 RUN mkdir -p /tmp/plugin/META-INF && \
     echo "Manifest-Version: 1.0" > /tmp/plugin/META-INF/MANIFEST.MF && \
     echo "Created-By: KingdomCommands" >> /tmp/plugin/META-INF/MANIFEST.MF && \
@@ -86,40 +86,7 @@ RUN mkdir -p /tmp/plugin/META-INF && \
     echo "  enabled: true" >> /tmp/plugin/config.yml && \
     echo "  interval: 60" >> /tmp/plugin/config.yml && \
     echo "  notify-admins: false" >> /tmp/plugin/config.yml && \
-    mkdir -p /tmp/plugin/com/kingdom/commands && \
-    echo "package com.kingdom.commands;" > /tmp/plugin/com/kingdom/commands/KingdomCommands.java && \
-    echo "" >> /tmp/plugin/com/kingdom/commands/KingdomCommands.java && \
-    echo "import org.bukkit.plugin.java.JavaPlugin;" >> /tmp/plugin/com/kingdom/commands/KingdomCommands.java && \
-    echo "import org.bukkit.command.Command;" >> /tmp/plugin/com/kingdom/commands/KingdomCommands.java && \
-    echo "import org.bukkit.command.CommandSender;" >> /tmp/plugin/com/kingdom/commands/KingdomCommands.java && \
-    echo "import org.bukkit.entity.Player;" >> /tmp/plugin/com/kingdom/commands/KingdomCommands.java && \
-    echo "" >> /tmp/plugin/com/kingdom/commands/KingdomCommands.java && \
-    echo "public class KingdomCommands extends JavaPlugin {" >> /tmp/plugin/com/kingdom/commands/KingdomCommands.java && \
-    echo "    @Override" >> /tmp/plugin/com/kingdom/commands/KingdomCommands.java && \
-    echo "    public void onEnable() {" >> /tmp/plugin/com/kingdom/commands/KingdomCommands.java && \
-    echo "        getLogger().info(\"§6✦ Kingdom Commands has been enabled! ✦\");" >> /tmp/plugin/com/kingdom/commands/KingdomCommands.java && \
-    echo "    }" >> /tmp/plugin/com/kingdom/commands/KingdomCommands.java && \
-    echo "" >> /tmp/plugin/com/kingdom/commands/KingdomCommands.java && \
-    echo "    @Override" >> /tmp/plugin/com/kingdom/commands/KingdomCommands.java && \
-    echo "    public void onDisable() {" >> /tmp/plugin/com/kingdom/commands/KingdomCommands.java && \
-    echo "        getLogger().info(\"§6✦ Kingdom Commands has been disabled! ✦\");" >> /tmp/plugin/com/kingdom/commands/KingdomCommands.java && \
-    echo "    }" >> /tmp/plugin/com/kingdom/commands/KingdomCommands.java && \
-    echo "" >> /tmp/plugin/com/kingdom/commands/KingdomCommands.java && \
-    echo "    @Override" >> /tmp/plugin/com/kingdom/commands/KingdomCommands.java && \
-    echo "    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {" >> /tmp/plugin/com/kingdom/commands/KingdomCommands.java && \
-    echo "        if (command.getName().equalsIgnoreCase(\"coins\")) {" >> /tmp/plugin/com/kingdom/commands/KingdomCommands.java && \
-    echo "            if (sender instanceof Player) {" >> /tmp/plugin/com/kingdom/commands/KingdomCommands.java && \
-    echo "                Player player = (Player) sender;" >> /tmp/plugin/com/kingdom/commands/KingdomCommands.java && \
-    echo "                player.sendMessage(\"§6✦ Your coins are calculated from gold in inventory and ender chest!\");" >> /tmp/plugin/com/kingdom/commands/KingdomCommands.java && \
-    echo "                player.sendMessage(\"§e1 Gold Nugget = 1 Coin, 1 Gold Ingot = 9 Coins, 1 Gold Block = 81 Coins\");" >> /tmp/plugin/com/kingdom/commands/KingdomCommands.java && \
-    echo "            }" >> /tmp/plugin/com/kingdom/commands/KingdomCommands.java && \
-    echo "            return true;" >> /tmp/plugin/com/kingdom/commands/KingdomCommands.java && \
-    echo "        }" >> /tmp/plugin/com/kingdom/commands/KingdomCommands.java && \
-    echo "        return false;" >> /tmp/plugin/com/kingdom/commands/KingdomCommands.java && \
-    echo "    }" >> /tmp/plugin/com/kingdom/commands/KingdomCommands.java && \
-    echo "}" >> /tmp/plugin/com/kingdom/commands/KingdomCommands.java && \
     cd /tmp/plugin && \
-    javac -cp /tmp/paper.jar com/kingdom/commands/KingdomCommands.java && \
     jar cf KingdomCommands-1.0.0.jar * && \
     cp KingdomCommands-1.0.0.jar /app/server/plugins/ && \
     rm -rf /tmp/plugin
