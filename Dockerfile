@@ -32,7 +32,7 @@ RUN echo "server-port=25565" > server.properties && \
     echo "max-entity-collisions=2" >> server.properties
 
 # Copy KingdomCommands plugin
-COPY plugins/KingdomCommands-1.0.0.jar /app/server/plugins/
+COPY plugins/KingdomCommands/target/KingdomCommands-1.0.0.jar /app/server/plugins/
 
 # Create startup script with auto-save
 RUN echo '#!/bin/sh' > /app/start.sh && \
