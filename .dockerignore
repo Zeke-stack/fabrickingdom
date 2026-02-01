@@ -1,0 +1,32 @@
+# Ignore large server files that shouldn't be in Docker build context
+world/
+world_nether/
+world_the_end/
+logs/
+cache/
+libraries/
+versions/
+*.log
+
+# Ignore temporary files
+*.tmp
+*.temp
+.console_history
+
+# Ignore git
+.git/
+
+# Ignore IDE files
+.idea/
+.vscode/
+*.iml
+*.ipr
+*.iws
+
+# Keep only essential files for build
+!plugins/KingdomCommands/target/KingdomCommands-1.0.0.jar
+!plugins/KingdomCommands/src/
+!plugins/KingdomCommands/pom.xml
+!Dockerfile
+!railway.toml
+!README.md
