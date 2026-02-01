@@ -9,9 +9,8 @@ RUN apk update && apk add --no-cache curl wget
 # Create server directory structure
 RUN mkdir -p /app/server/world /app/server/world_nether /app/server/world_the_end /app/server/plugins /app/server/logs
 
-# Use pre-downloaded server files
-COPY paper.jar /tmp/paper.jar
-COPY eula.txt /tmp/eula.txt
+# Download PaperMC server to a temporary location first
+RUN wget -O /tmp/paper.jar https://api.papermc.io/v2/projects/paper/versions/1.21.1/builds/133/downloads/paper-1.21.1-133.jar
 
 # Create a simple working KingdomCommands plugin JAR (no compilation needed)
 RUN mkdir -p /tmp/plugin/META-INF && \
