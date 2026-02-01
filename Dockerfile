@@ -12,9 +12,17 @@ RUN mkdir -p /app/server/world /app/server/world_nether /app/server/world_the_en
 # Download PaperMC server to a temporary location first
 RUN wget -O /tmp/paper.jar https://api.papermc.io/v2/projects/paper/versions/1.21.1/builds/133/downloads/paper-1.21.1-133.jar
 
-# Create plugin JAR directly in Docker
+# Create working plugin JAR with compiled classes
 RUN mkdir -p /app/server/plugins && \
     echo "Creating Kingdom plugin..." && \
+    # Create Java source
+    echo "import org.bukkit.plugin.java.JavaPlugin;" > /app/server/plugins/KingdomPlugin.java && \
+    echo "public class KingdomPlugin extends JavaPlugin {" >> /app/server/plugins/KingdomPlugin.java && \
+    echo "    @Override" >> /app/server/plugins/KingdomPlugin.java && \
+    echo "    public void onEnable() {" >> /app/server/plugins/KingdomPlugin.java && \
+    echo "        getLogger().info(\"Kingdom Plugin Enabled!\");" >> /app/server/plugins/KingdomPlugin.java && \
+    echo "    }" >> /app/server/plugins/KingdomPlugin.java && \
+    echo "}" >> /app/server/plugins/KingdomPlugin.java && \
     # Create plugin.yml
     echo "name: Kingdom" > /app/server/plugins/plugin.yml && \
     echo "version: 1.0.0" >> /app/server/plugins/plugin.yml && \
@@ -29,10 +37,11 @@ RUN mkdir -p /app/server/plugins && \
     echo "  coins:" >> /app/server/plugins/plugin.yml && \
     echo "    description: Check coins" >> /app/server/plugins/plugin.yml && \
     echo "    usage: /coins" >> /app/server/plugins/plugin.yml && \
-    # Create JAR with plugin.yml
+    # Compile and create JAR
     cd /app/server/plugins && \
-    jar cf Kingdom.jar plugin.yml && \
-    rm -f plugin.yml && \
+    javac -cp "/app/paper.jar" KingdomPlugin.java && \
+    jar cf Kingdom.jar KingdomPlugin.class plugin.yml && \
+    rm -f KingdomPlugin.java plugin.yml && \
     echo "✓ Kingdom plugin created and installed!" && \
     echo "Plugin contents:" && \
     jar tf Kingdom.jar
