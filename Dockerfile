@@ -15,58 +15,10 @@ RUN wget -O /tmp/paper.jar https://api.papermc.io/v2/projects/paper/versions/1.2
 # Create simple working plugin JAR
 RUN mkdir -p /tmp/plugin && \
     echo "Building Simple Kingdom Plugin..." && \
-    # Create a minimal plugin Java file
-    echo 'import org.bukkit.plugin.java.JavaPlugin;' > /tmp/plugin/SimpleKingdomPlugin.java && \
-    echo 'import org.bukkit.entity.Player;' >> /tmp/plugin/SimpleKingdomPlugin.java && \
-    echo 'import org.bukkit.event.EventHandler;' >> /tmp/plugin/SimpleKingdomPlugin.java && \
-    echo 'import org.bukkit.event.Listener;' >> /tmp/plugin/SimpleKingdomPlugin.java && \
-    echo 'import org.bukkit.event.player.PlayerJoinEvent;' >> /tmp/plugin/SimpleKingdomPlugin.java && \
-    echo 'import org.bukkit.command.Command;' >> /tmp/plugin/SimpleKingdomPlugin.java && \
-    echo 'import org.bukkit.command.CommandSender;' >> /tmp/plugin/SimpleKingdomPlugin.java && \
-    echo 'import org.bukkit.ChatColor;' >> /tmp/plugin/SimpleKingdomPlugin.java && \
-    echo '' >> /tmp/plugin/SimpleKingdomPlugin.java && \
-    echo 'public class SimpleKingdomPlugin extends JavaPlugin implements Listener {' >> /tmp/plugin/SimpleKingdomPlugin.java && \
-    echo '    @Override' >> /tmp/plugin/SimpleKingdomPlugin.java && \
-    echo '    public void onEnable() {' >> /tmp/plugin/SimpleKingdomPlugin.java && \
-    echo '        getLogger().info("Kingdom Plugin Enabled!");' >> /tmp/plugin/SimpleKingdomPlugin.java && \
-    echo '        getServer().getPluginManager().registerEvents(this, this);' >> /tmp/plugin/SimpleKingdomPlugin.java && \
-    echo '    }' >> /tmp/plugin/SimpleKingdomPlugin.java && \
-    echo '    @EventHandler' >> /tmp/plugin/SimpleKingdomPlugin.java && \
-    echo '    public void onPlayerJoin(PlayerJoinEvent event) {' >> /tmp/plugin/SimpleKingdomPlugin.java && \
-    echo '        Player player = event.getPlayer();' >> /tmp/plugin/SimpleKingdomPlugin.java && \
-    echo '        event.setJoinMessage(ChatColor.GOLD + "⚔️ " + player.getName() + " has entered the Kingdom! ⚔️");' >> /tmp/plugin/SimpleKingdomPlugin.java && \
-    echo '        player.sendMessage(ChatColor.GOLD + "✦ Welcome to the Kingdom Server! ✦");' >> /tmp/plugin/SimpleKingdomPlugin.java && \
-    echo '        player.sendMessage(ChatColor.YELLOW + "Type /kingdom for commands!");' >> /tmp/plugin/SimpleKingdomPlugin.java && \
-    echo '    }' >> /tmp/plugin/SimpleKingdomPlugin.java && \
-    echo '    @Override' >> /tmp/plugin/SimpleKingdomPlugin.java && \
-    echo '    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {' >> /tmp/plugin/SimpleKingdomPlugin.java && \
-    echo '        if (command.getName().equalsIgnoreCase("kingdom")) {' >> /tmp/plugin/SimpleKingdomPlugin.java && \
-    echo '            sender.sendMessage(ChatColor.GOLD + "✦ Kingdom Commands ✦");' >> /tmp/plugin/SimpleKingdomPlugin.java && \
-    echo '            sender.sendMessage(ChatColor.YELLOW + "/kingdom - Show this help");' >> /tmp/plugin/SimpleKingdomPlugin.java && \
-    echo '            sender.sendMessage(ChatColor.YELLOW + "/coins - Check your coins");' >> /tmp/plugin/SimpleKingdomPlugin.java && \
-    echo '            return true;' >> /tmp/plugin/SimpleKingdomPlugin.java && \
-    echo '        }' >> /tmp/plugin/SimpleKingdomPlugin.java && \
-    echo '        if (command.getName().equalsIgnoreCase("coins")) {' >> /tmp/plugin/SimpleKingdomPlugin.java && \
-    echo '            sender.sendMessage(ChatColor.GOLD + "💰 Coins: 0");' >> /tmp/plugin/SimpleKingdomPlugin.java && \
-    echo '            return true;' >> /tmp/plugin/SimpleKingdomPlugin.java && \
-    echo '        }' >> /tmp/plugin/SimpleKingdomPlugin.java && \
-    echo '        return false;' >> /tmp/plugin/SimpleKingdomPlugin.java && \
-    echo '    }' >> /tmp/plugin/SimpleKingdomPlugin.java && \
-    echo '}' >> /tmp/plugin/SimpleKingdomPlugin.java && \
+    # Create a minimal plugin Java file without Unicode
+    printf 'import org.bukkit.plugin.java.JavaPlugin;\nimport org.bukkit.entity.Player;\nimport org.bukkit.event.EventHandler;\nimport org.bukkit.event.Listener;\nimport org.bukkit.event.player.PlayerJoinEvent;\nimport org.bukkit.command.Command;\nimport org.bukkit.command.CommandSender;\nimport org.bukkit.ChatColor;\n\npublic class SimpleKingdomPlugin extends JavaPlugin implements Listener {\n    @Override\n    public void onEnable() {\n        getLogger().info("Kingdom Plugin Enabled!");\n        getServer().getPluginManager().registerEvents(this, this);\n    }\n    @EventHandler\n    public void onPlayerJoin(PlayerJoinEvent event) {\n        Player player = event.getPlayer();\n        event.setJoinMessage(ChatColor.GOLD + " [Kingdom] " + player.getName() + " has joined!");\n        player.sendMessage(ChatColor.GOLD + "Welcome to the Kingdom Server!");\n        player.sendMessage(ChatColor.YELLOW + "Type /kingdom for commands!");\n    }\n    @Override\n    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {\n        if (command.getName().equalsIgnoreCase("kingdom")) {\n            sender.sendMessage(ChatColor.GOLD + "Kingdom Commands:");\n            sender.sendMessage(ChatColor.YELLOW + "/kingdom - Show this help");\n            sender.sendMessage(ChatColor.YELLOW + "/coins - Check your coins");\n            return true;\n        }\n        if (command.getName().equalsIgnoreCase("coins")) {\n            sender.sendMessage(ChatColor.GOLD + "Coins: 0");\n            return true;\n        }\n        return false;\n    }\n}' > /tmp/plugin/SimpleKingdomPlugin.java && \
     # Create the plugin.yml
-    echo 'name: KingdomCommands' > /tmp/plugin/plugin.yml && \
-    echo 'version: 1.0.0' >> /tmp/plugin/plugin.yml && \
-    echo 'main: SimpleKingdomPlugin' >> /tmp/plugin/plugin.yml && \
-    echo 'api-version: 1.21' >> /tmp/plugin/plugin.yml && \
-    echo 'author: KingdomCraft' >> /tmp/plugin/plugin.yml && \
-    echo 'description: A kingdom-themed Minecraft server commands plugin' >> /tmp/plugin/plugin.yml && \
-    echo 'commands:' >> /tmp/plugin/plugin.yml && \
-    echo '  kingdom:' >> /tmp/plugin/plugin.yml && \
-    echo '    description: Kingdom commands' >> /tmp/plugin/plugin.yml && \
-    echo '    usage: /kingdom' >> /tmp/plugin/plugin.yml && \
-    echo '  coins:' >> /tmp/plugin/plugin.yml && \
-    echo '    description: Check your coins' >> /tmp/plugin/plugin.yml && \
-    echo '    usage: /coins' >> /tmp/plugin/plugin.yml && \
+    printf 'name: KingdomCommands\nversion: 1.0.0\nmain: SimpleKingdomPlugin\napi-version: 1.21\nauthor: KingdomCraft\ndescription: A kingdom-themed Minecraft server commands plugin\ncommands:\n  kingdom:\n    description: Kingdom commands\n    usage: /kingdom\n  coins:\n    description: Check your coins\n    usage: /coins\n' > /tmp/plugin/plugin.yml && \
     # Compile the plugin
     cd /tmp/plugin && \
     javac -cp "/app/paper.jar" SimpleKingdomPlugin.java && \
