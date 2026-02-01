@@ -42,10 +42,9 @@ release.properties
 target/
 build/
 *.class
-*.jar
 
 # Keep working plugin
-!plugin/Kingdom.jar
+!Kingdom.jar
 
 # Ignore other build outputs
 out/
