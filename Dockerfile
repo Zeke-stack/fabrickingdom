@@ -12,25 +12,6 @@ RUN mkdir -p /app/server/world /app/server/world_nether /app/server/world_the_en
 # Download PaperMC server to a temporary location first
 RUN wget -O /tmp/paper.jar https://api.papermc.io/v2/projects/paper/versions/1.21.1/builds/133/downloads/paper-1.21.1-133.jar
 
-# Accept EULA
-RUN echo "eula=true" > eula.txt
-
-# Set server properties with auto-save configuration
-RUN echo "server-port=25565" > server.properties && \
-    echo "enable-rcon=true" >> server.properties && \
-    echo "rcon.port=25575" >> server.properties && \
-    echo "rcon.password=changeme" >> server.properties && \
-    echo "motd=Kingdom Server - Medieval Roleplay" >> server.properties && \
-    echo "difficulty=normal" >> server.properties && \
-    echo "gamemode=survival" >> server.properties && \
-    echo "level-type=default" >> server.properties && \
-    echo "level-name=world" >> server.properties && \
-    echo "view-distance=6" >> server.properties && \
-    echo "simulation-distance=4" >> server.properties && \
-    echo "entity-broadcast-range-percentage=50" >> server.properties && \
-    echo "max-chained-neighbor-updates=500" >> server.properties && \
-    echo "max-entity-collisions=2" >> server.properties
-
 # Create a minimal KingdomCommands plugin JAR
 RUN mkdir -p /tmp/plugin/META-INF && \
     echo "Manifest-Version: 1.0" > /tmp/plugin/META-INF/MANIFEST.MF && \
@@ -117,6 +98,27 @@ RUN echo '#!/bin/sh' > /app/start.sh && \
     echo '# Copy paper.jar to server directory if it doesnt exist' >> /app/start.sh && \
     echo 'if [ ! -f "paper.jar" ]; then' >> /app/start.sh && \
     echo '    cp /tmp/paper.jar .' >> /app/start.sh && \
+    echo 'fi' >> /app/start.sh && \
+    echo '# Create EULA file if it doesnt exist' >> /app/start.sh && \
+    echo 'if [ ! -f "eula.txt" ]; then' >> /app/start.sh && \
+    echo '    echo "eula=true" > eula.txt' >> /app/start.sh && \
+    echo 'fi' >> /app/start.sh && \
+    echo '# Create server properties if they dont exist' >> /app/start.sh && \
+    echo 'if [ ! -f "server.properties" ]; then' >> /app/start.sh && \
+    echo '    echo "server-port=25565" > server.properties' >> /app/start.sh && \
+    echo '    echo "enable-rcon=true" >> server.properties' >> /app/start.sh && \
+    echo '    echo "rcon.port=25575" >> server.properties' >> /app/start.sh && \
+    echo '    echo "rcon.password=changeme" >> server.properties' >> /app/start.sh && \
+    echo '    echo "motd=Kingdom Server - Medieval Roleplay" >> server.properties' >> /app/start.sh && \
+    echo '    echo "difficulty=normal" >> server.properties' >> /app/start.sh && \
+    echo '    echo "gamemode=survival" >> server.properties' >> /app/start.sh && \
+    echo '    echo "level-type=default" >> server.properties' >> /app/start.sh && \
+    echo '    echo "level-name=world" >> server.properties' >> /app/start.sh && \
+    echo '    echo "view-distance=6" >> server.properties' >> /app/start.sh && \
+    echo '    echo "simulation-distance=4" >> server.properties' >> /app/start.sh && \
+    echo '    echo "entity-broadcast-range-percentage=50" >> server.properties' >> /app/start.sh && \
+    echo '    echo "max-chained-neighbor-updates=500" >> server.properties' >> /app/start.sh && \
+    echo '    echo "max-entity-collisions=2" >> server.properties' >> /app/start.sh && \
     echo 'fi' >> /app/start.sh && \
     echo 'java -Xms1G -Xmx2G -XX:+UseG1GC -XX:+ParallelRefProcEnabled -XX:MaxGCPauseMillis=200 -XX:+UnlockExperimentalVMOptions -XX:+DisableExplicitGC -XX:+AlwaysPreTouch -XX:G1NewSizePercent=30 -XX:G1MaxNewSizePercent=40 -XX:G1HeapRegionSize=8M -XX:G1ReservePercent=20 -XX:G1HeapWastePercent=5 -XX:G1MixedGCCountTarget=4 -XX:InitiatingHeapOccupancyPercent=15 -XX:G1MixedGCLiveThresholdPercent=90 -XX:G1RSetUpdatingPauseTimePercent=5 -XX:SurvivorRatio=32 -XX:+PerfDisableSharedMem -XX:MaxTenuringThreshold=1 -jar paper.jar nogui --nogui' >> /app/start.sh && \
     chmod +x /app/start.sh
