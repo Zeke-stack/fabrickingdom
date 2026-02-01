@@ -44,8 +44,5 @@ RUN echo '#!/bin/sh' > /app/start.sh && \
 # Expose ports
 EXPOSE 25565 25575
 
-# Set up volume paths
-VOLUME ["/app/server"]
-
 # Start the server
 CMD ["/app/start.sh"]
