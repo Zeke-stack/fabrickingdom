@@ -6,6 +6,8 @@ healthcheckPath = "/"
 healthcheckTimeout = 100
 restartPolicyType = "ON_FAILURE"
 restartPolicyMaxRetries = 10
+healthcheckProtocol = "TCP"
+healthcheckPort = 25565
 
 [[services]]
 name = "minecraft-server"
