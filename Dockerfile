@@ -99,10 +99,9 @@ RUN echo '#!/bin/sh' > /app/start.sh && \
     echo 'if [ ! -f "paper.jar" ]; then' >> /app/start.sh && \
     echo '    cp /tmp/paper.jar .' >> /app/start.sh && \
     echo 'fi' >> /app/start.sh && \
-    echo '# Create EULA file if it doesnt exist' >> /app/start.sh && \
-    echo 'if [ ! -f "eula.txt" ]; then' >> /app/start.sh && \
-    echo '    echo "eula=true" > eula.txt' >> /app/start.sh && \
-    echo 'fi' >> /app/start.sh && \
+    echo '# Always create EULA file' >> /app/start.sh && \
+    echo 'echo "eula=true" > eula.txt' >> /app/start.sh && \
+    echo 'echo "Created EULA file:" && cat eula.txt' >> /app/start.sh && \
     echo '# Create server properties if they dont exist' >> /app/start.sh && \
     echo 'if [ ! -f "server.properties" ]; then' >> /app/start.sh && \
     echo '    echo "server-port=25565" > server.properties' >> /app/start.sh && \
@@ -120,6 +119,9 @@ RUN echo '#!/bin/sh' > /app/start.sh && \
     echo '    echo "max-chained-neighbor-updates=500" >> server.properties' >> /app/start.sh && \
     echo '    echo "max-entity-collisions=2" >> server.properties' >> /app/start.sh && \
     echo 'fi' >> /app/start.sh && \
+    echo '# List files to debug' >> /app/start.sh && \
+    echo 'echo "Current directory contents:" && ls -la' >> /app/start.sh && \
+    echo 'echo "Starting Minecraft server..."' >> /app/start.sh && \
     echo 'java -Xms1G -Xmx2G -XX:+UseG1GC -XX:+ParallelRefProcEnabled -XX:MaxGCPauseMillis=200 -XX:+UnlockExperimentalVMOptions -XX:+DisableExplicitGC -XX:+AlwaysPreTouch -XX:G1NewSizePercent=30 -XX:G1MaxNewSizePercent=40 -XX:G1HeapRegionSize=8M -XX:G1ReservePercent=20 -XX:G1HeapWastePercent=5 -XX:G1MixedGCCountTarget=4 -XX:InitiatingHeapOccupancyPercent=15 -XX:G1MixedGCLiveThresholdPercent=90 -XX:G1RSetUpdatingPauseTimePercent=5 -XX:SurvivorRatio=32 -XX:+PerfDisableSharedMem -XX:MaxTenuringThreshold=1 -jar paper.jar nogui --nogui' >> /app/start.sh && \
     chmod +x /app/start.sh
 
