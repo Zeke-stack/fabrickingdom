@@ -95,6 +95,9 @@ RUN mkdir -p /tmp/plugin/META-INF && \
 RUN echo '#!/bin/sh' > /app/start.sh && \
     echo 'cd /app/server' >> /app/start.sh && \
     echo 'echo "Starting Kingdom Server with auto-save..."' >> /app/start.sh && \
+    echo 'echo "Volume mount path: /app/server"' >> /app/start.sh && \
+    echo 'echo "Current working directory: $(pwd)"' >> /app/start.sh && \
+    echo 'echo "Volume contents:" && ls -la /app/server' >> /app/start.sh && \
     echo '# Clean up any leftover lock files from previous runs' >> /app/start.sh && \
     echo 'rm -f world/session.lock' >> /app/start.sh && \
     echo 'rm -f world_nether/session.lock' >> /app/start.sh && \
@@ -124,11 +127,24 @@ RUN echo '#!/bin/sh' > /app/start.sh && \
     echo '    echo "entity-broadcast-range-percentage=50" >> server.properties' >> /app/start.sh && \
     echo '    echo "max-chained-neighbor-updates=500" >> server.properties' >> /app/start.sh && \
     echo '    echo "max-entity-collisions=2" >> server.properties' >> /app/start.sh && \
+    echo '    echo "auto-save=true" >> server.properties' >> /app/start.sh && \
     echo 'fi' >> /app/start.sh && \
     echo '# List files to debug' >> /app/start.sh && \
     echo 'echo "Current directory contents:" && ls -la' >> /app/start.sh && \
     echo 'echo "Starting Minecraft server..."' >> /app/start.sh && \
-    echo 'java -Xms1G -Xmx2G -XX:+UseG1GC -XX:+ParallelRefProcEnabled -XX:MaxGCPauseMillis=200 -XX:+UnlockExperimentalVMOptions -XX:+DisableExplicitGC -XX:+AlwaysPreTouch -XX:G1NewSizePercent=30 -XX:G1MaxNewSizePercent=40 -XX:G1HeapRegionSize=8M -XX:G1ReservePercent=20 -XX:G1HeapWastePercent=5 -XX:G1MixedGCCountTarget=4 -XX:InitiatingHeapOccupancyPercent=15 -XX:G1MixedGCLiveThresholdPercent=90 -XX:G1RSetUpdatingPauseTimePercent=5 -XX:SurvivorRatio=32 -XX:+PerfDisableSharedMem -XX:MaxTenuringThreshold=1 -jar paper.jar nogui --nogui' >> /app/start.sh && \
+    echo '# Start server with auto-save every 60 seconds' >> /app/start.sh && \
+    echo 'java -Xms1G -Xmx2G -XX:+UseG1GC -XX:+ParallelRefProcEnabled -XX:MaxGCPauseMillis=200 -XX:+UnlockExperimentalVMOptions -XX:+DisableExplicitGC -XX:+AlwaysPreTouch -XX:G1NewSizePercent=30 -XX:G1MaxNewSizePercent=40 -XX:G1HeapRegionSize=8M -XX:G1ReservePercent=20 -XX:G1HeapWastePercent=5 -XX:G1MixedGCCountTarget=4 -XX:InitiatingHeapOccupancyPercent=15 -XX:G1MixedGCLiveThresholdPercent=90 -XX:G1RSetUpdatingPauseTimePercent=5 -XX:SurvivorRatio=32 -XX:+PerfDisableSharedMem -XX:MaxTenuringThreshold=1 -jar paper.jar nogui --nogui &' >> /app/start.sh && \
+    echo 'SERVER_PID=$!' >> /app/start.sh && \
+    echo '# Auto-save every 60 seconds' >> /app/start.sh && \
+    echo 'while kill -0 $SERVER_PID 2>/dev/null; do' >> /app/start.sh && \
+    echo '    sleep 60' >> /app/start.sh && \
+    echo '    echo "Auto-saving world data to volume..."' >> /app/start.sh && \
+    echo '    if [ -n "$SERVER_PID" ]; then' >> /app/start.sh && \
+    echo '        echo "save-all" > /proc/$SERVER_PID/fd/0 2>/dev/null || true' >> /app/start.sh && \
+    echo '    fi' >> /app/start.sh && \
+    echo '    echo "World saved to persistent volume."' >> /app/start.sh && \
+    echo 'done' >> /app/start.sh && \
+    echo 'wait $SERVER_PID' >> /app/start.sh && \
     chmod +x /app/start.sh
 
 # Expose ports
