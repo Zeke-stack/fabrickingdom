@@ -1,0 +1,41 @@
+# Kingdom Commands Configuration
+prefix: "&6[&e✦&6Kingdom&e✦&6] &r"
+
+# Coin Economy Settings
+coin_economy:
+  enabled: true
+  gold_nugget_value: 1
+  gold_ingot_value: 9
+  gold_block_value: 81
+  count_ender_chest: true
+  
+# Join/Leave Messages
+join_leave:
+  enabled: true
+  show_to_all: true
+  
+# Tab List Settings
+tab_list:
+  enabled: true
+  update_interval: 5  # seconds
+  show_coins: true
+  
+# Command Messages
+commands:
+  ban:
+    broadcast_to_staff: true
+    default_reason: "Violating kingdom laws"
+  kick:
+    broadcast_to_staff: true
+    default_reason: "Temporary removal from kingdom"
+  op:
+    broadcast_to_staff: true
+  deop:
+    broadcast_to_staff: true
+
+# UI Settings
+ui:
+  medieval_style: true
+  border_color: "&6"
+  title_color: "&e"
+  text_color: "&f"

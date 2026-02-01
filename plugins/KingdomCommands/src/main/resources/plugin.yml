@@ -1,0 +1,59 @@
+name: KingdomCommands
+version: '1.0.0'
+main: com.kingdom.commands.KingdomCommands
+api-version: 1.21
+author: KingdomCraft
+description: A kingdom-themed Minecraft server commands plugin with beautiful UI and coin economy
+commands:
+  kban:
+    description: Ban a player with kingdom style
+    usage: /kban <player> [reason]
+    permission: kingdom.commands.ban
+  kkick:
+    description: Kick a player with kingdom style
+    usage: /kkick <player> [reason]
+    permission: kingdom.commands.kick
+  kop:
+    description: Op a player with kingdom style
+    usage: /kop <player>
+    permission: kingdom.commands.op
+  kdeop:
+    description: Deop a player with kingdom style
+    usage: /kdeop <player>
+    permission: kingdom.commands.deop
+  coins:
+    description: Check your total coins from inventory and ender chest
+    usage: /coins
+    permission: kingdom.commands.coins
+  balance:
+    description: Quick balance check
+    usage: /balance
+    permission: kingdom.commands.balance
+permissions:
+  kingdom.commands.*:
+    description: All kingdom commands
+    children:
+      kingdom.commands.ban: true
+      kingdom.commands.kick: true
+      kingdom.commands.op: true
+      kingdom.commands.deop: true
+      kingdom.commands.coins: true
+      kingdom.commands.balance: true
+  kingdom.commands.ban:
+    description: Allow banning players
+    default: op
+  kingdom.commands.kick:
+    description: Allow kicking players
+    default: op
+  kingdom.commands.op:
+    description: Allow opping players
+    default: op
+  kingdom.commands.deop:
+    description: Allow deopping players
+    default: op
+  kingdom.commands.coins:
+    description: Allow using coin commands
+    default: true
+  kingdom.commands.balance:
+    description: Allow checking balance
+    default: true
