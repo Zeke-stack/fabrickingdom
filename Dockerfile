@@ -12,7 +12,6 @@ RUN mkdir -p /app/server/world /app/server/world_nether /app/server/world_the_en
 # Use pre-downloaded server files
 COPY paper.jar /tmp/paper.jar
 COPY eula.txt /tmp/eula.txt
-COPY server.properties /tmp/server.properties
 
 # Create a simple working KingdomCommands plugin JAR (no compilation needed)
 RUN mkdir -p /tmp/plugin/META-INF && \
@@ -110,9 +109,22 @@ RUN echo '#!/bin/sh' > /app/start.sh && \
     echo 'if [ ! -f "eula.txt" ]; then' >> /app/start.sh && \
     echo '    cp /tmp/eula.txt .' >> /app/start.sh && \
     echo 'fi' >> /app/start.sh && \
-    echo '# Copy server properties if they dont exist' >> /app/start.sh && \
+    echo '# Create server properties if they dont exist' >> /app/start.sh && \
     echo 'if [ ! -f "server.properties" ]; then' >> /app/start.sh && \
-    echo '    cp /tmp/server.properties .' >> /app/start.sh && \
+    echo '    echo "server-port=25565" > server.properties' >> /app/start.sh && \
+    echo '    echo "enable-rcon=true" >> server.properties' >> /app/start.sh && \
+    echo '    echo "rcon.port=25575" >> server.properties' >> /app/start.sh && \
+    echo '    echo "rcon.password=changeme" >> server.properties' >> /app/start.sh && \
+    echo '    echo "motd=Kingdom Server - Medieval Roleplay" >> server.properties' >> /app/start.sh && \
+    echo '    echo "difficulty=normal" >> server.properties' >> /app/start.sh && \
+    echo '    echo "gamemode=survival" >> server.properties' >> /app/start.sh && \
+    echo '    echo "level-type=default" >> server.properties' >> /app/start.sh && \
+    echo '    echo "level-name=world" >> server.properties' >> /app/start.sh && \
+    echo '    echo "view-distance=6" >> server.properties' >> /app/start.sh && \
+    echo '    echo "simulation-distance=4" >> server.properties' >> /app/start.sh && \
+    echo '    echo "entity-broadcast-range-percentage=50" >> server.properties' >> /app/start.sh && \
+    echo '    echo "max-chained-neighbor-updates=500" >> server.properties' >> /app/start.sh && \
+    echo '    echo "max-entity-collisions=2" >> server.properties' >> /app/start.sh && \
     echo 'fi' >> /app/start.sh && \
     echo '# List files to debug' >> /app/start.sh && \
     echo 'echo "Current directory contents:" && ls -la' >> /app/start.sh && \
