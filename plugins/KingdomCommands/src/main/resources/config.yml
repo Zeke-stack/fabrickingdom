@@ -9,6 +9,12 @@ coin_economy:
   gold_block_value: 81
   count_ender_chest: true
   
+# Auto-Save Settings
+auto-save:
+  enabled: true
+  interval: 60  # seconds
+  notify-admins: false  # Set to true to notify admins on each save
+  
 # Join/Leave Messages
 join_leave:
   enabled: true

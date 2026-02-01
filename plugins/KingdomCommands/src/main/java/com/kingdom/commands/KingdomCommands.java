@@ -1,9 +1,8 @@
-package com.kingdom.commands;
-
 import com.kingdom.commands.commands.*;
 import com.kingdom.commands.listeners.PlayerJoinLeaveListener;
 import com.kingdom.commands.listeners.CoinEconomyListener;
 import com.kingdom.commands.listeners.TabListListener;
+import com.kingdom.commands.listeners.AutoSaveListener;
 import com.kingdom.commands.utils.CoinManager;
 import com.kingdom.commands.utils.MessageUtils;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -11,6 +10,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class KingdomCommands extends JavaPlugin {
     
     private CoinManager coinManager;
+    private AutoSaveListener autoSaveListener;
     
     @Override
     public void onEnable() {
@@ -32,6 +32,10 @@ public class KingdomCommands extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new CoinEconomyListener(this), this);
         getServer().getPluginManager().registerEvents(new TabListListener(this), this);
         
+        // Initialize auto-save
+        this.autoSaveListener = new AutoSaveListener(this);
+        getServer().getPluginManager().registerEvents(autoSaveListener, this);
+        
         // Save default config
         saveDefaultConfig();
         
@@ -42,6 +46,17 @@ public class KingdomCommands extends JavaPlugin {
     @Override
     public void onDisable() {
         getLogger().info("§6✦ Kingdom Commands has been disabled! ✦");
+        
+        // Stop auto-save
+        if (autoSaveListener != null) {
+            autoSaveListener.stopAutoSave();
+        }
+        
+        // Final save before shutdown
+        getServer().getScheduler().runTask(this, () -> {
+            getServer().getWorlds().forEach(world -> world.save());
+            getServer().getOnlinePlayers().forEach(player -> player.saveData());
+        });
     }
     
     public CoinManager getCoinManager() {

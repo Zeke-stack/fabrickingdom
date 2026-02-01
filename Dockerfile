@@ -1,13 +1,13 @@
-FROM openjdk:21-jdk-slim
+FROM eclipse-temurin:21-jdk-alpine
 
 # Set working directory
 WORKDIR /app
 
 # Install curl and wget
-RUN apt-get update && apt-get install -y curl wget && rm -rf /var/lib/apt/lists/*
+RUN apk update && apk add --no-cache curl wget
 
-# Create server directory
-RUN mkdir -p /app/server
+# Create server directory structure
+RUN mkdir -p /app/server/world /app/server/world_nether /app/server/world_the_end /app/server/plugins /app/server/logs
 
 # Download PaperMC server
 RUN wget -O paper.jar https://api.papermc.io/v2/projects/paper/versions/1.21.1/builds/133/downloads/paper-1.21.1-133.jar
@@ -15,7 +15,7 @@ RUN wget -O paper.jar https://api.papermc.io/v2/projects/paper/versions/1.21.1/b
 # Accept EULA
 RUN echo "eula=true" > eula.txt
 
-# Set server properties
+# Set server properties with auto-save configuration
 RUN echo "server-port=25565" > server.properties && \
     echo "enable-rcon=true" >> server.properties && \
     echo "rcon.port=25575" >> server.properties && \
@@ -23,22 +23,29 @@ RUN echo "server-port=25565" > server.properties && \
     echo "motd=Kingdom Server - Medieval Roleplay" >> server.properties && \
     echo "difficulty=normal" >> server.properties && \
     echo "gamemode=survival" >> server.properties && \
-    echo "level-type=default" >> server.properties
-
-# Create plugins directory
-RUN mkdir -p /app/server/plugins
+    echo "level-type=default" >> server.properties && \
+    echo "level-name=world" >> server.properties && \
+    echo "view-distance=6" >> server.properties && \
+    echo "simulation-distance=4" >> server.properties && \
+    echo "entity-broadcast-range-percentage=50" >> server.properties && \
+    echo "max-chained-neighbor-updates=500" >> server.properties && \
+    echo "max-entity-collisions=2" >> server.properties
 
 # Copy KingdomCommands plugin
 COPY plugins/KingdomCommands-1.0.0.jar /app/server/plugins/
 
+# Create startup script with auto-save
+RUN echo '#!/bin/sh' > /app/start.sh && \
+    echo 'cd /app/server' >> /app/start.sh && \
+    echo 'echo "Starting Kingdom Server with auto-save..."' >> /app/start.sh && \
+    echo 'java -Xms1G -Xmx2G -XX:+UseG1GC -XX:+ParallelRefProcEnabled -XX:MaxGCPauseMillis=200 -XX:+UnlockExperimentalVMOptions -XX:+DisableExplicitGC -XX:+AlwaysPreTouch -XX:G1NewSizePercent=30 -XX:G1MaxNewSizePercent=40 -XX:G1HeapRegionSize=8M -XX:G1ReservePercent=20 -XX:G1HeapWastePercent=5 -XX:G1MixedGCCountTarget=4 -XX:InitiatingHeapOccupancyPercent=15 -XX:G1MixedGCLiveThresholdPercent=90 -XX:G1RSetUpdatingPauseTimePercent=5 -XX:SurvivorRatio=32 -XX:+PerfDisableSharedMem -XX:MaxTenuringThreshold=1 -jar paper.jar nogui --nogui' >> /app/start.sh && \
+    chmod +x /app/start.sh
+
 # Expose ports
 EXPOSE 25565 25575
 
-# Set up startup script
-RUN echo '#!/bin/bash\n\
-cd /app/server\n\
-java -Xms1G -Xmx2G -jar paper.jar nogui' > /app/start.sh && \
-chmod +x /app/start.sh
+# Set up volume paths
+VOLUME ["/app/server"]
 
 # Start the server
 CMD ["/app/start.sh"]

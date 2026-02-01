@@ -22,5 +22,14 @@ ENABLE_RCON = "true"
 memory = "2048Mi"
 cpu = "1000m"
 
+[services.volumes]
+mountPath = "/app/server"
+size = "10Gi"
+
 [env]
 PORT = "25565"
+
+# Auto-save configuration
+[services.environment]
+AUTOSAVE_INTERVAL = "60"  # Save every 60 seconds
+MAX_BACKUPS = "10"
