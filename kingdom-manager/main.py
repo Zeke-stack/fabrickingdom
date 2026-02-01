@@ -276,20 +276,109 @@ class KingdomManager:
                  command=self.custom_command).pack(fill=tk.X, pady=2)
         
     def connect_to_server(self):
-        """Connect to the Minecraft server"""
+        """Connect to the Minecraft server via RCON"""
         def connect():
             try:
-                # Simulate connection (in real app, would use RCON or server API)
-                time.sleep(2)
+                import socket
+                # Create RCON connection
+                self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                self.socket.settimeout(10)
+                
+                self.log_to_console(f"Connecting to {self.server_ip}:{self.rcon_port}...")
+                self.socket.connect((self.server_ip, self.rcon_port))
+                
+                # Send RCON authentication
+                self.send_rcon_packet(3, self.rcon_password)
+                response = self.read_rcon_packet()
+                
+                if response and response['id'] == -1:
+                    raise Exception("RCON authentication failed")
+                
                 self.connected = True
                 self.root.after(0, self.update_connection_status, True)
                 self.root.after(0, self.log_to_console, "Connected to Kingdom Server successfully!")
                 self.root.after(0, self.start_monitoring)
+                
             except Exception as e:
+                self.connected = False
                 self.root.after(0, self.update_connection_status, False)
                 self.root.after(0, self.log_to_console, f"Failed to connect: {str(e)}")
+                self.root.after(0, self.log_to_console, "Make sure RCON is enabled on the server")
         
         threading.Thread(target=connect, daemon=True).start()
+        
+    def send_rcon_packet(self, type, data):
+        """Send RCON packet"""
+        if not self.socket:
+            return None
+            
+        try:
+            # Build packet
+            payload = data.encode('utf-8') + b'\x00\x00'
+            packet_length = len(payload) + 10
+            
+            # Create packet
+            packet = bytearray()
+            packet.extend(packet_length.to_bytes(4, 'little'))
+            packet.extend(int(1).to_bytes(4, 'little'))  # Request ID
+            packet.extend(int(type).to_bytes(4, 'little'))
+            packet.extend(payload)
+            
+            self.socket.send(packet)
+            
+        except Exception as e:
+            self.log_to_console(f"Failed to send RCON packet: {e}")
+            return None
+            
+    def read_rcon_packet(self):
+        """Read RCON packet response"""
+        if not self.socket:
+            return None
+            
+        try:
+            # Read packet length
+            length_data = self.socket.recv(4)
+            if not length_data:
+                return None
+                
+            length = int.from_bytes(length_data, 'little')
+            
+            # Read remaining packet
+            remaining = self.socket.recv(length)
+            if not remaining:
+                return None
+                
+            # Parse packet
+            request_id = int.from_bytes(remaining[0:4], 'little')
+            type = int.from_bytes(remaining[4:8], 'little')
+            payload = remaining[8:-2].decode('utf-8')
+            
+            return {
+                'id': request_id,
+                'type': type,
+                'payload': payload
+            }
+            
+        except Exception as e:
+            self.log_to_console(f"Failed to read RCON packet: {e}")
+            return None
+            
+    def send_rcon_command(self, command):
+        """Send RCON command"""
+        if not self.connected:
+            return "Not connected to server"
+            
+        try:
+            self.send_rcon_packet(2, command)
+            response = self.read_rcon_packet()
+            
+            if response:
+                return response['payload']
+            else:
+                return "No response from server"
+                
+        except Exception as e:
+            return f"Command failed: {e}"
         
     def update_connection_status(self, connected):
         """Update connection status"""
@@ -310,24 +399,53 @@ class KingdomManager:
         command = self.console_input.get().strip()
         if command:
             self.log_to_console(f"> {command}")
-            # Simulate command execution
-            self.root.after(100, lambda: self.log_to_console(f"Command executed: {command}"))
+            
+            # Send actual RCON command
+            response = self.send_rcon_command(command)
+            self.root.after(100, lambda: self.log_to_console(response))
+            
             self.console_input.delete(0, tk.END)
             
     def start_monitoring(self):
         """Start monitoring server"""
         def monitor():
             while self.connected:
-                # Simulate server events
-                time.sleep(5)
-                if self.connected:
-                    self.root.after(0, self.update_player_list)
+                try:
+                    # Get actual player list from server
+                    response = self.send_rcon_command("list")
+                    if response and "players online:" in response.lower():
+                        self.root.after(0, self.update_player_list_from_response, response)
+                    
+                    time.sleep(10)  # Check every 10 seconds
+                except Exception as e:
+                    self.root.after(0, self.log_to_console, f"Monitor error: {e}")
+                    time.sleep(30)  # Wait longer on error
         
         threading.Thread(target=monitor, daemon=True).start()
         
+    def update_player_list_from_response(self, response):
+        """Update player list from server response"""
+        try:
+            # Parse player list from response like "There are 2 players online: Player1, Player2"
+            if "players online:" in response.lower():
+                parts = response.split(":")
+                if len(parts) > 1:
+                    player_part = parts[1].strip()
+                    players = [p.strip() for p in player_part.split(",")]
+                    
+                    # Update player listbox
+                    self.player_listbox.delete(0, tk.END)
+                    for player in players:
+                        if player:
+                            self.player_listbox.insert(tk.END, player)
+                    
+                    self.log_to_console(f"Updated player list: {len(players)} players online")
+        except Exception as e:
+            self.log_to_console(f"Error parsing player list: {e}")
+        
     def update_player_list(self):
-        """Update player list"""
-        # Simulate player list
+        """Update player list (fallback)"""
+        # Simulate player list if RCON fails
         sample_players = ["GavinoFlores", "KingPlayer", "MedievalKnight", "CastleBuilder"]
         self.player_listbox.delete(0, tk.END)
         for player in sample_players:

@@ -99,65 +99,101 @@ RUN echo '#!/bin/sh' > /app/start.sh && \
     echo 'echo "Current working directory: $(pwd)"' >> /app/start.sh && \
     echo '# Wait for volume to be properly mounted' >> /app/start.sh && \
     echo 'echo "Checking volume mount..."' >> /app/start.sh && \
-    echo 'while [ ! -d "/app/server" ]; do' >> /app/start.sh && \
-    echo '    echo "Waiting for volume mount..."' >> /app/start.sh && \
-    echo '    sleep 1' >> /app/start.sh && \
+    echo 'for i in $(seq 1 30); do' >> /app/start.sh && \
+    echo '    if [ -d "/app/server" ]; then' >> /app/start.sh && \
+    echo '        echo "Volume mounted successfully! (attempt $i)"' >> /app/start.sh && \
+    echo '        break' >> /app/start.sh && \
+    echo '    fi' >> /app/start.sh && \
+    echo '    echo "Waiting for volume mount... (attempt $i/30)"' >> /app/start.sh && \
+    echo '    sleep 2' >> /app/start.sh && \
     echo 'done' >> /app/start.sh && \
-    echo 'echo "Volume mounted successfully!"' >> /app/start.sh && \
-    echo 'echo "Volume contents:" && ls -la /app/server' >> /app/start.sh && \
+    echo '# Final check' >> /app/start.sh && \
+    echo 'if [ ! -d "/app/server" ]; then' >> /app/start.sh && \
+    echo '    echo "ERROR: Volume failed to mount after 60 seconds!"' >> /app/start.sh && \
+    echo '    echo "Creating emergency directory..."' >> /app/start.sh && \
+    echo '    mkdir -p /app/server' >> /app/start.sh && \
+    echo 'fi' >> /app/start.sh && \
+    echo 'echo "Volume contents:"' >> /app/start.sh && \
+    echo 'ls -la /app/server' >> /app/start.sh && \
     echo '# Check if world exists in volume' >> /app/start.sh && \
     echo 'if [ -d "world" ]; then' >> /app/start.sh && \
-    echo '    echo "Found existing world in volume!"' >> /app/start.sh && \
-    echo '    echo "World files:" && ls -la world/' >> /app/start.sh && \
+    echo '    echo "✓ Found existing world in volume!"' >> /app/start.sh && \
+    echo '    echo "World files:"' >> /app/start.sh && \
+    echo '    ls -la world/ | head -10' >> /app/start.sh && \
+    echo '    echo "World region files:"' >> /app/start.sh && \
+    echo '    ls -la world/region/ 2>/dev/null | head -5 || echo "No region files yet"' >> /app/start.sh && \
+    echo '    echo "Using existing world - players will spawn in same location!"' >> /app/start.sh && \
     echo 'else' >> /app/start.sh && \
-    echo '    echo "No world found in volume, will create new one"' >> /app/start.sh && \
+    echo '    echo "⚠ No world found in volume, will create new one"' >> /app/start.sh && \
+    echo '    echo "WARNING: This will create a NEW world!"' >> /app/start.sh && \
     echo 'fi' >> /app/start.sh && \
     echo '# Clean up any leftover lock files from previous runs' >> /app/start.sh && \
-    echo 'rm -f world/session.lock' >> /app/start.sh && \
-    echo 'rm -f world_nether/session.lock' >> /app/start.sh && \
-    echo 'rm -f world_the_end/session.lock' >> /app/start.sh && \
-    echo 'rm -f session.lock' >> /app/start.sh && \
+    echo 'echo "Cleaning up lock files..."' >> /app/start.sh && \
+    echo 'rm -f world/session.lock 2>/dev/null || true' >> /app/start.sh && \
+    echo 'rm -f world_nether/session.lock 2>/dev/null || true' >> /app/start.sh && \
+    echo 'rm -f world_the_end/session.lock 2>/dev/null || true' >> /app/start.sh && \
+    echo 'rm -f session.lock 2>/dev/null || true' >> /app/start.sh && \
     echo '# Copy paper.jar to server directory if it doesnt exist' >> /app/start.sh && \
     echo 'if [ ! -f "paper.jar" ]; then' >> /app/start.sh && \
+    echo '    echo "Copying paper.jar..."' >> /app/start.sh && \
     echo '    cp /tmp/paper.jar .' >> /app/start.sh && \
     echo 'fi' >> /app/start.sh && \
     echo '# Copy EULA file if it doesnt exist' >> /app/start.sh && \
     echo 'if [ ! -f "eula.txt" ]; then' >> /app/start.sh && \
+    echo '    echo "Copying eula.txt..."' >> /app/start.sh && \
     echo '    cp /tmp/eula.txt .' >> /app/start.sh && \
     echo 'fi' >> /app/start.sh && \
     echo '# Create server properties if they dont exist' >> /app/start.sh && \
     echo 'if [ ! -f "server.properties" ]; then' >> /app/start.sh && \
-    echo '    echo "server-port=25565" > server.properties' >> /app/start.sh && \
-    echo '    echo "enable-rcon=true" >> server.properties' >> /app/start.sh && \
-    echo '    echo "rcon.port=25575" >> server.properties' >> /app/start.sh && \
-    echo '    echo "rcon.password=changeme" >> server.properties' >> /app/start.sh && \
-    echo '    echo "motd=Kingdom Server - Medieval Roleplay" >> server.properties' >> /app/start.sh && \
-    echo '    echo "difficulty=normal" >> server.properties' >> /app/start.sh && \
-    echo '    echo "gamemode=survival" >> server.properties' >> /app/start.sh && \
-    echo '    echo "level-type=default" >> server.properties' >> /app/start.sh && \
-    echo '    echo "level-name=world" >> server.properties' >> /app/start.sh && \
-    echo '    echo "view-distance=6" >> server.properties' >> /app/start.sh && \
-    echo '    echo "simulation-distance=4" >> server.properties' >> /app/start.sh && \
-    echo '    echo "entity-broadcast-range-percentage=50" >> server.properties' >> /app/start.sh && \
-    echo '    echo "max-chained-neighbor-updates=500" >> server.properties' >> /app/start.sh && \
-    echo '    echo "max-entity-collisions=2" >> server.properties' >> /app/start.sh && \
-    echo '    echo "auto-save=true" >> server.properties' >> /app/start.sh && \
+    echo '    echo "Creating server.properties..."' >> /app/start.sh && \
+    echo '    cat > server.properties << EOF' >> /app/start.sh && \
+    echo 'server-port=25565' >> /app/start.sh && \
+    echo 'enable-rcon=true' >> /app/start.sh && \
+    echo 'rcon.port=25575' >> /app/start.sh && \
+    echo 'rcon.password=changeme' >> /app/start.sh && \
+    echo 'motd=Kingdom Server - Medieval Roleplay' >> /app/start.sh && \
+    echo 'difficulty=normal' >> /app/start.sh && \
+    echo 'gamemode=survival' >> /app/start.sh && \
+    echo 'level-type=default' >> /app/start.sh && \
+    echo 'level-name=world' >> /app/start.sh && \
+    echo 'view-distance=6' >> /app/start.sh && \
+    echo 'simulation-distance=4' >> /app/start.sh && \
+    echo 'entity-broadcast-range-percentage=50' >> /app/start.sh && \
+    echo 'max-chained-neighbor-updates=500' >> /app/start.sh && \
+    echo 'max-entity-collisions=2' >> /app/start.sh && \
+    echo 'auto-save=true' >> /app/start.sh && \
+    echo 'level-seed=' >> /app/start.sh && \
+    echo 'generate-structures=true' >> /app/start.sh && \
+    echo 'online-mode=false' >> /app/start.sh && \
+    echo 'pvp=true' >> /app/start.sh && \
+    echo 'allow-flight=false' >> /app/start.sh && \
+    echo 'EOF' >> /app/start.sh && \
     echo 'fi' >> /app/start.sh && \
     echo '# List files to debug' >> /app/start.sh && \
-    echo 'echo "Current directory contents:" && ls -la' >> /app/start.sh && \
-    echo 'echo "Starting Minecraft server..."' >> /app/start.sh && \
+    echo 'echo "Current directory contents:"' >> /app/start.sh && \
+    echo 'ls -la' >> /app/start.sh && \
+    echo 'echo "=== STARTING MINECRAFT SERVER ==="' >> /app/start.sh && \
+    echo 'echo "Server will auto-save every 60 seconds to persistent volume"' >> /app/start.sh && \
     echo '# Start server with auto-save every 60 seconds' >> /app/start.sh && \
     echo 'java -Xms1G -Xmx2G -XX:+UseG1GC -XX:+ParallelRefProcEnabled -XX:MaxGCPauseMillis=200 -XX:+UnlockExperimentalVMOptions -XX:+DisableExplicitGC -XX:+AlwaysPreTouch -XX:G1NewSizePercent=30 -XX:G1MaxNewSizePercent=40 -XX:G1HeapRegionSize=8M -XX:G1ReservePercent=20 -XX:G1HeapWastePercent=5 -XX:G1MixedGCCountTarget=4 -XX:InitiatingHeapOccupancyPercent=15 -XX:G1MixedGCLiveThresholdPercent=90 -XX:G1RSetUpdatingPauseTimePercent=5 -XX:SurvivorRatio=32 -XX:+PerfDisableSharedMem -XX:MaxTenuringThreshold=1 -jar paper.jar nogui --nogui &' >> /app/start.sh && \
     echo 'SERVER_PID=$!' >> /app/start.sh && \
+    echo 'echo "Server started with PID: $SERVER_PID"' >> /app/start.sh && \
+    echo '# Wait a moment for server to start' >> /app/start.sh && \
+    echo 'sleep 10' >> /app/start.sh && \
+    echo 'echo "Starting auto-save loop..."' >> /app/start.sh && \
     echo '# Auto-save every 60 seconds' >> /app/start.sh && \
+    echo 'SAVE_COUNT=0' >> /app/start.sh && \
     echo 'while kill -0 $SERVER_PID 2>/dev/null; do' >> /app/start.sh && \
     echo '    sleep 60' >> /app/start.sh && \
-    echo '    echo "Auto-saving world data to volume..."' >> /app/start.sh && \
+    echo '    SAVE_COUNT=$((SAVE_COUNT + 1))' >> /app/start.sh && \
+    echo '    echo "[$SAVE_COUNT] Auto-saving world data to volume..."' >> /app/start.sh && \
     echo '    if [ -n "$SERVER_PID" ]; then' >> /app/start.sh && \
-    echo '        echo "save-all" > /proc/$SERVER_PID/fd/0 2>/dev/null || true' >> /app/start.sh && \
+    echo '        echo "save-all" > /proc/$SERVER_PID/fd/0 2>/dev/null && echo "Save command sent successfully" || echo "Failed to send save command"' >> /app/start.sh && \
     echo '    fi' >> /app/start.sh && \
-    echo '    echo "World saved to persistent volume."' >> /app/start.sh && \
+    echo '    echo "✓ World saved to persistent volume (save #$SAVE_COUNT)"' >> /app/start.sh && \
+    echo '    echo "Volume size: $(du -sh . 2>/dev/null | cut -f1)"' >> /app/start.sh && \
     echo 'done' >> /app/start.sh && \
+    echo 'echo "Server process ended, cleaning up..."' >> /app/start.sh && \
     echo 'wait $SERVER_PID' >> /app/start.sh && \
     chmod +x /app/start.sh
 
