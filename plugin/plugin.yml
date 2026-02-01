@@ -1,6 +1,6 @@
-name: KingdomCommands
+name: Kingdom
 version: 1.0.0
-main: SimpleKingdomPlugin
+main: SimplePlugin
 api-version: 1.21
 author: KingdomCraft
 description: A kingdom-themed Minecraft server commands plugin
