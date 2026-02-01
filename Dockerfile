@@ -97,7 +97,21 @@ RUN echo '#!/bin/sh' > /app/start.sh && \
     echo 'echo "Starting Kingdom Server with auto-save..."' >> /app/start.sh && \
     echo 'echo "Volume mount path: /app/server"' >> /app/start.sh && \
     echo 'echo "Current working directory: $(pwd)"' >> /app/start.sh && \
+    echo '# Wait for volume to be properly mounted' >> /app/start.sh && \
+    echo 'echo "Checking volume mount..."' >> /app/start.sh && \
+    echo 'while [ ! -d "/app/server" ]; do' >> /app/start.sh && \
+    echo '    echo "Waiting for volume mount..."' >> /app/start.sh && \
+    echo '    sleep 1' >> /app/start.sh && \
+    echo 'done' >> /app/start.sh && \
+    echo 'echo "Volume mounted successfully!"' >> /app/start.sh && \
     echo 'echo "Volume contents:" && ls -la /app/server' >> /app/start.sh && \
+    echo '# Check if world exists in volume' >> /app/start.sh && \
+    echo 'if [ -d "world" ]; then' >> /app/start.sh && \
+    echo '    echo "Found existing world in volume!"' >> /app/start.sh && \
+    echo '    echo "World files:" && ls -la world/' >> /app/start.sh && \
+    echo 'else' >> /app/start.sh && \
+    echo '    echo "No world found in volume, will create new one"' >> /app/start.sh && \
+    echo 'fi' >> /app/start.sh && \
     echo '# Clean up any leftover lock files from previous runs' >> /app/start.sh && \
     echo 'rm -f world/session.lock' >> /app/start.sh && \
     echo 'rm -f world_nether/session.lock' >> /app/start.sh && \
