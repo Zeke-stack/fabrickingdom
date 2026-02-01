@@ -95,6 +95,11 @@ RUN mkdir -p /tmp/plugin/META-INF && \
 RUN echo '#!/bin/sh' > /app/start.sh && \
     echo 'cd /app/server' >> /app/start.sh && \
     echo 'echo "Starting Kingdom Server with auto-save..."' >> /app/start.sh && \
+    echo '# Clean up any leftover lock files from previous runs' >> /app/start.sh && \
+    echo 'rm -f world/session.lock' >> /app/start.sh && \
+    echo 'rm -f world_nether/session.lock' >> /app/start.sh && \
+    echo 'rm -f world_the_end/session.lock' >> /app/start.sh && \
+    echo 'rm -f session.lock' >> /app/start.sh && \
     echo '# Copy paper.jar to server directory if it doesnt exist' >> /app/start.sh && \
     echo 'if [ ! -f "paper.jar" ]; then' >> /app/start.sh && \
     echo '    cp /tmp/paper.jar .' >> /app/start.sh && \
