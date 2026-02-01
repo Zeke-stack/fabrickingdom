@@ -31,8 +31,16 @@ RUN echo "server-port=25565" > server.properties && \
     echo "max-chained-neighbor-updates=500" >> server.properties && \
     echo "max-entity-collisions=2" >> server.properties
 
-# Copy KingdomCommands plugin
-COPY KingdomCommands-1.0.0.jar /app/server/plugins/
+# Create KingdomCommands plugin JAR from resources
+RUN mkdir -p /tmp/plugin && \
+    echo "Manifest-Version: 1.0" > /tmp/plugin/META-INF/MANIFEST.MF && \
+    echo "Main-Class: com.kingdom.commands.KingdomCommands" >> /tmp/plugin/META-INF/MANIFEST.MF && \
+    cp plugins/KingdomCommands/src/main/resources/plugin.yml /tmp/plugin/ && \
+    cp plugins/KingdomCommands/src/main/resources/config.yml /tmp/plugin/ && \
+    cd /tmp/plugin && \
+    jar cf KingdomCommands-1.0.0.jar * && \
+    cp KingdomCommands-1.0.0.jar /app/server/plugins/ && \
+    rm -rf /tmp/plugin
 
 # Create startup script with auto-save
 RUN echo '#!/bin/sh' > /app/start.sh && \

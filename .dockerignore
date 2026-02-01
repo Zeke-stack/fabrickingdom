@@ -23,8 +23,10 @@ versions/
 *.ipr
 *.iws
 
-# Keep only essential files for build
-!plugins/KingdomCommands/target/KingdomCommands-1.0.0.jar
+# Ignore built JAR (we'll build it in Docker)
+KingdomCommands-1.0.0.jar
+
+# Keep essential files for build
 !plugins/KingdomCommands/src/
 !plugins/KingdomCommands/pom.xml
 !Dockerfile
