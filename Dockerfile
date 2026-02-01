@@ -122,10 +122,15 @@ RUN echo '#!/bin/sh' > /app/start.sh && \
     echo '    ls -la world/ | head -10' >> /app/start.sh && \
     echo '    echo "World region files:"' >> /app/start.sh && \
     echo '    ls -la world/region/ 2>/dev/null | head -5 || echo "No region files yet"' >> /app/start.sh && \
-    echo '    echo "Using existing world - players will spawn in same location!"' >> /app/start.sh && \
+    echo '    echo "World level.dat:"' >> /app/start.sh && \
+    echo '    ls -la world/level.dat 2>/dev/null || echo "No level.dat found"' >> /app/start.sh && \
+    echo '    echo "Using existing world - players will spawn in SAME location!"' >> /app/start.sh && \
+    echo '    echo "IMPORTANT: This should be the SAME world as before!"' >> /app/start.sh && \
     echo 'else' >> /app/start.sh && \
-    echo '    echo "⚠ No world found in volume, will create new one"' >> /app/start.sh && \
-    echo '    echo "WARNING: This will create a NEW world!"' >> /app/start.sh && \
+    echo '    echo "⚠ WARNING: No world found in volume!"' >> /app/start.sh && \
+    echo '    echo "⚠ This will create a NEW world!"' >> /app/start.sh && \
+    echo '    echo "⚠ Players will spawn in a NEW location!"' >> /app/start.sh && \
+    echo '    echo "⚠ This is NOT the same world as before!"' >> /app/start.sh && \
     echo 'fi' >> /app/start.sh && \
     echo '# Clean up any leftover lock files from previous runs' >> /app/start.sh && \
     echo 'echo "Cleaning up lock files..."' >> /app/start.sh && \
@@ -151,18 +156,21 @@ RUN echo '#!/bin/sh' > /app/start.sh && \
     echo 'enable-rcon=true' >> /app/start.sh && \
     echo 'rcon.port=25575' >> /app/start.sh && \
     echo 'rcon.password=changeme' >> /app/start.sh && \
+    echo 'rcon.address=0.0.0.0' >> /app/start.sh && \
+    echo 'rcon.broadcast=true' >> /app/start.sh && \
     echo 'motd=Kingdom Server - Medieval Roleplay' >> /app/start.sh && \
     echo 'difficulty=normal' >> /app/start.sh && \
     echo 'gamemode=survival' >> /app/start.sh && \
     echo 'level-type=default' >> /app/start.sh && \
     echo 'level-name=world' >> /app/start.sh && \
+    echo 'level-seed=12345' >> /app/start.sh && \
+    echo 'force-gamemode=false' >> /app/start.sh && \
     echo 'view-distance=6' >> /app/start.sh && \
     echo 'simulation-distance=4' >> /app/start.sh && \
     echo 'entity-broadcast-range-percentage=50' >> /app/start.sh && \
     echo 'max-chained-neighbor-updates=500' >> /app/start.sh && \
     echo 'max-entity-collisions=2' >> /app/start.sh && \
     echo 'auto-save=true' >> /app/start.sh && \
-    echo 'level-seed=' >> /app/start.sh && \
     echo 'generate-structures=true' >> /app/start.sh && \
     echo 'online-mode=false' >> /app/start.sh && \
     echo 'pvp=true' >> /app/start.sh && \
@@ -174,12 +182,22 @@ RUN echo '#!/bin/sh' > /app/start.sh && \
     echo 'ls -la' >> /app/start.sh && \
     echo 'echo "=== STARTING MINECRAFT SERVER ==="' >> /app/start.sh && \
     echo 'echo "Server will auto-save every 60 seconds to persistent volume"' >> /app/start.sh && \
+    echo 'echo "RCON enabled on port 25575 with password: changeme"' >> /app/start.sh && \
+    echo 'echo "World seed: 12345 (FIXED SEED FOR CONSISTENCY)"' >> /app/start.sh && \
     echo '# Start server with auto-save every 60 seconds' >> /app/start.sh && \
     echo 'java -Xms1G -Xmx2G -XX:+UseG1GC -XX:+ParallelRefProcEnabled -XX:MaxGCPauseMillis=200 -XX:+UnlockExperimentalVMOptions -XX:+DisableExplicitGC -XX:+AlwaysPreTouch -XX:G1NewSizePercent=30 -XX:G1MaxNewSizePercent=40 -XX:G1HeapRegionSize=8M -XX:G1ReservePercent=20 -XX:G1HeapWastePercent=5 -XX:G1MixedGCCountTarget=4 -XX:InitiatingHeapOccupancyPercent=15 -XX:G1MixedGCLiveThresholdPercent=90 -XX:G1RSetUpdatingPauseTimePercent=5 -XX:SurvivorRatio=32 -XX:+PerfDisableSharedMem -XX:MaxTenuringThreshold=1 -jar paper.jar nogui --nogui &' >> /app/start.sh && \
     echo 'SERVER_PID=$!' >> /app/start.sh && \
     echo 'echo "Server started with PID: $SERVER_PID"' >> /app/start.sh && \
-    echo '# Wait a moment for server to start' >> /app/start.sh && \
-    echo 'sleep 10' >> /app/start.sh && \
+    echo '# Wait for server to fully start' >> /app/start.sh && \
+    echo 'sleep 15' >> /app/start.sh && \
+    echo 'echo "Checking if server is running..."' >> /app/start.sh && \
+    echo 'if kill -0 $SERVER_PID 2>/dev/null; then' >> /app/start.sh && \
+    echo '    echo "✓ Server is running successfully!"' >> /app/start.sh && \
+    echo '    echo "Testing RCON connection..."' >> /app/start.sh && \
+    echo '    echo "list" > /proc/$SERVER_PID/fd/0 2>/dev/null && echo "✓ RCON is working!" || echo "⚠ RCON test failed"' >> /app/start.sh && \
+    echo 'else' >> /app/start.sh && \
+    echo '    echo "✗ Server failed to start!"' >> /app/start.sh && \
+    echo 'fi' >> /app/start.sh && \
     echo 'echo "Starting auto-save loop..."' >> /app/start.sh && \
     echo '# Auto-save every 60 seconds' >> /app/start.sh && \
     echo 'SAVE_COUNT=0' >> /app/start.sh && \
@@ -189,9 +207,13 @@ RUN echo '#!/bin/sh' > /app/start.sh && \
     echo '    echo "[$SAVE_COUNT] Auto-saving world data to volume..."' >> /app/start.sh && \
     echo '    if [ -n "$SERVER_PID" ]; then' >> /app/start.sh && \
     echo '        echo "save-all" > /proc/$SERVER_PID/fd/0 2>/dev/null && echo "Save command sent successfully" || echo "Failed to send save command"' >> /app/start.sh && \
+    echo '        sleep 5' >> /app/start.sh && \
+    echo '        echo "save-off" > /proc/$SERVER_PID/fd/0 2>/dev/null || true' >> /app/start.sh && \
+    echo '        echo "save-on" > /proc/$SERVER_PID/fd/0 2>/dev/null || true' >> /app/start.sh && \
     echo '    fi' >> /app/start.sh && \
     echo '    echo "✓ World saved to persistent volume (save #$SAVE_COUNT)"' >> /app/start.sh && \
-    echo '    echo "Volume size: $(du -sh . 2>/dev/null | cut -f1)"' >> /app/start.sh && \
+    echo '    echo "Volume size: $(du -sh . 2>/dev/null | cut -f1 || echo "unknown")"' >> /app/start.sh && \
+    echo '    echo "World files: $(find world -name "*.mca" 2>/dev/null | wc -l) region files"' >> /app/start.sh && \
     echo 'done' >> /app/start.sh && \
     echo 'echo "Server process ended, cleaning up..."' >> /app/start.sh && \
     echo 'wait $SERVER_PID' >> /app/start.sh && \

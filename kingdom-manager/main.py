@@ -25,6 +25,9 @@ class KingdomManager:
         self.rcon_port = 25575
         self.rcon_password = "changeme"
         
+        # Connection timeout
+        self.connection_timeout = 15  # 15 seconds
+        
         # Connection status
         self.connected = False
         self.socket = None
@@ -282,7 +285,7 @@ class KingdomManager:
                 import socket
                 # Create RCON connection
                 self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-                self.socket.settimeout(10)
+                self.socket.settimeout(self.connection_timeout)
                 
                 self.log_to_console(f"Connecting to {self.server_ip}:{self.rcon_port}...")
                 self.socket.connect((self.server_ip, self.rcon_port))
@@ -292,18 +295,28 @@ class KingdomManager:
                 response = self.read_rcon_packet()
                 
                 if response and response['id'] == -1:
-                    raise Exception("RCON authentication failed")
+                    raise Exception("RCON authentication failed - wrong password")
                 
                 self.connected = True
                 self.root.after(0, self.update_connection_status, True)
                 self.root.after(0, self.log_to_console, "Connected to Kingdom Server successfully!")
+                self.root.after(0, self.log_to_console, f"RCON authenticated on port {self.rcon_port}")
                 self.root.after(0, self.start_monitoring)
+                
+            except socket.timeout:
+                self.connected = False
+                self.root.after(0, self.update_connection_status, False)
+                self.root.after(0, self.log_to_console, f"Connection timed out after {self.connection_timeout} seconds")
+                self.root.after(0, self.log_to_console, "Make sure the server is fully started")
                 
             except Exception as e:
                 self.connected = False
                 self.root.after(0, self.update_connection_status, False)
                 self.root.after(0, self.log_to_console, f"Failed to connect: {str(e)}")
-                self.root.after(0, self.log_to_console, "Make sure RCON is enabled on the server")
+                self.root.after(0, self.log_to_console, "Troubleshooting:")
+                self.root.after(0, self.log_to_console, "1. Check if server is running")
+                self.root.after(0, self.log_to_console, "2. Verify RCON is enabled in server.properties")
+                self.root.after(0, self.log_to_console, "3. Check if port 25575 is accessible")
         
         threading.Thread(target=connect, daemon=True).start()
         
