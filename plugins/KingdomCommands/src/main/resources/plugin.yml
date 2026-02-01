@@ -137,6 +137,46 @@ commands:
     description: Manage staff members
     usage: /staff <add|remove|list> <player> [rank]
     permission: kingdom.staff.manage
+  kingdom:
+    description: Kingdom information and commands
+    usage: /kingdom <info|status|laws|ranks>
+    permission: kingdom.kingdom.info
+  realm:
+    description: Manage the kingdom realm
+    usage: /realm <announce|lock|unlock|tax>
+    permission: kingdom.staff.administrator
+  royal:
+    description: Royal commands for nobility
+    usage: /royal <pardon|exile|decree|summon>
+    permission: kingdom.staff.administrator
+  herald:
+    description: Make kingdom announcements
+    usage: /herald <message>
+    permission: kingdom.staff.moderator
+  decree:
+    description: Issue royal decrees
+    usage: /decree <decree text>
+    permission: kingdom.staff.administrator
+  proclaim:
+    description: Make royal proclamations
+    usage: /proclaim <message>
+    permission: kingdom.staff.event_staff
+  summoncourt:
+    description: summon all nobility to court
+    usage: /summoncourt
+    permission: kingdom.staff.administrator
+  knight:
+    description: Knight a player
+    usage: /knight <player>
+    permission: kingdom.staff.administrator
+  noble:
+    description: Grant nobility to a player
+    usage: /noble <player>
+    permission: kingdom.staff.founder
+  peasant:
+    description: View peasant life information
+    usage: /peasant
+    permission: kingdom.kingdom.peasant
 permissions:
   kingdom.commands.*:
     description: All kingdom commands
@@ -148,6 +188,7 @@ permissions:
       kingdom.commands.coins: true
       kingdom.commands.balance: true
       kingdom.staff.*: true
+      kingdom.kingdom.*: true
   kingdom.commands.ban:
     description: Allow banning players
     default: op
@@ -189,3 +230,22 @@ permissions:
   kingdom.staff.manage:
     description: Manage staff members
     default: op
+  kingdom.kingdom.*:
+    description: All kingdom permissions
+    children:
+      kingdom.kingdom.info: true
+      kingdom.kingdom.peasant: true
+      kingdom.kingdom.realm: true
+      kingdom.kingdom.royal: true
+  kingdom.kingdom.info:
+    description: Access kingdom information
+    default: true
+  kingdom.kingdom.peasant:
+    description: Access peasant commands
+    default: true
+  kingdom.kingdom.realm:
+    description: Manage kingdom realm
+    default: false
+  kingdom.kingdom.royal:
+    description: Access royal commands
+    default: false

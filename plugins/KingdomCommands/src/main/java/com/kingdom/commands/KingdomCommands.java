@@ -7,6 +7,7 @@ import com.kingdom.commands.listeners.StaffChatListener;
 import com.kingdom.commands.listeners.InventoryClickListener;
 import com.kingdom.commands.utils.CoinManager;
 import com.kingdom.commands.utils.MessageUtils;
+import com.kingdom.commands.utils.KingdomManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class KingdomCommands extends JavaPlugin {
@@ -15,6 +16,8 @@ public class KingdomCommands extends JavaPlugin {
     private AutoSaveListener autoSaveListener;
     private StaffManager staffManager;
     private StaffCommands staffCommands;
+    private KingdomCommandExecutor kingdomCommandExecutor;
+    private KingdomManager kingdomManager;
     
     @Override
     public void onEnable() {
@@ -23,6 +26,10 @@ public class KingdomCommands extends JavaPlugin {
         // Initialize staff manager
         this.staffManager = new StaffManager(this);
         this.staffCommands = new StaffCommands(this);
+        this.kingdomCommandExecutor = new KingdomCommandExecutor(this);
+        
+        // Initialize kingdom manager
+        this.kingdomManager = new KingdomManager(this);
         
         // Initialize coin manager
         this.coinManager = new CoinManager(this);
@@ -56,6 +63,10 @@ public class KingdomCommands extends JavaPlugin {
         new TabListListener(this).startTabUpdater();
         
         getLogger().info("§6✦ Staff system initialized with " + staffManager.getAllStaff().size() + " staff members!");
+        getLogger().info("§6✦ Kingdom system initialized with " + kingdomManager.getAllPlayerRanks().size() + " ranked citizens!");
+        
+        // Load existing kingdom data
+        kingdomManager.loadKingdomData();
     }
     
     private void registerStaffCommands() {
@@ -69,6 +80,16 @@ public class KingdomCommands extends JavaPlugin {
         
         for (String cmd : staffCommands) {
             getCommand(cmd).setExecutor(this.staffCommands);
+        }
+        
+        // Register kingdom commands
+        String[] kingdomCommands = {
+            "kingdom", "realm", "royal", "herald", "decree", "proclaim", 
+            "summoncourt", "knight", "noble", "peasant"
+        };
+        
+        for (String cmd : kingdomCommands) {
+            getCommand(cmd).setExecutor(this.kingdomCommandExecutor);
         }
     }
     
@@ -93,11 +114,16 @@ public class KingdomCommands extends JavaPlugin {
         getServer().getScheduler().runTask(this, () -> {
             getServer().getWorlds().forEach(world -> world.save());
             getServer().getOnlinePlayers().forEach(player -> player.saveData());
+            
+            // Save kingdom data
+            if (kingdomManager != null) {
+                kingdomManager.saveKingdomData();
+            }
         });
     }
     
-    public CoinManager getCoinManager() {
-        return coinManager;
+    public KingdomManager getKingdomManager() {
+        return kingdomManager;
     }
     
     public String getPrefix() {

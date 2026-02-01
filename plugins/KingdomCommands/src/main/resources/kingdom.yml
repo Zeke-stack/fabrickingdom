@@ -1,0 +1,167 @@
+# Kingdom Configuration File
+# Medieval roleplay settings and commands
+
+kingdom:
+  # Basic kingdom information
+  name: "Kingdom of Minecraftia"
+  ruler: "His Majesty, the King"
+  realm: "The Medieval Realm"
+  motto: "Honor, Loyalty, Valor"
+  
+  # Kingdom ranks and permissions
+  ranks:
+    king:
+      prefix: "👑"
+      color: "DARK_PURPLE"
+      permissions: ["*"]
+      title: "His Majesty"
+    queen:
+      prefix: "👑"
+      color: "DARK_PURPLE"
+      permissions: ["*"]
+      title: "Her Majesty"
+    prince:
+      prefix: "👑"
+      color: "LIGHT_PURPLE"
+      permissions: ["kingdom.royal.*"]
+      title: "His Royal Highness"
+    princess:
+      prefix: "👑"
+      color: "LIGHT_PURPLE"
+      permissions: ["kingdom.royal.*"]
+      title: "Her Royal Highness"
+    duke:
+      prefix: "🏰"
+      color: "GOLD"
+      permissions: ["kingdom.noble.*", "kingdom.staff.administrator"]
+      title: "His Grace"
+    duchess:
+      prefix: "🏰"
+      color: "GOLD"
+      permissions: ["kingdom.noble.*", "kingdom.staff.administrator"]
+      title: "Her Grace"
+    count:
+      prefix: "🏰"
+      color: "YELLOW"
+      permissions: ["kingdom.noble.*", "kingdom.staff.moderator"]
+      title: "The Honorable"
+    countess:
+      prefix: "🏰"
+      color: "YELLOW"
+      permissions: ["kingdom.noble.*", "kingdom.staff.moderator"]
+      title: "The Honorable"
+    knight:
+      prefix: "⚔️"
+      color: "AQUA"
+      permissions: ["kingdom.knight.*", "kingdom.staff.moderator"]
+      title: "Sir"
+    squire:
+      prefix: "⚔️"
+      color: "BLUE"
+      permissions: ["kingdom.knight.trainee"]
+      title: "Squire"
+    merchant:
+      prefix: "💰"
+      color: "GREEN"
+      permissions: ["kingdom.merchant.*"]
+      title: "Merchant"
+    peasant:
+      prefix: "🌾"
+      color: "GRAY"
+      permissions: ["kingdom.peasant.*"]
+      title: "Citizen"
+
+  # Kingdom laws
+  laws:
+    - "No griefing within the kingdom walls"
+    - "Respect nobility and royal family"
+    - "No stealing from fellow citizens"
+    - "Follow all royal decrees"
+    - "Pay taxes when due (weekly)"
+    - "No unauthorized PvP within cities"
+    - "Maintain the peace and prosperity"
+    - "Honor the King and Queen"
+
+  # Kingdom locations
+  locations:
+    throne_room:
+      world: "world"
+      x: 0
+      y: 64
+      z: 0
+      name: "Royal Throne Room"
+    castle:
+      world: "world"
+      x: 100
+      y: 70
+      z: 100
+      name: "Kingdom Castle"
+    village:
+      world: "world"
+      x: -200
+      y: 64
+      z: -200
+      name: "Peasant Village"
+    market:
+      world: "world"
+      x: 0
+      y: 64
+      z: 200
+      name: "Royal Market"
+
+  # Economic settings
+  economy:
+    tax_rate: 10  # Percentage
+    tax_collection_day: "FRIDAY"
+    starting_coins: 100
+    knight_salary: 500
+    noble_salary: 1000
+
+  # Events and ceremonies
+  events:
+    royal_ceremony:
+      enabled: true
+      interval_days: 30
+      location: "throne_room"
+    tournament:
+      enabled: true
+      interval_days: 14
+      location: "castle"
+    festival:
+      enabled: true
+      interval_days: 7
+      location: "village"
+
+  # Chat formatting
+  chat:
+    king_format: "👑§d§l[KING]§r {display_name}§7: §f{message}"
+    queen_format: "👑§d§l[QUEEN]§r {display_name}§7: §f{message}"
+    noble_format: "🏰§6[NOBLE]§r {display_name}§7: §f{message}"
+    knight_format: "⚔️§b[KNIGHT]§r {display_name}§7: §f{message}"
+    peasant_format: "🌾§7[PEASANT]§r {display_name}§7: §f{message}"
+
+  # Sound effects
+  sounds:
+    royal_announce: "ENTITY_WITHER_SPAWN"
+    knight_ceremony: "ENTITY_PLAYER_LEVELUP"
+    tax_collection: "ENTITY_EXPERIENCE_ORB_PICKUP"
+    festival: "ENTITY_FIREWORK_ROCKET_BLAST"
+
+# Messages
+messages:
+  welcome: "Welcome to the Kingdom of Minecraftia!"
+  laws_warning: "Remember to follow the kingdom laws!"
+  tax_collected: "Taxes have been collected for the kingdom!"
+  knight_ceremony: "A new knight has been sworn into service!"
+  royal_decree: "A royal decree has been issued!"
+  festival_start: "The kingdom festival has begun!"
+  tournament_start: "The royal tournament is starting!"
+
+# Settings
+settings:
+  enable_kingdom_chat: true
+  enable_tax_system: true
+  enable_ceremonies: true
+  enable_events: true
+  auto_save_interval: 300  # 5 minutes
+  debug_mode: false
