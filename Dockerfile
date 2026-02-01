@@ -12,10 +12,67 @@ RUN mkdir -p /app/server/world /app/server/world_nether /app/server/world_the_en
 # Download PaperMC server to a temporary location first
 RUN wget -O /tmp/paper.jar https://api.papermc.io/v2/projects/paper/versions/1.21.1/builds/133/downloads/paper-1.21.1-133.jar
 
-# Copy pre-built plugin files
+# Create plugin directly in Docker
 RUN mkdir -p /app/server/plugins && \
-    echo "Copying Kingdom plugin files..." && \
-    cp -r working-plugin/* /app/server/plugins/ && \
+    echo "Creating Kingdom plugin..." && \
+    # Create Java source file
+    cat > /app/server/plugins/KingdomPlugin.java << 'EOF'
+import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
+
+public class KingdomPlugin extends JavaPlugin implements Listener {
+    @Override
+    public void onEnable() {
+        getLogger().info("Kingdom Plugin Enabled!");
+        getServer().getPluginManager().registerEvents(this, this);
+    }
+    
+    @EventHandler
+    public void onPlayerJoin(PlayerJoinEvent event) {
+        Player player = event.getPlayer();
+        event.setJoinMessage("[Kingdom] " + player.getName() + " has joined!");
+        player.sendMessage("Welcome to the Kingdom Server!");
+        player.sendMessage("Type /kingdom for commands!");
+    }
+    
+    @Override
+    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+        if (command.getName().equalsIgnoreCase("kingdom")) {
+            sender.sendMessage("Kingdom Commands:");
+            sender.sendMessage("/kingdom - Show this help");
+            sender.sendMessage("/coins - Check your coins");
+            return true;
+        }
+        if (command.getName().equalsIgnoreCase("coins")) {
+            sender.sendMessage("Coins: 0");
+            return true;
+        }
+        return false;
+    }
+}
+EOF && \
+    # Create plugin.yml
+    cat > /app/server/plugins/plugin.yml << 'EOF'
+name: Kingdom
+version: 1.0.0
+main: KingdomPlugin
+api-version: 1.21
+author: KingdomCraft
+description: Kingdom commands plugin
+commands:
+  kingdom:
+    description: Kingdom commands
+    usage: /kingdom
+  coins:
+    description: Check coins
+    usage: /coins
+EOF && \
+    # Compile and create JAR
     cd /app/server/plugins && \
     javac -cp "/app/paper.jar" KingdomPlugin.java && \
     jar cf Kingdom.jar KingdomPlugin.class plugin.yml && \
