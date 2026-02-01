@@ -12,13 +12,30 @@ RUN mkdir -p /app/server/world /app/server/world_nether /app/server/world_the_en
 # Download PaperMC server to a temporary location first
 RUN wget -O /tmp/paper.jar https://api.papermc.io/v2/projects/paper/versions/1.21.1/builds/133/downloads/paper-1.21.1-133.jar
 
-# Copy pre-built plugin JAR
+# Create plugin JAR directly in Docker
 RUN mkdir -p /app/server/plugins && \
-    echo "Copying Kingdom plugin..." && \
-    cp Kingdom.jar /app/server/plugins/ && \
-    echo "✓ Kingdom plugin installed!" && \
+    echo "Creating Kingdom plugin..." && \
+    # Create plugin.yml
+    echo "name: Kingdom" > /app/server/plugins/plugin.yml && \
+    echo "version: 1.0.0" >> /app/server/plugins/plugin.yml && \
+    echo "main: KingdomPlugin" >> /app/server/plugins/plugin.yml && \
+    echo "api-version: 1.21" >> /app/server/plugins/plugin.yml && \
+    echo "author: KingdomCraft" >> /app/server/plugins/plugin.yml && \
+    echo "description: Kingdom commands plugin" >> /app/server/plugins/plugin.yml && \
+    echo "commands:" >> /app/server/plugins/plugin.yml && \
+    echo "  kingdom:" >> /app/server/plugins/plugin.yml && \
+    echo "    description: Kingdom commands" >> /app/server/plugins/plugin.yml && \
+    echo "    usage: /kingdom" >> /app/server/plugins/plugin.yml && \
+    echo "  coins:" >> /app/server/plugins/plugin.yml && \
+    echo "    description: Check coins" >> /app/server/plugins/plugin.yml && \
+    echo "    usage: /coins" >> /app/server/plugins/plugin.yml && \
+    # Create JAR with plugin.yml
+    cd /app/server/plugins && \
+    jar cf Kingdom.jar plugin.yml && \
+    rm -f plugin.yml && \
+    echo "✓ Kingdom plugin created and installed!" && \
     echo "Plugin contents:" && \
-    jar tf /app/server/plugins/Kingdom.jar
+    jar tf Kingdom.jar
 
 # Create startup script with auto-save
 RUN echo '#!/bin/sh' > /app/start.sh && \
