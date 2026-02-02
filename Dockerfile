@@ -35,8 +35,8 @@ RUN echo "🏰 Building KingdomCommands plugin..." && \
         echo "⚠️ SimpleKingdom failed, using BasicKingdom fallback..." && \
         cd /tmp/BasicKingdom && \
         mkdir -p target/classes && \
-        javac -cp "/app/server/paper.jar" -d target/classes BasicKingdom.java && \
-        jar cf target/BasicKingdom.jar plugin.yml -C target/classes . && \
+        javac -cp "/app/server/paper.jar" -d target/classes src/main/java/com/kingdom/BasicKingdom.java && \
+        jar cf target/BasicKingdom.jar -C src/main/resources . -C target/classes . && \
         cp target/BasicKingdom.jar /app/server/plugins/ && \
         echo "✓ BasicKingdom ultra-fallback plugin installed!"; \
     fi && \
