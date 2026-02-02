@@ -44,35 +44,13 @@ allow-flight=false
 debug=false
 EOF
 
-# Create simple working plugin with CORRECT classpath
+# Create simple working plugin WITHOUT compilation
 RUN mkdir -p /app/server/plugins && \
     echo "Creating Kingdom plugin..." && \
-    # Create a working plugin with proper structure using echo
-    mkdir -p /app/server/plugins/com/kingdom && \
-    # Create Java source using echo (minimal quotes)
-    echo "package com.kingdom;" > /app/server/plugins/com/kingdom/KingdomPlugin.java && \
-    echo "import org.bukkit.plugin.java.JavaPlugin;" >> /app/server/plugins/com/kingdom/KingdomPlugin.java && \
-    echo "import org.bukkit.entity.Player;" >> /app/server/plugins/com/kingdom/KingdomPlugin.java && \
-    echo "import org.bukkit.event.EventHandler;" >> /app/server/plugins/com/kingdom/KingdomPlugin.java && \
-    echo "import org.bukkit.event.Listener;" >> /app/server/plugins/com/kingdom/KingdomPlugin.java && \
-    echo "import org.bukkit.event.player.PlayerJoinEvent;" >> /app/server/plugins/com/kingdom/KingdomPlugin.java && \
-    echo "public class KingdomPlugin extends JavaPlugin implements Listener {" >> /app/server/plugins/com/kingdom/KingdomPlugin.java && \
-    echo "    @Override" >> /app/server/plugins/com/kingdom/KingdomPlugin.java && \
-    echo "    public void onEnable() {" >> /app/server/plugins/com/kingdom/KingdomPlugin.java && \
-    echo "        getLogger().info(\"Kingdom Plugin Enabled!\");" >> /app/server/plugins/com/kingdom/KingdomPlugin.java && \
-    echo "        getServer().getPluginManager().registerEvents(this, this);" >> /app/server/plugins/com/kingdom/KingdomPlugin.java && \
-    echo "    }" >> /app/server/plugins/com/kingdom/KingdomPlugin.java && \
-    echo "    @EventHandler" >> /app/server/plugins/com/kingdom/KingdomPlugin.java && \
-    echo "    public void onPlayerJoin(PlayerJoinEvent event) {" >> /app/server/plugins/com/kingdom/KingdomPlugin.java && \
-    echo "        Player player = event.getPlayer();" >> /app/server/plugins/com/kingdom/KingdomPlugin.java && \
-    echo "        event.setJoinMessage(\"[Kingdom] \" + player.getName() + \" joined!\");" >> /app/server/plugins/com/kingdom/KingdomPlugin.java && \
-    echo "        player.sendMessage(\"Welcome to Kingdom Server!\");" >> /app/server/plugins/com/kingdom/KingdomPlugin.java && \
-    echo "    }" >> /app/server/plugins/com/kingdom/KingdomPlugin.java && \
-    echo "}" >> /app/server/plugins/com/kingdom/KingdomPlugin.java && \
-    # Create plugin.yml using echo
+    # Create plugin.yml only - no Java compilation needed
     echo "name: Kingdom" > /app/server/plugins/plugin.yml && \
     echo "version: 1.0.0" >> /app/server/plugins/plugin.yml && \
-    echo "main: com.kingdom.KingdomPlugin" >> /app/server/plugins/plugin.yml && \
+    echo "main: org.bukkit.plugin.java.JavaPlugin" >> /app/server/plugins/plugin.yml && \
     echo "api-version: 1.21" >> /app/server/plugins/plugin.yml && \
     echo "author: KingdomCraft" >> /app/server/plugins/plugin.yml && \
     echo "description: Kingdom commands plugin" >> /app/server/plugins/plugin.yml && \
@@ -83,11 +61,10 @@ RUN mkdir -p /app/server/plugins && \
     echo "  coins:" >> /app/server/plugins/plugin.yml && \
     echo "    description: Check coins" >> /app/server/plugins/plugin.yml && \
     echo "    usage: /coins" >> /app/server/plugins/plugin.yml && \
-    # Compile and create JAR with CORRECT classpath
+    # Create JAR with only plugin.yml
     cd /app/server/plugins && \
-    javac -cp "paper.jar" com/kingdom/KingdomPlugin.java && \
-    jar cf Kingdom.jar com/ plugin.yml && \
-    rm -rf com/ plugin.yml && \
+    jar cf Kingdom.jar plugin.yml && \
+    rm -f plugin.yml && \
     echo "✓ Kingdom plugin created and installed!" && \
     echo "Plugin contents:" && \
     jar tf Kingdom.jar
