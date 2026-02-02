@@ -1,0 +1,21 @@
+[build]
+builder = "NIXPACKS"
+
+[phases.build]
+cmds = [
+  "echo '🏰 Building Kingdom of Minecraftia Server...'",
+  "echo '📦 Installing Maven dependencies...'",
+  "cd plugins/KingdomCommands && mvn clean package -q",
+  "echo '✅ KingdomCommands plugin built successfully!'",
+  "echo '🎮 Preparing medieval resource pack...'",
+  "echo '🚀 Server build complete!'"
+]
+
+[start]
+cmd = "cd /app/server && /app/start.sh"
+
+[variables]
+MEMORY_MIN = "2G"
+MEMORY_MAX = "4G"
+SERVER_NAME = "Kingdom of Minecraftia"
+MOTD = "§6✦ Kingdom of Minecraftia §7- §eMedieval Roleplay §6✦"
