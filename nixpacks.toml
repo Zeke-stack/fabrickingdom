@@ -3,13 +3,20 @@ builder = "NIXPACKS"
 
 [phases.build]
 cmds = [
-  "echo '🏰 Building Kingdom Server...'"
+  "echo '🏰 Building Kingdom Server...'",
+  "echo '📦 Building plugins...'",
+  "cd /tmp/KingdomCommands && mvn clean package -q -DskipTests 2>/dev/null && cp target/KingdomCommands-1.0.0.jar /app/server/plugins/ && echo '✅ KingdomCommands built!' || echo '⚠️ KingdomCommands failed'",
+  "cd /tmp/SimpleKingdom && mvn clean package -q 2>/dev/null && cp target/SimpleKingdom-1.0.0.jar /app/server/plugins/ && echo '✅ SimpleKingdom built!' || (cd /tmp/BasicKingdom && mkdir -p target/classes && javac -cp '/app/server/paper.jar' -d target/classes src/main/java/com/kingdom/BasicKingdom.java && jar cf target/BasicKingdom.jar -C src/main/resources . -C target/classes . && cp target/BasicKingdom.jar /app/server/plugins/ && echo '✅ BasicKingdom built!')",
+  "echo '📋 Plugins installed:' && ls -la /app/server/plugins/",
+  "echo '🗺️ Copying resources...' && cp -r /app/server/resources/* /app/server/ 2>/dev/null || echo 'No resources to copy'",
+  "echo '✅ Build complete!'"
 ]
 
 [start]
-cmd = "cd /app/server && echo '🏰 Starting Kingdom of Minecraftia Server...' && echo '� Server Configuration:' && echo '  Memory: ${MEMORY_MIN:-2G} - ${MEMORY_MAX:-4G}' && echo '  World: world' && echo '  Plugins: $(ls plugins/ | wc -l) installed' && echo '✅ Kingdom server ready!' && exec java -Xms${MEMORY_MIN:-2G} -Xmx${MEMORY_MAX:-4G} -XX:+UseG1GC -XX:+ParallelRefProcEnabled -XX:MaxGCPauseMillis=200 -XX:+UnlockExperimentalVMOptions -XX:+DisableExplicitGC -XX:+AlwaysPreTouch -XX:G1NewSizePercent=30 -XX:G1MaxNewSizePercent=40 -XX:G1HeapRegionSize=8M -XX:G1ReservePercent=20 -XX:G1HeapWastePercent=5 -XX:G1MixedGCCountTarget=4 -XX:InitiatingHeapOccupancyPercent=15 -XX:G1MixedGCLiveThresholdPercent=90 -XX:G1RSetUpdatingPauseTimePercent=5 -XX:SurvivorRatio=32 -XX:+PerfDisableSharedMem -XX:MaxTenuringThreshold=1 -Dusing.aikars.flags=https://mcflags.emc.gs -Daikars.new.flags=true -jar paper.jar nogui"
+cmd = "cd /app/server && echo '🏰 Starting Kingdom of Minecraftia Server...' && echo '📋 Server Configuration:' && echo '  Memory: ${MEMORY_MIN:-2G} - ${MEMORY_MAX:-4G}' && echo '  World: world' && echo '  Plugins: $(ls plugins/ | wc -l) installed' && echo '  Plugin list: $(ls plugins/)' && echo '✅ Kingdom server ready!' && exec java -Xms${MEMORY_MIN:-2G} -Xmx${MEMORY_MAX:-4G} -XX:+UseG1GC -XX:+ParallelRefProcEnabled -XX:MaxGCPauseMillis=200 -XX:+UnlockExperimentalVMOptions -XX:+DisableExplicitGC -XX:+AlwaysPreTouch -XX:G1NewSizePercent=30 -XX:G1MaxNewSizePercent=40 -XX:G1HeapRegionSize=8M -XX:G1ReservePercent=20 -XX:G1HeapWastePercent=5 -XX:G1MixedGCCountTarget=4 -XX:InitiatingHeapOccupancyPercent=15 -XX:G1MixedGCLiveThresholdPercent=90 -XX:G1RSetUpdatingPauseTimePercent=5 -XX:SurvivorRatio=32 -XX:+PerfDisableSharedMem -XX:MaxTenuringThreshold=1 -Dusing.aikars.flags=https://mcflags.emc.gs -Daikars.new.flags=true -jar paper.jar nogui"
 
 [variables]
 MEMORY_MIN = "2G"
 MEMORY_MAX = "4G"
 SERVER_NAME = "Kingdom of Minecraftia"
+MOTD = "§6✦ Kingdom of Minecraftia §7- §eMedieval Roleplay §6✦"
