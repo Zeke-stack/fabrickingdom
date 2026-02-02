@@ -38,13 +38,9 @@ pom.xml.versionsBackup
 pom.xml.next
 release.properties
 
-# Ignore build artifacts
-target/
-build/
-*.class
-
-# Keep working plugin
+# Keep working plugin and compiled classes
 !Kingdom.jar
+!plugins/com/kingdom/*.class
 
 # Ignore other build outputs
 out/
