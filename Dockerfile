@@ -44,70 +44,64 @@ allow-flight=false
 debug=false
 EOF
 
-# Create simple working plugin
+# Create simple working plugin with NO heredoc
 RUN mkdir -p /app/server/plugins && \
     echo "Creating Kingdom plugin..." && \
-    # Create a working plugin with proper structure
+    # Create a working plugin with proper structure using echo
     mkdir -p /app/server/plugins/com/kingdom && \
-    # Create Java source
-    cat > /app/server/plugins/com/kingdom/KingdomPlugin.java << 'EOF'
-package com.kingdom;
-
-import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
-
-public class KingdomPlugin extends JavaPlugin implements Listener {
-    @Override
-    public void onEnable() {
-        getLogger().info("Kingdom Plugin Enabled!");
-        getServer().getPluginManager().registerEvents(this, this);
-    }
-    
-    @EventHandler
-    public void onPlayerJoin(PlayerJoinEvent event) {
-        Player player = event.getPlayer();
-        event.setJoinMessage("[Kingdom] " + player.getName() + " has joined!");
-        player.sendMessage("Welcome to the Kingdom Server!");
-        player.sendMessage("Type /kingdom for commands!");
-    }
-    
-    @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (command.getName().equalsIgnoreCase("kingdom")) {
-            sender.sendMessage("Kingdom Commands:");
-            sender.sendMessage("/kingdom - Show this help");
-            sender.sendMessage("/coins - Check your coins");
-            return true;
-        }
-        if (command.getName().equalsIgnoreCase("coins")) {
-            sender.sendMessage("Coins: 100");
-            return true;
-        }
-        return false;
-    }
-}
-EOF && \
-    # Create plugin.yml
-    cat > /app/server/plugins/plugin.yml << 'EOF'
-name: Kingdom
-version: 1.0.0
-main: com.kingdom.KingdomPlugin
-api-version: 1.21
-author: KingdomCraft
-description: Kingdom commands plugin
-commands:
-  kingdom:
-    description: Kingdom commands
-    usage: /kingdom
-  coins:
-    description: Check coins
-    usage: /coins
-EOF && \
+    # Create Java source using echo
+    echo "package com.kingdom;" > /app/server/plugins/com/kingdom/KingdomPlugin.java && \
+    echo "" >> /app/server/plugins/com/kingdom/KingdomPlugin.java && \
+    echo "import org.bukkit.plugin.java.JavaPlugin;" >> /app/server/plugins/com/kingdom/KingdomPlugin.java && \
+    echo "import org.bukkit.entity.Player;" >> /app/server/plugins/com/kingdom/KingdomPlugin.java && \
+    echo "import org.bukkit.event.EventHandler;" >> /app/server/plugins/com/kingdom/KingdomPlugin.java && \
+    echo "import org.bukkit.event.Listener;" >> /app/server/plugins/com/kingdom/KingdomPlugin.java && \
+    echo "import org.bukkit.event.player.PlayerJoinEvent;" >> /app/server/plugins/com/kingdom/KingdomPlugin.java && \
+    echo "import org.bukkit.command.Command;" >> /app/server/plugins/com/kingdom/KingdomPlugin.java && \
+    echo "import org.bukkit.command.CommandSender;" >> /app/server/plugins/com/kingdom/KingdomPlugin.java && \
+    echo "" >> /app/server/plugins/com/kingdom/KingdomPlugin.java && \
+    echo "public class KingdomPlugin extends JavaPlugin implements Listener {" >> /app/server/plugins/com/kingdom/KingdomPlugin.java && \
+    echo "    @Override" >> /app/server/plugins/com/kingdom/KingdomPlugin.java && \
+    echo "    public void onEnable() {" >> /app/server/plugins/com/kingdom/KingdomPlugin.java && \
+    echo "        getLogger().info(\"Kingdom Plugin Enabled!\");" >> /app/server/plugins/com/kingdom/KingdomPlugin.java && \
+    echo "        getServer().getPluginManager().registerEvents(this, this);" >> /app/server/plugins/com/kingdom/KingdomPlugin.java && \
+    echo "    }" >> /app/server/plugins/com/kingdom/KingdomPlugin.java && \
+    echo "    @EventHandler" >> /app/server/plugins/com/kingdom/KingdomPlugin.java && \
+    echo "    public void onPlayerJoin(PlayerJoinEvent event) {" >> /app/server/plugins/com/kingdom/KingdomPlugin.java && \
+    echo "        Player player = event.getPlayer();" >> /app/server/plugins/com/kingdom/KingdomPlugin.java && \
+    echo "        event.setJoinMessage(\"[Kingdom] \" + player.getName() + \" has joined!\");" >> /app/server/plugins/com/kingdom/KingdomPlugin.java && \
+    echo "        player.sendMessage(\"Welcome to the Kingdom Server!\");" >> /app/server/plugins/com/kingdom/KingdomPlugin.java && \
+    echo "        player.sendMessage(\"Type /kingdom for commands!\");" >> /app/server/plugins/com/kingdom/KingdomPlugin.java && \
+    echo "    }" >> /app/server/plugins/com/kingdom/KingdomPlugin.java && \
+    echo "    @Override" >> /app/server/plugins/com/kingdom/KingdomPlugin.java && \
+    echo "    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {" >> /app/server/plugins/com/kingdom/KingdomPlugin.java && \
+    echo "        if (command.getName().equalsIgnoreCase(\"kingdom\")) {" >> /app/server/plugins/com/kingdom/KingdomPlugin.java && \
+    echo "            sender.sendMessage(\"Kingdom Commands:\");" >> /app/server/plugins/com/kingdom/KingdomPlugin.java && \
+    echo "            sender.sendMessage(\"/kingdom - Show this help\");" >> /app/server/plugins/com/kingdom/KingdomPlugin.java && \
+    echo "            sender.sendMessage(\"/coins - Check your coins\");" >> /app/server/plugins/com/kingdom/KingdomPlugin.java && \
+    echo "            return true;" >> /app/server/plugins/com/kingdom/KingdomPlugin.java && \
+    echo "        }" >> /app/server/plugins/com/kingdom/KingdomPlugin.java && \
+    echo "        if (command.getName().equalsIgnoreCase(\"coins\")) {" >> /app/server/plugins/com/kingdom/KingdomPlugin.java && \
+    echo "            sender.sendMessage(\"Coins: 100\");" >> /app/server/plugins/com/kingdom/KingdomPlugin.java && \
+    echo "            return true;" >> /app/server/plugins/com/kingdom/KingdomPlugin.java && \
+    echo "        }" >> /app/server/plugins/com/kingdom/KingdomPlugin.java && \
+    echo "        return false;" >> /app/server/plugins/com/kingdom/KingdomPlugin.java && \
+    echo "    }" >> /app/server/plugins/com/kingdom/KingdomPlugin.java && \
+    echo "}" >> /app/server/plugins/com/kingdom/KingdomPlugin.java && \
+    # Create plugin.yml using echo
+    echo "name: Kingdom" > /app/server/plugins/plugin.yml && \
+    echo "version: 1.0.0" >> /app/server/plugins/plugin.yml && \
+    echo "main: com.kingdom.KingdomPlugin" >> /app/server/plugins/plugin.yml && \
+    echo "api-version: 1.21" >> /app/server/plugins/plugin.yml && \
+    echo "author: KingdomCraft" >> /app/server/plugins/plugin.yml && \
+    echo "description: Kingdom commands plugin" >> /app/server/plugins/plugin.yml && \
+    echo "commands:" >> /app/server/plugins/plugin.yml && \
+    echo "  kingdom:" >> /app/server/plugins/plugin.yml && \
+    echo "    description: Kingdom commands" >> /app/server/plugins/plugin.yml && \
+    echo "    usage: /kingdom" >> /app/server/plugins/plugin.yml && \
+    echo "  coins:" >> /app/server/plugins/plugin.yml && \
+    echo "    description: Check coins" >> /app/server/plugins/plugin.yml && \
+    echo "    usage: /coins" >> /app/server/plugins/plugin.yml && \
     # Compile and create JAR
     cd /app/server/plugins && \
     javac -cp "../paper.jar" com/kingdom/KingdomPlugin.java && \
