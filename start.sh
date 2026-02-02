@@ -1,4 +1,12 @@
 #!/bin/bash
+echo "🏰 Starting Kingdom Server..."
+echo "📦 Copying plugin..."
+cp plugins/KingdomPlugin.jar server/plugins/ 2>/dev/null || echo "No pre-built plugin found"
+echo "🗺️ Copying resources..."
+cp -r resources/* server/ 2>/dev/null || echo "No resources found"
+echo "🚀 Starting Paper server..."
+cd server
+java -Xms2G -Xmx4G -XX:+UseG1GC -jar paper.jar nogui
 # Kingdom Server Startup Script - Guaranteed Working Version
 echo "Starting Kingdom of Minecraftia Server..."
 

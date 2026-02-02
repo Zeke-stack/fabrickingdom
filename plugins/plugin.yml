@@ -1,0 +1,13 @@
+name: KingdomPlugin
+version: '1.0.0'
+main: com.kingdom.KingdomPlugin
+api-version: 1.21
+author: KingdomCraft
+description: Medieval kingdom plugin
+commands:
+  kingdom:
+    description: Kingdom information
+    usage: /kingdom
+  coins:
+    description: Check coins
+    usage: /coins

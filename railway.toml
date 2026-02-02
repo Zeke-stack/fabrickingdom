@@ -1,5 +1,5 @@
 [build]
-builder = "NIXPACKS"
+builder = "DOCKER"
 
 [deploy]
 healthcheckTimeout = 100
@@ -20,13 +20,15 @@ RCON_PORT = "25575"
 ENABLE_RCON = "false"
 MEMORY_MIN = "2G"
 MEMORY_MAX = "4G"
+SERVER_NAME = "Kingdom of Minecraftia"
+MOTD = "§6✦ Kingdom of Minecraftia §7- §eMedieval Roleplay §6✦"
 
 [services.resources]
 memory = "4096Mi"
 cpu = "2000m"
 
 [services.volumes]
-mountPath = "/app/server"
+mountPath = "/app"
 size = "20Gi"
 
 [env]
@@ -34,8 +36,6 @@ PORT = "25565"
 
 # Kingdom Server Configuration
 [services.environment]
-SERVER_NAME = "Kingdom of Minecraftia"
-MOTD = "§6✦ Kingdom of Minecraftia §7- §eMedieval Roleplay §6✦"
 DIFFICULTY = "hard"
 ONLINE_MODE = "true"
 PVP = "true"
