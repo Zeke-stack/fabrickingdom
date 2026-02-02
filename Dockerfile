@@ -22,9 +22,9 @@ COPY . /minecraft-template/
 WORKDIR /minecraft-template
 RUN npm install --production 2>/dev/null || true
 
-# Build plugins with Maven
+# Build plugins with Maven (skip if fails)
 WORKDIR /minecraft-template/plugins
-RUN find . -name "pom.xml" -execdir mvn clean package -q -DskipTests \; || echo "Some plugins may have failed to build"
+RUN find . -name "pom.xml" -execdir mvn clean package -q -DskipTests \; 2>/dev/null || echo "Plugin build completed with some failures"
 
 # Download Paper 1.21.1 server JAR (build 133 - using direct API URL)
 RUN wget -O /minecraft-template/server.jar "https://api.papermc.io/v2/projects/paper/versions/1.21.1/builds/133/downloads/paper-1.21.1-133.jar" && \
