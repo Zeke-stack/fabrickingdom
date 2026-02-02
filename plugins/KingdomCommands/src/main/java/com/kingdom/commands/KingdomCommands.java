@@ -59,8 +59,9 @@ public class KingdomCommands extends JavaPlugin {
         // Save default config
         saveDefaultConfig();
         
-        // Start tab list updater
-        new TabListListener(this).startTabUpdater();
+        // Initialize tab list updater
+        TabListListener tabListListener = new TabListListener(this);
+        tabListListener.startTabUpdater();
         
         getLogger().info("§6✦ Staff system initialized with " + staffManager.getAllStaff().size() + " staff members!");
         getLogger().info("§6✦ Kingdom system initialized with " + kingdomManager.getAllPlayerRanks().size() + " ranked citizens!");
