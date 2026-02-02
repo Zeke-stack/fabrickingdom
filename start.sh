@@ -1,21 +1,23 @@
 #!/bin/bash
-echo "🏰 Starting Kingdom Server..."
-echo "📦 Copying plugin..."
-cp plugins/KingdomPlugin.jar server/plugins/ 2>/dev/null || echo "No pre-built plugin found"
-echo "🗺️ Copying resources..."
-cp -r resources/* server/ 2>/dev/null || echo "No resources found"
-echo "🚀 Starting Paper server..."
-cd server
-java -Xms2G -Xmx4G -XX:+UseG1GC -jar paper.jar nogui
-# Kingdom Server Startup Script - Guaranteed Working Version
-echo "Starting Kingdom of Minecraftia Server..."
+set -e
 
-# Set memory limits
+echo "🏰 Starting Kingdom Server..."
+
+# Set memory limits from environment variables
 MEMORY_MIN=${MEMORY_MIN:-2G}
 MEMORY_MAX=${MEMORY_MAX:-4G}
 
-# Start Paper server with optimized settings
-java -Xms$MEMORY_MIN -Xmx$MEMORY_MAX \
+# Ensure we're in the server directory
+cd /app/server
+
+echo "📋 Server Configuration:"
+echo "  Memory: $MEMORY_MIN - $MEMORY_MAX"
+echo "  World: world"
+echo "  Plugins: $(ls plugins/ 2>/dev/null | wc -l) installed"
+echo "  Plugin list: $(ls plugins/ 2>/dev/null || echo 'No plugins found')"
+
+echo "🚀 Starting Paper server with optimized settings..."
+exec java -Xms$MEMORY_MIN -Xmx$MEMORY_MAX \
   -XX:+UseG1GC \
   -XX:+ParallelRefProcEnabled \
   -XX:MaxGCPauseMillis=200 \
@@ -36,7 +38,5 @@ java -Xms$MEMORY_MIN -Xmx$MEMORY_MAX \
   -XX:MaxTenuringThreshold=1 \
   -Dusing.aikars.flags=https://mcflags.emc.gs \
   -Daikars.new.flags=true \
-  -jar paper-1.21.1-133.jar nogui
-
-echo "Kingdom server stopped."
+  -jar paper.jar nogui
 

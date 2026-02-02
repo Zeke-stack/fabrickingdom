@@ -1,0 +1,74 @@
+FROM eclipse-temurin:21-jdk-alpine
+
+# Set working directory
+WORKDIR /app
+
+# Install required packages
+RUN apk update && apk add --no-cache curl wget maven git
+
+# Create server directory structure
+RUN mkdir -p /app/server/world /app/server/world_nether /app/server/world_the_end /app/server/plugins /app/server/logs
+
+# Download PaperMC server
+RUN wget -O /app/server/paper.jar https://api.papermc.io/v2/projects/paper/versions/1.21.1/builds/133/downloads/paper-1.21.1-133.jar
+
+# Create EULA file
+RUN echo "eula=true" > /app/server/eula.txt
+
+# Copy server configuration files
+COPY server.properties /app/server/
+COPY ops.json /app/server/
+COPY bukkit.yml /app/server/
+COPY spigot.yml /app/server/
+COPY commands.yml /app/server/
+COPY help.yml /app/server/
+COPY permissions.yml /app/server/
+
+# Copy world data if it exists
+COPY world/ /app/server/world/
+
+# Create other world directories
+RUN mkdir -p /app/server/world_nether /app/server/world_the_end
+
+# Copy other world data if exists
+COPY world_nether/ /app/server/world_nether/ || true
+COPY world_the_end/ /app/server/world_the_end/ || true
+
+# Build and copy plugins
+# KingdomCommands
+COPY plugins/KingdomCommands /tmp/KingdomCommands/
+RUN cd /tmp/KingdomCommands && \
+    mvn clean package -q -DskipTests && \
+    cp target/KingdomCommands-1.0.0.jar /app/server/plugins/ || \
+    echo "KingdomCommands build failed"
+
+# Copy pre-built plugins
+COPY plugins/CoreProtect-CE-23.1.jar /app/server/plugins/
+COPY plugins/ItemBlocker-1.0.1.jar /app/server/plugins/
+COPY plugins/voicechat-bukkit-2.6.11.jar /app/server/plugins/
+COPY plugins/KingdomPlugin.jar /app/server/plugins/
+
+# Copy plugin directories
+COPY plugins/CoreProtect /app/server/plugins/CoreProtect/
+COPY plugins/ItemBlocker /app/server/plugins/ItemBlocker/
+COPY plugins/voicechat /app/server/plugins/voicechat/
+
+# Copy resources
+COPY resources /app/server/
+
+# Copy and setup start script
+COPY start.sh /app/start.sh
+RUN chmod +x /app/start.sh
+
+# Create proper Procfile for Railway
+RUN echo "web: cd /app/server && java -Xms\${MEMORY_MIN:-2G} -Xmx\${MEMORY_MAX:-4G} -XX:+UseG1GC -jar paper.jar nogui" > /app/Procfile
+
+# Expose ports
+EXPOSE 25565
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
+  CMD netstat -an | grep :25565 || exit 1
+
+# Start the server
+CMD ["/app/start.sh"]
