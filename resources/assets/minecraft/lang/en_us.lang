@@ -1,0 +1,94 @@
+# Kingdom of Minecraftia Language Pack
+# Medieval themed replacements
+
+item.minecraft.sword=§6Sword of the Realm
+item.minecraft.bow=§6Hunter's Bow
+item.minecraft.shield=§6Knight's Shield
+item.minecraft.iron_sword=§6Iron Blade
+item.minecraft.diamond_sword=§6Diamond Sword of Valor
+item.minecraft.golden_sword=§6Golden Royal Sword
+
+block.minecraft.stone=§7Castle Stone
+block.minecraft.cobblestone=§7Rough Castle Stone
+block.minecraft.oak_planks=§6Royal Oak Planks
+block.minecraft.spruce_planks=§6Forest Pine Planks
+block.minecraft.birch_planks=§6Kingdom Birch Planks
+
+death.attack.player=%1$s was slain by %2$s in honorable combat
+death.attack.mob=%1$s fell to a beast of the realm
+death.attack.outOfWorld=%1$s fell from the kingdom into the void
+
+gui.done=§aProceed
+gui.cancel=§6Cancel
+gui.back=§eReturn
+gui.toMenu=§6Return to Kingdom
+
+advancements.story.root.title=§6Kingdom Adventures
+advancements.story.root.description=§7Begin your journey in the Kingdom of Minecraftia
+advancements.story.mine_stone.title=§6Stone Mining
+advancements.story.mine_stone.description=§7Mine stone to build the kingdom
+advancements.story.upgrade_tools.title=§6Better Tools
+advancements.story.upgrade_tools.description=§7Craft better tools for the kingdom
+
+entity.minecraft.villager=§6Kingdom Citizen
+entity.minecraft.villager.armorer=§6Royal Armorer
+entity.minecraft.villager.butcher=§6Kingdom Butcher
+entity.minecraft.villager.cartographer=§6Royal Cartographer
+entity.minecraft.villager.cleric=§6Temple Cleric
+entity.minecraft.villager.farmer=§6Kingdom Farmer
+entity.minecraft.villager.fisherman=§6Royal Fisherman
+entity.minecraft.villager.fletcher=§6Royal Fletcher
+entity.minecraft.villager.leatherworker=§6Royal Leatherworker
+entity.minecraft.villager.librarian=§6Royal Librarian
+entity.minecraft.villager.mason=§6Royal Mason
+entity.minecraft.villager.nitwit=§6Court Jester
+entity.minecraft.villager.shepherd=§6Royal Shepherd
+entity.minecraft.villager.toolsmith=§6Royal Toolsmith
+entity.minecraft.villager.weaponsmith=§6Royal Weaponsmith
+
+biome.plains=§6Kingdom Plains
+biome.forest=§6Royal Forest
+biome.desert=§6Desert Wastes
+biome.mountains=§6Mountain Peaks
+biome.ocean=§6Royal Ocean
+
+# Custom Kingdom Messages
+multiplayer.disconnect.kicked=§6You have been exiled from the kingdom!
+multiplayer.disconnect.banned=§6You have been banished from the realm!
+multiplayer.disconnect.kicked.reason=§6You have been exiled from the kingdom!\n§7Reason: %s
+multiplayer.disconnect.banned.reason=§6You have been banished from the realm!\n§7Reason: %s
+
+# GUI Medieval Theme
+container.chest=§6Royal Chest
+container.enderchest=§6Ender Chest of the Realm
+container.shulkerBox=§6Royal Storage Box
+container.inventory=§6Royal Inventory
+container.crafting=§6Royal Crafting Table
+container.furnace=§6Kingdom Furnace
+container.brewing=§6Royal Brewing Stand
+container.enchant=§6Royal Enchantment Table
+container.beacon=§6Royal Beacon
+container.anvil=§6Royal Anvil
+container.hopper=§6Royal Hopper
+container.dropper=§6Royal Dropper
+container.dispenser=§6Royal Dispenser
+
+# Death Messages Medieval Style
+death.attack.generic=%1$s perished in the kingdom
+death.attack.inFire=%1$s was consumed by royal flames
+death.attack.onFire=%1$s burned to death in the kingdom
+death.attack.lava=%1$s fell into the royal lava
+death.attack.hotFloor=%1$s discovered the floor was lava
+death.attack.inWall=%1$s suffocated in a castle wall
+death.attack.drown=%1$s drowned in the royal waters
+death.attack.starve=%1$s starved to death in the kingdom
+death.attack.cactus=%1$s was pricked to death by a cactus
+death.attack.generic=%1$s perished in the kingdom
+death.attack.magic=%1$s was killed by dark magic
+death.attack.wither=%1sWithered away
+death.attack.anvil=%1$s was squashed by a falling anvil
+death.attack.fallingBlock=%1$s was squashed by a falling block
+death.attack.sting=%1$s was stung to death
+death.attack.fall=%1$s fell from a great height
+death.attack.outOfWorld=%1$s fell out of the kingdom
+death.attack.generic=%1$s perished in the kingdom

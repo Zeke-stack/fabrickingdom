@@ -1,18 +1,18 @@
 # Minecraft Server
-server.properties
-ops.json
-whitelist.json
-banned-players.json
-banned-ips.json
-usercache.json
-logs/
-world/
-world_the_end/
-world_nether/
-cache/
-libraries/
-versions/
-*.jar
+# server.properties
+# ops.json
+# whitelist.json
+# banned-players.json
+# banned-ips.json
+# usercache.json
+# logs/
+# world/
+# world_the_end/
+# world_nether/
+# cache/
+# libraries/
+# versions/
+# *.jar
 
 # IDE
 .idea/
