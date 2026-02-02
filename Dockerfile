@@ -44,7 +44,7 @@ allow-flight=false
 debug=false
 EOF
 
-# Create simple working plugin with MINIMAL code
+# Create simple working plugin with CORRECT classpath
 RUN mkdir -p /app/server/plugins && \
     echo "Creating Kingdom plugin..." && \
     # Create a working plugin with proper structure using echo
@@ -83,9 +83,9 @@ RUN mkdir -p /app/server/plugins && \
     echo "  coins:" >> /app/server/plugins/plugin.yml && \
     echo "    description: Check coins" >> /app/server/plugins/plugin.yml && \
     echo "    usage: /coins" >> /app/server/plugins/plugin.yml && \
-    # Compile and create JAR
+    # Compile and create JAR with CORRECT classpath
     cd /app/server/plugins && \
-    javac -cp "../paper.jar" com/kingdom/KingdomPlugin.java && \
+    javac -cp "paper.jar" com/kingdom/KingdomPlugin.java && \
     jar cf Kingdom.jar com/ plugin.yml && \
     rm -rf com/ plugin.yml && \
     echo "✓ Kingdom plugin created and installed!" && \
