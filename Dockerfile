@@ -47,8 +47,17 @@ COPY resources /app/server/resources
 RUN echo "✓ Medieval resource pack installed!"
 
 # Create optimized startup script
-COPY start.sh /app/start.sh
-RUN chmod +x /app/start.sh
+RUN echo '#!/bin/sh' > /app/start.sh && \
+    echo 'echo "🏰 Starting Kingdom of Minecraftia Server..."' >> /app/start.sh && \
+    echo 'cd /app/server' >> /app/start.sh && \
+    echo 'echo "📋 Server Configuration:"' >> /app/start.sh && \
+    echo 'echo "  Memory: ${MEMORY_MIN:-2G} - ${MEMORY_MAX:-4G}"' >> /app/start.sh && \
+    echo 'echo "  World: world"' >> /app/start.sh && \
+    echo 'echo "  Plugins: $(ls plugins/ | wc -l) installed"' >> /app/start.sh && \
+    echo 'echo "✅ Kingdom server ready!"' >> /app/start.sh && \
+    echo 'exec java -Xms${MEMORY_MIN:-2G} -Xmx${MEMORY_MAX:-4G} -XX:+UseG1GC -XX:+ParallelRefProcEnabled -XX:MaxGCPauseMillis=200 -XX:+UnlockExperimentalVMOptions -XX:+DisableExplicitGC -XX:+AlwaysPreTouch -XX:G1NewSizePercent=30 -XX:G1MaxNewSizePercent=40 -XX:G1HeapRegionSize=8M -XX:G1ReservePercent=20 -XX:G1HeapWastePercent=5 -XX:G1MixedGCCountTarget=4 -XX:InitiatingHeapOccupancyPercent=15 -XX:G1MixedGCLiveThresholdPercent=90 -XX:G1RSetUpdatingPauseTimePercent=5 -XX:SurvivorRatio=32 -XX:+PerfDisableSharedMem -XX:MaxTenuringThreshold=1 -Dusing.aikars.flags=https://mcflags.emc.gs -Daikars.new.flags=true -jar paper.jar nogui' >> /app/start.sh && \
+    chmod +x /app/start.sh && \
+    ls -la /app/start.sh
 
 # Create nixpacks.toml for Railway
 RUN echo '[build]' > /app/nixpacks.toml && \
