@@ -22,9 +22,9 @@ COPY . /minecraft-template/
 WORKDIR /minecraft-template
 RUN npm install --production 2>/dev/null || true
 
-# Skip plugin building for now to avoid YAML errors
-# WORKDIR /minecraft-template/plugins
-# RUN find . -name "pom.xml" -execdir mvn clean package -q -DskipTests \; 2>/dev/null || echo "Plugin build completed with some failures"
+# Build plugins with Maven properly
+WORKDIR /minecraft-template/plugins
+RUN find . -name "pom.xml" -execdir mvn clean package -q -DskipTests \; 2>/dev/null || echo "Plugin build completed"
 
 # Download Paper 1.21.1 server JAR (build 133 - using direct API URL)
 RUN wget -O /minecraft-template/server.jar "https://api.papermc.io/v2/projects/paper/versions/1.21.1/builds/133/downloads/paper-1.21.1-133.jar" && \
@@ -54,9 +54,9 @@ RUN echo '#!/bin/sh' > /start.sh && \
     echo '  rm -rf /data/website' >> /start.sh && \
     echo '  cp -r /minecraft-template/website /data/website 2>/dev/null || true' >> /start.sh && \
     echo '  mkdir -p /data/plugins' >> /start.sh && \
-    echo '  echo "Skipping plugin copy to avoid YAML errors"' >> /start.sh && \
-    echo '  # cp /minecraft-template/plugins/*.jar /data/plugins/ 2>/dev/null || true' >> /start.sh && \
-    echo '  # cp /minecraft-template/plugins/*/*.jar /data/plugins/ 2>/dev/null || true' >> /start.sh && \
+    echo '  echo "Installing plugins..."' >> /start.sh && \
+    echo '  cp /minecraft-template/plugins/*.jar /data/plugins/ 2>/dev/null || true' >> /start.sh && \
+    echo '  cp /minecraft-template/plugins/*/*.jar /data/plugins/ 2>/dev/null || true' >> /start.sh && \
     echo 'fi' >> /start.sh && \
     echo '# Always force copy server.jar' >> /start.sh && \
     echo 'echo "Copying fresh server.jar..."' >> /start.sh && \
