@@ -44,22 +44,18 @@ allow-flight=false
 debug=false
 EOF
 
-# Create simple working plugin with NO heredoc
+# Create simple working plugin with MINIMAL code
 RUN mkdir -p /app/server/plugins && \
     echo "Creating Kingdom plugin..." && \
     # Create a working plugin with proper structure using echo
     mkdir -p /app/server/plugins/com/kingdom && \
-    # Create Java source using echo
+    # Create Java source using echo (minimal quotes)
     echo "package com.kingdom;" > /app/server/plugins/com/kingdom/KingdomPlugin.java && \
-    echo "" >> /app/server/plugins/com/kingdom/KingdomPlugin.java && \
     echo "import org.bukkit.plugin.java.JavaPlugin;" >> /app/server/plugins/com/kingdom/KingdomPlugin.java && \
     echo "import org.bukkit.entity.Player;" >> /app/server/plugins/com/kingdom/KingdomPlugin.java && \
     echo "import org.bukkit.event.EventHandler;" >> /app/server/plugins/com/kingdom/KingdomPlugin.java && \
     echo "import org.bukkit.event.Listener;" >> /app/server/plugins/com/kingdom/KingdomPlugin.java && \
     echo "import org.bukkit.event.player.PlayerJoinEvent;" >> /app/server/plugins/com/kingdom/KingdomPlugin.java && \
-    echo "import org.bukkit.command.Command;" >> /app/server/plugins/com/kingdom/KingdomPlugin.java && \
-    echo "import org.bukkit.command.CommandSender;" >> /app/server/plugins/com/kingdom/KingdomPlugin.java && \
-    echo "" >> /app/server/plugins/com/kingdom/KingdomPlugin.java && \
     echo "public class KingdomPlugin extends JavaPlugin implements Listener {" >> /app/server/plugins/com/kingdom/KingdomPlugin.java && \
     echo "    @Override" >> /app/server/plugins/com/kingdom/KingdomPlugin.java && \
     echo "    public void onEnable() {" >> /app/server/plugins/com/kingdom/KingdomPlugin.java && \
@@ -69,23 +65,8 @@ RUN mkdir -p /app/server/plugins && \
     echo "    @EventHandler" >> /app/server/plugins/com/kingdom/KingdomPlugin.java && \
     echo "    public void onPlayerJoin(PlayerJoinEvent event) {" >> /app/server/plugins/com/kingdom/KingdomPlugin.java && \
     echo "        Player player = event.getPlayer();" >> /app/server/plugins/com/kingdom/KingdomPlugin.java && \
-    echo "        event.setJoinMessage(\"[Kingdom] \" + player.getName() + \" has joined!\");" >> /app/server/plugins/com/kingdom/KingdomPlugin.java && \
-    echo "        player.sendMessage(\"Welcome to the Kingdom Server!\");" >> /app/server/plugins/com/kingdom/KingdomPlugin.java && \
-    echo "        player.sendMessage(\"Type /kingdom for commands!\");" >> /app/server/plugins/com/kingdom/KingdomPlugin.java && \
-    echo "    }" >> /app/server/plugins/com/kingdom/KingdomPlugin.java && \
-    echo "    @Override" >> /app/server/plugins/com/kingdom/KingdomPlugin.java && \
-    echo "    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {" >> /app/server/plugins/com/kingdom/KingdomPlugin.java && \
-    echo "        if (command.getName().equalsIgnoreCase(\"kingdom\")) {" >> /app/server/plugins/com/kingdom/KingdomPlugin.java && \
-    echo "            sender.sendMessage(\"Kingdom Commands:\");" >> /app/server/plugins/com/kingdom/KingdomPlugin.java && \
-    echo "            sender.sendMessage(\"/kingdom - Show this help\");" >> /app/server/plugins/com/kingdom/KingdomPlugin.java && \
-    echo "            sender.sendMessage(\"/coins - Check your coins\");" >> /app/server/plugins/com/kingdom/KingdomPlugin.java && \
-    echo "            return true;" >> /app/server/plugins/com/kingdom/KingdomPlugin.java && \
-    echo "        }" >> /app/server/plugins/com/kingdom/KingdomPlugin.java && \
-    echo "        if (command.getName().equalsIgnoreCase(\"coins\")) {" >> /app/server/plugins/com/kingdom/KingdomPlugin.java && \
-    echo "            sender.sendMessage(\"Coins: 100\");" >> /app/server/plugins/com/kingdom/KingdomPlugin.java && \
-    echo "            return true;" >> /app/server/plugins/com/kingdom/KingdomPlugin.java && \
-    echo "        }" >> /app/server/plugins/com/kingdom/KingdomPlugin.java && \
-    echo "        return false;" >> /app/server/plugins/com/kingdom/KingdomPlugin.java && \
+    echo "        event.setJoinMessage(\"[Kingdom] \" + player.getName() + \" joined!\");" >> /app/server/plugins/com/kingdom/KingdomPlugin.java && \
+    echo "        player.sendMessage(\"Welcome to Kingdom Server!\");" >> /app/server/plugins/com/kingdom/KingdomPlugin.java && \
     echo "    }" >> /app/server/plugins/com/kingdom/KingdomPlugin.java && \
     echo "}" >> /app/server/plugins/com/kingdom/KingdomPlugin.java && \
     # Create plugin.yml using echo
