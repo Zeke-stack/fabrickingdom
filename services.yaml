@@ -1,0 +1,10 @@
+# Railway service configuration
+name: Kingdom Server
+plan: starter
+region: oregon
+instance_type: basic
+environment:
+  MEMORY_MIN: 2G
+  MEMORY_MAX: 4G
+  SERVER_NAME: Kingdom of Minecraftia
+  MOTD: §6✦ Kingdom of Minecraftia §7- §eMedieval Roleplay §6✦

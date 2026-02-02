@@ -54,17 +54,17 @@ RUN echo '#!/bin/sh' > /app/start.sh && \
     echo 'echo "  Memory: ${MEMORY_MIN:-2G} - ${MEMORY_MAX:-4G}"' >> /app/start.sh && \
     echo 'echo "  World: world"' >> /app/start.sh && \
     echo 'echo "  Plugins: $(ls plugins/ | wc -l) installed"' >> /app/start.sh && \
+    echo 'echo "  Plugin list: $(ls plugins/)"' >> /app/start.sh && \
     echo 'echo "✅ Kingdom server ready!"' >> /app/start.sh && \
     echo 'exec java -Xms${MEMORY_MIN:-2G} -Xmx${MEMORY_MAX:-4G} -XX:+UseG1GC -XX:+ParallelRefProcEnabled -XX:MaxGCPauseMillis=200 -XX:+UnlockExperimentalVMOptions -XX:+DisableExplicitGC -XX:+AlwaysPreTouch -XX:G1NewSizePercent=30 -XX:G1MaxNewSizePercent=40 -XX:G1HeapRegionSize=8M -XX:G1ReservePercent=20 -XX:G1HeapWastePercent=5 -XX:G1MixedGCCountTarget=4 -XX:InitiatingHeapOccupancyPercent=15 -XX:G1MixedGCLiveThresholdPercent=90 -XX:G1RSetUpdatingPauseTimePercent=5 -XX:SurvivorRatio=32 -XX:+PerfDisableSharedMem -XX:MaxTenuringThreshold=1 -Dusing.aikars.flags=https://mcflags.emc.gs -Daikars.new.flags=true -jar paper.jar nogui' >> /app/start.sh && \
-    chmod +x /app/start.sh && \
-    ls -la /app/start.sh
+    chmod +x /app/start.sh
 
-# Create nixpacks.toml for Railway
+# Create nixpacks.toml for Railway (as backup)
 RUN echo '[build]' > /app/nixpacks.toml && \
     echo 'builder = "NIXPACKS"' >> /app/nixpacks.toml && \
     echo '' >> /app/nixpacks.toml && \
     echo '[phases.build]' >> /app/nixpacks.toml && \
-    echo 'cmds = ["echo \"Building Kingdom Server...\""]' >> /app/nixpacks.toml && \
+    echo 'cmds = ["echo \"🏰 Building Kingdom Server...\""]' >> /app/nixpacks.toml && \
     echo '' >> /app/nixpacks.toml && \
     echo '[start]' >> /app/nixpacks.toml && \
     echo 'cmd = "cd /app/server && /app/start.sh"' >> /app/nixpacks.toml
@@ -76,6 +76,5 @@ EXPOSE 25565
 HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
   CMD netstat -an | grep :25565 || exit 1
 
-# Start the server directly without script dependency
-WORKDIR /app/server
-CMD ["sh", "-c", "echo '🏰 Starting Kingdom of Minecraftia Server...' && echo '📋 Server Configuration:' && echo '  Memory: ${MEMORY_MIN:-2G} - ${MEMORY_MAX:-4G}' && echo '  World: world' && echo '  Plugins: $(ls plugins/ | wc -l) installed' && echo '✅ Kingdom server ready!' && exec java -Xms${MEMORY_MIN:-2G} -Xmx${MEMORY_MAX:-4G} -XX:+UseG1GC -XX:+ParallelRefProcEnabled -XX:MaxGCPauseMillis=200 -XX:+UnlockExperimentalVMOptions -XX:+DisableExplicitGC -XX:+AlwaysPreTouch -XX:G1NewSizePercent=30 -XX:G1MaxNewSizePercent=40 -XX:G1HeapRegionSize=8M -XX:G1ReservePercent=20 -XX:G1HeapWastePercent=5 -XX:G1MixedGCCountTarget=4 -XX:InitiatingHeapOccupancyPercent=15 -XX:G1MixedGCLiveThresholdPercent=90 -XX:G1RSetUpdatingPauseTimePercent=5 -XX:SurvivorRatio=32 -XX:+PerfDisableSharedMem -XX:MaxTenuringThreshold=1 -Dusing.aikars.flags=https://mcflags.emc.gs -Daikars.new.flags=true -jar paper.jar nogui"]
+# Start the server
+CMD ["/app/start.sh"]
