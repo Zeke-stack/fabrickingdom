@@ -4,9 +4,9 @@ world_nether/
 world_the_end/
 logs/
 cache/
-template/world/
-template/world_nether/
-template/world_the_end/
+
+# Keep template directory for world files
+!template/
 
 # Ignore corrupted plugin binaries but keep EssentialKingdom, EarthWrap, and RealisticWorld source
 plugins/*.jar
