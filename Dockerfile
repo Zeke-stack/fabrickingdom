@@ -22,7 +22,7 @@ COPY . /minecraft-template/
 WORKDIR /minecraft-template
 RUN npm install --production 2>/dev/null || true
 
-# Download working plugins directly (no manual installation needed)
+# Download working plugins directly (no manual installation needed) - v2
 RUN mkdir -p /minecraft-template/plugins
 RUN wget -O /minecraft-template/plugins/CoreProtect.jar "https://github.com/PlayPro/CoreProtect/releases/download/v23.1/CoreProtect-23.1.jar" && \
     wget -O /minecraft-template/plugins/WorldEdit.jar "https://download.enginehub.org/worldedit/downloads/worldedit-bukkit-7.3.6.jar" && \
