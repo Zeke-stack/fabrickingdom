@@ -22,16 +22,17 @@ COPY . /minecraft-template/
 WORKDIR /minecraft-template
 RUN npm install --production 2>/dev/null || true
 
-# Download and build custom plugins
+# Download working plugins (skip complex build for now)
 RUN mkdir -p /minecraft-template/plugins
 RUN wget -O /minecraft-template/plugins/CoreProtect.jar "https://github.com/PlayPro/CoreProtect/releases/download/v23.1/CoreProtect-23.1.jar" && \
     wget -O /minecraft-template/plugins/voicechat-bukkit.jar "https://github.com/Esophose/PluginManager/releases/download/v2.6.11/voicechat-bukkit-2.6.11.jar" && \
-    echo "Downloaded essential plugins"
+    wget -O /minecraft-template/plugins/WorldEdit.jar "https://download.enginehub.org/worldedit/downloads/worldedit-bukkit-7.3.6.jar" && \
+    echo "Downloaded working plugins"
 
-# Build KingdomCommands plugin
-WORKDIR /minecraft-template/plugins/KingdomCommands
-RUN mvn clean package -q -DskipTests && \
-    cp target/*.jar /minecraft-template/plugins/ || echo "KingdomCommands build completed"
+# Skip KingdomCommands build for now (will add manually later)
+# WORKDIR /minecraft-template/plugins/KingdomCommands
+# RUN mvn clean package -q -DskipTests && \
+#     cp target/*.jar /minecraft-template/plugins/ || echo "KingdomCommands build completed"
 
 # Download Paper 1.21.1 server JAR (build 133 - using direct API URL)
 RUN wget -O /minecraft-template/server.jar "https://api.papermc.io/v2/projects/paper/versions/1.21.1/builds/133/downloads/paper-1.21.1-133.jar" && \
