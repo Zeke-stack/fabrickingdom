@@ -5,10 +5,14 @@ if [ ! -f "eula.txt" ]; then
   cp -r /minecraft-template/* /data/
 else
   echo "Updating files..."
-  # Copy template world for realistic Earth
+  # Extract template world for realistic Earth
   echo "Loading template world..."
   rm -rf /data/world /data/world_nether /data/world_the_end
-  if [ -d "/minecraft-template/template/world" ]; then
+  if [ -f "/minecraft-template/world.tar.gz" ]; then
+    echo "Found compressed template world - extracting..."
+    tar -xzf /minecraft-template/world.tar.gz -C /data/
+    echo "Template world extracted successfully!"
+  elif [ -d "/minecraft-template/template/world" ]; then
     echo "Found template world - copying..."
     cp -r /minecraft-template/template/world /data/world
     echo "Template world loaded successfully!"
