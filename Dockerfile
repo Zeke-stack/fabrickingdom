@@ -109,4 +109,4 @@ RUN echo '#!/bin/sh' > /start.sh && \
     chmod +x /start.sh && \
     chmod 755 /start.sh
 
-CMD ["/start.sh"]
+CMD ["sh", "/start.sh"]
