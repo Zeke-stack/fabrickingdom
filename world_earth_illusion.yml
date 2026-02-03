@@ -1,0 +1,53 @@
+# World Configuration for Earth Illusion - Wrapping World
+# This creates a world that appears to be Earth-like and wraps around
+
+world-settings:
+  default:
+    # World border settings for wrapping illusion
+    world-border:
+      enabled: true
+      warning-distance: 100
+      damage-amount: 0.0
+      damage-buffer: 5
+      warning-time: 15
+      size: 30000.0  # Large border for Earth illusion
+      center-x: 0.0
+      center-z: 0.0
+    
+    # World generation settings
+    generator:
+      settings:
+        # Make world feel more Earth-like
+        coordinate-scale: 684.412
+        height-scale: 684.412
+        lower-limit-scale: 512.0
+        upper-limit-scale: 512.0
+        depth-noise-scale-x: 200.0
+        depth-noise-scale-z: 200.0
+        depth-noise-scale-exponent: 0.5
+        base-size: 8.5
+        vertical-fuzz: 0.0
+        
+    # Spawn settings
+    spawn:
+      radius: 16
+      keep-spawn-loaded: true
+      spawn-radius: 16
+      
+    # View distance for better Earth illusion
+    view-distance: 12
+    simulation-distance: 8
+    
+    # Entity settings for realism
+    entity-tracking-range:
+      players: 48
+      animals: 48
+      monsters: 48
+      misc: 32
+      
+    # Ticks for realistic world feel
+      entity-tick-range:
+      players: 32
+      animals: 32
+      monsters: 32
+      misc: 16

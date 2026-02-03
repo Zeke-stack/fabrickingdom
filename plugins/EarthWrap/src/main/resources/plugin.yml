@@ -1,0 +1,15 @@
+name: EarthWrap
+version: '1.0.0'
+main: com.kingdom.EarthWrap
+api-version: 1.21
+author: KingdomCraft
+description: Creates Earth illusion with world wrapping mechanics - travel around the world!
+commands:
+  earth:
+    description: Shows Earth world information and current position
+    usage: /earth
+    permission: earth.info
+permissions:
+  earth.info:
+    description: Access Earth world information
+    default: true

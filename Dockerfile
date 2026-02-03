@@ -31,6 +31,12 @@ RUN mvn clean package -q -DskipTests && \
     cp target/*.jar /minecraft-template/plugins/ && \
     echo "EssentialKingdom plugin built successfully"
 
+# Build EarthWrap plugin (world wrapping mechanics)
+WORKDIR /minecraft-template/plugins/EarthWrap
+RUN mvn clean package -q -DskipTests && \
+    cp target/*.jar /minecraft-template/plugins/ && \
+    echo "EarthWrap plugin built successfully"
+
 # Download essential plugins with fallback URLs
 RUN wget -O /minecraft-template/plugins/CoreProtect.jar "https://github.com/PlayPro/CoreProtect/releases/download/v23.1/CoreProtect-23.1.jar" || \
     wget -O /minecraft-template/plugins/CoreProtect.jar "https://media.discordapp.net/attachments/123456789/CoreProtect-23.1.jar" || \
@@ -47,6 +53,11 @@ RUN wget -O /minecraft-template/plugins/LuckPerms.jar "https://download.luckperm
 RUN wget -O /minecraft-template/plugins/Vault.jar "https://github.com/MilkBowl/Vault/releases/download/1.7.3/Vault-1.7.3.jar" || \
     wget -O /minecraft-template/plugins/Vault.jar "https://media.discordapp.net/attachments/123456789/Vault-1.7.3.jar" || \
     echo "Vault download failed - will create placeholder"
+
+# Download Dynmap for web map functionality
+RUN wget -O /minecraft-template/plugins/Dynmap.jar "https://github.com/webbukkit/dynmap/releases/download/Dynmap-3.7-beta-5/dynmap-3.7-beta-5-spigot.jar" || \
+    wget -O /minecraft-template/plugins/Dynmap.jar "https://media.discordapp.net/attachments/123456789/dynmap-3.7-beta-5-spigot.jar" || \
+    echo "Dynmap download failed - will create placeholder"
 
 # Create placeholder plugins if downloads failed
 RUN if [ ! -f /minecraft-template/plugins/CoreProtect.jar ]; then \
@@ -69,6 +80,11 @@ RUN if [ ! -f /minecraft-template/plugins/Vault.jar ]; then \
     echo "Vault Placeholder" > /minecraft-template/plugins/Vault.jar; \
 fi
 
+RUN if [ ! -f /minecraft-template/plugins/Dynmap.jar ]; then \
+    echo "Creating Dynmap placeholder..."; \
+    echo "Dynmap Placeholder" > /minecraft-template/plugins/Dynmap.jar; \
+fi
+
 # List all plugins
 RUN echo "=== PLUGINS INSTALLED ===" && \
     ls -la /minecraft-template/plugins/ && \
@@ -81,8 +97,9 @@ RUN wget -O /minecraft-template/server.jar "https://api.papermc.io/v2/projects/p
 # Accept EULA
 RUN echo "eula=true" > /minecraft-template/eula.txt
 
-# Expose the port (Railway uses this)
+# Expose the ports (Railway uses this)
 EXPOSE 25565
+EXPOSE 8123
 
 # Create startup script
 WORKDIR /minecraft
@@ -105,6 +122,9 @@ RUN echo '#!/bin/sh' > /start.sh && \
     echo '  echo "Installing plugins..."' >> /start.sh && \
     echo '  cp /minecraft-template/plugins/*.jar /data/plugins/ 2>/dev/null || true' >> /start.sh && \
     echo '  cp /minecraft-template/plugins/*/*.jar /data/plugins/ 2>/dev/null || true' >> /start.sh && \
+    echo '  # Set up Dynmap configuration' >> /start.sh && \
+    echo '  mkdir -p /data/dynmap' >> /start.sh && \
+    echo '  cp /minecraft-template/dynmap_configuration.txt /data/dynmap/configuration.txt 2>/dev/null || true' >> /start.sh && \
     echo 'fi' >> /start.sh && \
     echo '# Always force copy server.jar' >> /start.sh && \
     echo 'echo "Copying fresh server.jar..."' >> /start.sh && \

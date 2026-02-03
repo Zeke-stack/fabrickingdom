@@ -1,0 +1,86 @@
+# Dynmap Configuration for Kingdom Server
+# This will be copied to /data/dynmap/configuration.txt
+
+web:
+  bindaddress: 0.0.0.0
+  port: 8123
+  maxthreads: 8
+  
+components:
+  - class: org.dynmap.ClientConfigurationComponent
+  - class: org.dynmap.InternalClientUpdateComponent
+    sendhealth: true
+    sendposition: true
+    allowwebchat: true
+    webchat-interval: 5
+  - class: org.dynmap.JsonFileClientUpdateComponent
+    writeinterval: 1
+    writequeue: 10
+  - class: org.dynmap.SimpleWebChatComponent
+    allowchat: true
+    spaminterval: 5
+  - class: org.dynmap.KzedMapComponent
+    name: kzed
+    title: "Surface Map"
+    prefix: "kt"
+    enabled: true
+    mapzoomin: 16
+    mapzoomout: 4
+    mapdisplayheight: 768
+    mapdisplaywidth: 1024
+    tileupdateinterval: 30
+    maxchunkspertick: 200
+    renderchunkcachelimit: 5000
+    renderacceleratormaxsize: 1024
+    renderacceleratorinterval: 0
+    renderacceleratormaxthreads: 4
+    renderacceleratorqueue: 6
+    hideores: false
+    showbiomes: true
+    use-generated-textures: true
+    transparency: true
+    smooth-lighting: true
+    custom-colors:
+      water: "0x607080"
+      water-ocean: "0x607080"
+      water-swamp: "0x4A644A"
+      water-river: "0x507090"
+      water-frozen: "0xA0C0F0"
+      lava: "0xFF6000"
+      lava-frozen: "0xFF6000"
+      leaves: "0x208020"
+      leaves-oak: "0x208020"
+      leaves-birch: "0xA0C060"
+      leaves-spruce: "0x006020"
+      leaves-jungle: "0x40A020"
+      
+world:
+  name: world
+  title: "Kingdom World"
+  center: 0,0
+  zoomout: 3
+  
+templates:
+  - name: Kingdom
+    enabled: true
+    prefix: "kt"
+    width: 1000
+    height: 1000
+    htmlfilename: "kingdom_{world}_{timestamp}.html"
+    filenameformat: "kingdom_{world}_{zoom}_{x}_{y}.png"
+    mapzoomin: 16
+    mapzoomout: 4
+    mapdisplayheight: 768
+    mapdisplaywidth: 1024
+    tileupdateinterval: 30
+    maxchunkspertick: 200
+    renderchunkcachelimit: 5000
+    renderacceleratormaxsize: 1024
+    renderacceleratorinterval: 0
+    renderacceleratormaxthreads: 4
+    renderacceleratorqueue: 6
+    hideores: false
+    showbiomes: true
+    use-generated-textures: true
+    transparency: true
+    smooth-lighting: true
