@@ -106,6 +106,7 @@ RUN echo '#!/bin/sh' > /start.sh && \
     echo 'echo "📋 Plugins: $(ls plugins/*.jar 2>/dev/null | wc -l) installed"' >> /start.sh && \
     echo 'echo "🌍 World: $(ls world/level.dat 2>/dev/null && echo "Existing" || echo "New")"' >> /start.sh && \
     echo 'exec java -Xms${MEMORY:-2G} -Xmx${MEMORY:-4G} -XX:+UseG1GC -jar server.jar nogui' >> /start.sh && \
-    chmod +x /start.sh
+    chmod +x /start.sh && \
+    chmod 755 /start.sh
 
 CMD ["/start.sh"]
