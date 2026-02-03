@@ -22,11 +22,11 @@ COPY . /minecraft-template/
 WORKDIR /minecraft-template
 RUN npm install --production 2>/dev/null || true
 
-# Download fresh plugins instead of building corrupted ones
-RUN mkdir -p /minecraft-template/plugins
-RUN wget -O /minecraft-template/plugins/CoreProtect.jar "https://github.com/PlayPro/CoreProtect/releases/download/v23.1/CoreProtect-23.1.jar" && \
-    wget -O /minecraft-template/plugins/voicechat-bukkit.jar "https://github.com/Esophose/PluginManager/releases/download/v2.6.11/voicechat-bukkit-2.6.11.jar" && \
-    echo "Downloaded essential plugins"
+# Start with no plugins to get server working first
+# RUN mkdir -p /minecraft-template/plugins
+# RUN wget -O /minecraft-template/plugins/CoreProtect.jar "https://github.com/PlayPro/CoreProtect/releases/download/v23.1/CoreProtect-23.1.jar" && \
+#     wget -O /minecraft-template/plugins/voicechat-bukkit.jar "https://github.com/Esophose/PluginManager/releases/download/v2.6.11/voicechat-bukkit-2.6.11.jar" && \
+#     echo "Downloaded essential plugins"
 
 # Download Paper 1.21.1 server JAR (build 133 - using direct API URL)
 RUN wget -O /minecraft-template/server.jar "https://api.papermc.io/v2/projects/paper/versions/1.21.1/builds/133/downloads/paper-1.21.1-133.jar" && \
@@ -55,10 +55,10 @@ RUN echo '#!/bin/sh' > /start.sh && \
     echo '  cp -r /minecraft-template/backend /data/backend 2>/dev/null || true' >> /start.sh && \
     echo '  rm -rf /data/website' >> /start.sh && \
     echo '  cp -r /minecraft-template/website /data/website 2>/dev/null || true' >> /start.sh && \
-    echo '  mkdir -p /data/plugins' >> /start.sh && \
-    echo '  echo "Installing plugins..."' >> /start.sh && \
-    echo '  cp /minecraft-template/plugins/*.jar /data/plugins/ 2>/dev/null || true' >> /start.sh && \
-    echo '  cp /minecraft-template/plugins/*/*.jar /data/plugins/ 2>/dev/null || true' >> /start.sh && \
+    echo '  # mkdir -p /data/plugins' >> /start.sh && \
+    echo '  # echo "Installing plugins..."' >> /start.sh && \
+    echo '  # cp /minecraft-template/plugins/*.jar /data/plugins/ 2>/dev/null || true' >> /start.sh && \
+    echo '  # cp /minecraft-template/plugins/*/*.jar /data/plugins/ 2>/dev/null || true' >> /start.sh && \
     echo 'fi' >> /start.sh && \
     echo '# Always force copy server.jar' >> /start.sh && \
     echo 'echo "Copying fresh server.jar..."' >> /start.sh && \
