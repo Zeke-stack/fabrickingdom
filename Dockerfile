@@ -121,7 +121,7 @@ RUN echo '#!/bin/sh' > /start.sh && \
     echo 'else' >> /start.sh && \
     echo '  echo "Updating files..."' >> /start.sh && \
     echo '  # Load template world' >> /start.sh && \
-    echo '  /minecraft-template/load_world.sh' >> /start.sh && \
+    echo '  /data/load_world.sh' >> /start.sh && \
     echo '  rm -rf /data/world/datapacks' >> /start.sh && \
     echo '  cp -r /minecraft-template/world/datapacks /data/world/ 2>/dev/null || true' >> /start.sh && \
     echo '  cp /minecraft-template/commands.yml /data/commands.yml 2>/dev/null || true' >> /start.sh && \
