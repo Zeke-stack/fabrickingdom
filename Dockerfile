@@ -69,44 +69,8 @@ RUN echo "eula=true" > /minecraft-template/eula.txt
 EXPOSE 25565
 EXPOSE 8123
 
-# Create startup script
-WORKDIR /minecraft
-RUN echo '#!/bin/sh' > /start.sh && \
-    echo 'cd /data' >> /start.sh && \
-    echo 'if [ ! -f "eula.txt" ]; then' >> /start.sh && \
-    echo '  echo "First run - copying server files..."' >> /start.sh && \
-    echo '  cp -r /minecraft-template/* /data/' >> /start.sh && \
-    echo 'else' >> /start.sh && \
-    echo '  echo "Updating files..."' >> /start.sh && \
-    echo '  # Ensure world directory exists' >> /start.sh && \
-    echo '  mkdir -p /data/world' >> /start.sh && \
-    echo '  echo "World ready for realistic Earth simulation!" >> /start.sh && \
-    echo '  rm -rf /data/world/datapacks' >> /start.sh && \
-    echo '  cp -r /minecraft-template/world/datapacks /data/world/ 2>/dev/null || true' >> /start.sh && \
-    echo '  cp /minecraft-template/commands.yml /data/commands.yml 2>/dev/null || true' >> /start.sh && \
-    echo '  cp /minecraft-template/ops.json /data/ops.json 2>/dev/null || true' >> /start.sh && \
-    echo '  rm -rf /data/backend' >> /start.sh && \
-    echo '  cp -r /minecraft-template/backend /data/backend 2>/dev/null || true' >> /start.sh && \
-    echo '  rm -rf /data/website' >> /start.sh && \
-    echo '  cp -r /minecraft-template/website /data/website 2>/dev/null || true' >> /start.sh && \
-    echo '  mkdir -p /data/plugins' >> /start.sh && \
-    echo '  echo "Installing plugins..."' >> /start.sh && \
-    echo '  cp /minecraft-template/plugins/*.jar /data/plugins/ 2>/dev/null || true' >> /start.sh && \
-    echo '  cp /minecraft-template/plugins/*/*.jar /data/plugins/ 2>/dev/null || true' >> /start.sh && \
-    echo '  # Set up Dynmap configuration' >> /start.sh && \
-    echo '  mkdir -p /data/dynmap' >> /start.sh && \
-    echo '  cp /minecraft-template/dynmap_configuration.txt /data/dynmap/configuration.txt 2>/dev/null || true' >> /start.sh && \
-    echo 'fi' >> /start.sh && \
-    echo '# Always force copy server.jar' >> /start.sh && \
-    echo 'echo "Copying fresh server.jar..."' >> /start.sh && \
-    echo 'cp -f /minecraft-template/server.jar /data/server.jar' >> /start.sh && \
-    echo 'ls -la /data/server.jar' >> /start.sh && \
-    echo 'cd /data' >> /start.sh && \
-    echo 'echo "Starting Kingdom Server..."' >> /start.sh && \
-    echo 'echo "Plugins: $(ls plugins/*.jar 2>/dev/null | wc -l) installed"' >> /start.sh && \
-    echo 'echo "World: $(ls world/level.dat 2>/dev/null && echo "Existing" || echo "New")"' >> /start.sh && \
-    echo 'exec java -Xms${MEMORY:-2G} -Xmx${MEMORY:-4G} -XX:+UseG1GC -jar server.jar nogui' >> /start.sh && \
-    chmod +x /start.sh && \
-    chmod 755 /start.sh
+# Copy simple startup script
+COPY simple_start.sh /start.sh
+RUN chmod +x /start.sh
 
 CMD ["sh", "/start.sh"]
