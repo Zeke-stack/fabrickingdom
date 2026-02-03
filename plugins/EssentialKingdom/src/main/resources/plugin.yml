@@ -1,24 +1,22 @@
 name: EssentialKingdom
-version: '1.0.0'
+version: 1.0.0
 main: com.kingdom.EssentialKingdom
-api-version: 1.21
-author: KingdomCraft
-description: Essential medieval kingdom plugin with beautiful text commands, coin system, and rank management
+api-version: 1.21.1
+author: Kingdom Dev
+description: Essential Kingdom Plugin with Economy and Admin Commands
+
 commands:
   kingdom:
-    description: Display kingdom information and available commands
+    description: Show kingdom information
     usage: /kingdom
-    permission: kingdom.kingdom.info
   coins:
-    description: Check your coin balance and rank information
+    description: Check your coins
     usage: /coins
-    permission: kingdom.coins.balance
   rank:
-    description: View your current rank and requirements
+    description: Check your rank
     usage: /rank
-    permission: kingdom.rank.view
   online:
-    description: Show online players in the kingdom
+    description: Show online players
     usage: /online
     permission: kingdom.online.view
   knight:

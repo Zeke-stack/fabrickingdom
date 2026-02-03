@@ -3,13 +3,28 @@ cd /data
 if [ ! -f "eula.txt" ]; then
   echo "First run - copying server files..."
   cp -r /minecraft-template/* /data/
-else
-  echo "Updating files..."
-  # Create fresh Earth world with seed
-  echo "Creating Earth world with seed..."
+  # Force Earth world on first run
+  echo "🌍 LOADING EARTH WORLD TEMPLATE..."
   rm -rf /data/world /data/world_nether /data/world_the_end
-  mkdir -p /data/world
-  echo "Earth world created with seed: EarthKingdom2024"
+  if [ -d "/minecraft-template/template/world" ]; then
+    echo "✅ Found template world - copying..."
+    cp -r /minecraft-template/template/world /data/world
+    echo "🎉 EARTH WORLD LOADED!"
+  elif [ -d "/minecraft-template/world" ]; then
+    echo "✅ Found root template world - copying..."
+    cp -r /minecraft-template/world /data/world
+    echo "🎉 EARTH WORLD LOADED!"
+  else
+    echo "❌ No template world found - creating with Earth seed"
+    mkdir -p /data/world
+  fi
+  echo "EARTH_WORLD_LOADED=true" > /data/.earth_world_loaded
+else
+  echo "Updating files - keeping existing world..."
+  # Don't touch the world if it already exists
+  if [ -f "/data/.earth_world_loaded" ]; then
+    echo "✅ Earth world already loaded - preserving data"
+  fi
   cp /minecraft-template/commands.yml /data/commands.yml 2>/dev/null || true
   cp /minecraft-template/ops.json /data/ops.json 2>/dev/null || true
   rm -rf /data/backend
@@ -29,5 +44,5 @@ ls -la /data/server.jar
 cd /data
 echo "Starting Kingdom Server..."
 echo "Plugins: $(ls plugins/*.jar 2>/dev/null | wc -l) installed"
-echo "World: $(ls world/level.dat 2>/dev/null && echo "Existing" || echo "New")"
+echo "World: $(ls world/level.dat 2>/dev/null && echo "Existing Earth World" || echo "New World")"
 exec java -Xms2G -Xmx4G -XX:+UseG1GC -jar server.jar nogui
