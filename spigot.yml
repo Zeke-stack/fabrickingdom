@@ -1,3 +1,74 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:3a5abbe53aad847b6859b9107111f98ab953bda78570b85bfa01928eca6218a5
-size 4920
+# Spigot Configuration
+commands:
+  silent-command-blocks: false
+  log: true
+  tab-complete: 0
+  send-namespaced: true
+settings:
+  debug: false
+  save-user-cache-on-stop-only: false
+  moved-too-quickly-multiplier: 10.0
+  moved-wrongly-threshold: 0.0625
+  player-shuffle: 0
+  sample-ping-interval: 0
+  verbose: false
+  bungeecord: false
+  late-bind: false
+  netty-threads: 4
+world-settings:
+  default:
+    verbose: false
+    view-distance: default
+    mob-spawn-range: 8
+    growth-chunks-per-tick: 1000
+    item-despawn-rate: 6000
+    merge-radius:
+      item: 2.5
+      exp: 3.0
+    arrows-despawn-rate: 1200
+    enable-zombie-pigmen-portal-spawns: true
+    wither-spawn-sound-radius: 0
+    hanging-tick-frequency: 100
+    zombie-aggressive-towards-villager: true
+    nerf-spawner-mobs: false
+    end-portal-sound-radius: 0
+    entity-activation-range:
+      animals: 32
+      monsters: 32
+      misc: 16
+      water: 16
+    entity-tracking-range:
+      players: 128
+      animals: 48
+      monsters: 48
+      misc: 32
+      other: 64
+    ticks-per:
+      hopper-transfer: 8
+      hopper-check: 1
+      hopper-merge: 1
+    max-tnt-per-tick: 100
+    max-growth-height:
+      cactus: 3
+      reeds: 3
+    max-entity-collision: 8
+    seed-village: 10387312
+    seed-feature: 14357718
+    seed-monument: 10387313
+    seed-slime: 987234911
+    hunger:
+      walk-exhaustion: 0.2
+      sprint-exhaustion: 0.8
+      combat-exhaustion: 0.3
+      regen-exhaustion: 6.0
+      swim-multiplier: 0.2
+      jump-multiplier: 0.8
+      break-multiplier: 0.025
+      fall-multiplier: 0.2
+      other-multiplier: 0.0
+    jump-sprint-exhaustion: 0.8
+    squid-spawn-height:
+      min: 45.0
+      max: 63.0
+    max-chained-neighbor-updates: 500
+    max-chained-neighbor-updates-per-tick: 500
