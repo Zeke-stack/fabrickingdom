@@ -5,17 +5,12 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
 
-public class EssentialKingdom extends JavaPlugin implements Listener {
+public class EssentialKingdom extends JavaPlugin {
     
     @Override
     public void onEnable() {
-        getLogger().info(ChatColor.GOLD + "✦ Essential Kingdom Plugin Enabled! ✦");
-        getServer().getPluginManager().registerEvents(this, this);
+        getLogger().info("Essential Kingdom Plugin Enabled!");
         saveDefaultConfig();
         
         // Initialize config with default values
@@ -27,38 +22,7 @@ public class EssentialKingdom extends JavaPlugin implements Listener {
     
     @Override
     public void onDisable() {
-        getLogger().info(ChatColor.GOLD + "✦ Essential Kingdom Plugin Disabled! ✦");
-    }
-    
-    @EventHandler
-    public void onPlayerJoin(PlayerJoinEvent event) {
-        Player player = event.getPlayer();
-        String kingdomName = getConfig().getString("kingdom.name", "Minecraftia");
-        
-        // Welcome message with beautiful formatting
-        event.setJoinMessage(null); // Remove default join message
-        getServer().broadcastMessage(
-            ChatColor.GOLD + "✦ " + ChatColor.WHITE + player.getName() + 
-            ChatColor.YELLOW + " has arrived in the Kingdom of " + 
-            ChatColor.AQUA + kingdomName + ChatColor.GOLD + " ✦"
-        );
-        
-        // Personal welcome
-        player.sendMessage(ChatColor.GOLD + "✦✦✦✦✦✦✦✦✦✦✦✦✦✦✦");
-        player.sendMessage(ChatColor.YELLOW + "  Welcome to " + ChatColor.AQUA + kingdomName + ChatColor.YELLOW + "!");
-        player.sendMessage(ChatColor.WHITE + "  Use " + ChatColor.GREEN + "/kingdom" + ChatColor.WHITE + " for commands");
-        player.sendMessage(ChatColor.WHITE + "  Use " + ChatColor.GREEN + "/coins" + ChatColor.WHITE + " to check wealth");
-        player.sendMessage(ChatColor.GOLD + "✦✦✦✦✦✦✦✦✦✦✦✦✦✦✦");
-    }
-    
-    @EventHandler
-    public void onPlayerQuit(PlayerQuitEvent event) {
-        Player player = event.getPlayer();
-        event.setQuitMessage(null); // Remove default quit message
-        getServer().broadcastMessage(
-            ChatColor.GRAY + "◇ " + ChatColor.WHITE + player.getName() + 
-            ChatColor.GRAY + " has left the Kingdom ◇"
-        );
+        getLogger().info("Essential Kingdom Plugin Disabled!");
     }
     
     @Override
