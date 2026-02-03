@@ -116,19 +116,10 @@ RUN echo '#!/bin/sh' > /start.sh && \
     echo '  cp -r /minecraft-template/* /data/' >> /start.sh && \
     echo 'else' >> /start.sh && \
     echo '  echo "Updating files..."' >> /start.sh && \
-    echo '  # Replace world with template world for realistic Earth' >> /start.sh && \
-    echo '  rm -rf /data/world /data/world_nether /data/world_the_end' >> /start.sh && \
-    echo '  if [ -d "/minecraft-template/template/world" ]; then' >> /start.sh && \
-    echo '    echo "Found template world - copying..." >> /start.sh && \
-    echo '    cp -r /minecraft-template/template/world /data/world' >> /start.sh && \
-    echo '    echo "Template world copied - realistic Earth world ready!" >> /start.sh' >> /start.sh && \
-    echo '  elif [ -d "/minecraft-template/world" ]; then' >> /start.sh && \
-    echo '    echo "Found root template world - copying..." >> /start.sh && \
-    echo '    cp -r /minecraft-template/world /data/world' >> /start.sh && \
-    echo '    Template world copied - realistic Earth world ready!" >> /start.sh' >> /start.sh && \
-    echo '  else' >> /start.sh && \
-    echo '    echo "No template world found - using existing world" >> /start.sh' >> /start.sh && \
-    echo '  fi' >> /start.sh && \
+    echo '  # Copy template world for realistic Earth' >> /start.sh && \
+    echo '  echo "Copying template world..." >> /start.sh && \
+    echo '  cp -r /minecraft-template/template/world/* /data/world/ 2>/dev/null || echo "Template world copy failed"' >> /start.sh && \
+    echo '  echo "Template world update complete!" >> /start.sh && \
     echo '  rm -rf /data/world/datapacks' >> /start.sh && \
     echo '  cp -r /minecraft-template/world/datapacks /data/world/ 2>/dev/null || true' >> /start.sh && \
     echo '  cp /minecraft-template/commands.yml /data/commands.yml 2>/dev/null || true' >> /start.sh && \
