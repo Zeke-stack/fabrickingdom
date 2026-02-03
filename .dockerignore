@@ -7,7 +7,6 @@ cache/
 
 # Ignore corrupted plugin binaries but keep source
 plugins/*.jar
-plugins/*/*.jar
 !plugins/KingdomCommands/
 
 # Ignore temporary files
