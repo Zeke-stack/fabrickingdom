@@ -1,4 +1,4 @@
-# Spigot Configuration
+# Spigot Configuration - Realistic World
 commands:
   silent-command-blocks: false
   log: true
@@ -18,6 +18,45 @@ settings:
 world-settings:
   default:
     verbose: false
+    # Disable all monsters and hostile mobs
+    mob-spawning:
+      monsters: false
+      animals: true
+      water-animals: true
+      ambient: false
+    # Disable village generation
+    world:
+      verbose: false
+      generator:
+        settings:
+          # No villages, temples, or other structures
+          disable-villages: true
+          disable-temples: true
+          disable-monuments: true
+          disable-mansions: true
+    # Entity settings
+    entity:
+      activation-range:
+        animals: 32
+        monsters: 0  # No monster activation
+        misc: 16
+        water: 16
+      tracking-range:
+        players: 48
+        animals: 48
+        monsters: 0  # No monster tracking
+        misc: 32
+        other: 64
+      ticks-per:
+        hopper-transfer: 8
+        hopper-check: 1
+    # Merge settings
+    merge:
+      exp:
+        max: -1
+      item:
+        radius: 2.5
+        items: 2.5
     view-distance: default
     mob-spawn-range: 8
     growth-chunks-per-tick: 1000

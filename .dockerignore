@@ -5,10 +5,11 @@ world_the_end/
 logs/
 cache/
 
-# Ignore corrupted plugin binaries but keep EssentialKingdom and EarthWrap source
+# Ignore corrupted plugin binaries but keep EssentialKingdom, EarthWrap, and RealisticWorld source
 plugins/*.jar
 !plugins/EssentialKingdom/
 !plugins/EarthWrap/
+!plugins/RealisticWorld/
 
 # Ignore temporary files
 *.tmp

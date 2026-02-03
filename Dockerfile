@@ -37,6 +37,12 @@ RUN mvn clean package -q -DskipTests && \
     cp target/*.jar /minecraft-template/plugins/ && \
     echo "EarthWrap plugin built successfully"
 
+# Build RealisticWorld plugin (removes monsters and NPCs)
+WORKDIR /minecraft-template/plugins/RealisticWorld
+RUN mvn clean package -q -DskipTests && \
+    cp target/*.jar /minecraft-template/plugins/ && \
+    echo "RealisticWorld plugin built successfully"
+
 # Download essential plugins with fallback URLs
 RUN wget -O /minecraft-template/plugins/CoreProtect.jar "https://github.com/PlayPro/CoreProtect/releases/download/v23.1/CoreProtect-23.1.jar" || \
     wget -O /minecraft-template/plugins/CoreProtect.jar "https://media.discordapp.net/attachments/123456789/CoreProtect-23.1.jar" || \

@@ -1,4 +1,4 @@
-# Bukkit Configuration
+# Bukkit Configuration - Realistic World
 aliases: on
 database:
   username: bukkit
@@ -6,3 +6,27 @@ database:
   driver: org.sqlite.JDBC
   password: walrus
   url: jdbc:sqlite:{DIR}{NAME}.db
+
+# World settings for realistic survival
+worlds:
+  world:
+    generator: # No custom generator
+    
+# Tick rates for performance
+ticks-per:
+  animal-spawns: 400
+  monster-spawns: 0  # No monsters
+  
+# Update settings
+update-folder: update
+plugins:
+  default: false
+  
+# Settings for realistic survival
+settings:
+  allow-end: true
+  warn-on-overload: true
+  permissions-file: permissions.yml
+  update-folder: update
+  ping-packet-limit: 100
+  use-exact-login-location: false

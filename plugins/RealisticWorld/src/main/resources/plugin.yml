@@ -1,0 +1,15 @@
+name: RealisticWorld
+version: '1.0.0'
+main: com.kingdom.RealisticWorld
+api-version: 1.21
+author: KingdomCraft
+description: Creates realistic survival by removing monsters, villagers, and NPCs
+commands:
+  realistic:
+    description: Shows realistic world status
+    usage: /realistic
+    permission: realistic.info
+permissions:
+  realistic.info:
+    description: Access realistic world information
+    default: true
