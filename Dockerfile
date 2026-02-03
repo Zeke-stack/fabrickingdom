@@ -80,7 +80,7 @@ RUN echo '#!/bin/sh' > /start.sh && \
     echo '  echo "Updating files..."' >> /start.sh && \
     echo '  # Ensure world directory exists' >> /start.sh && \
     echo '  mkdir -p /data/world' >> /start.sh && \
-    echo '  echo "� World ready for realistic Earth simulation!" >> /start.sh && \
+    echo '  echo "World ready for realistic Earth simulation!" >> /start.sh && \
     echo '  rm -rf /data/world/datapacks' >> /start.sh && \
     echo '  cp -r /minecraft-template/world/datapacks /data/world/ 2>/dev/null || true' >> /start.sh && \
     echo '  cp /minecraft-template/commands.yml /data/commands.yml 2>/dev/null || true' >> /start.sh && \
@@ -102,9 +102,9 @@ RUN echo '#!/bin/sh' > /start.sh && \
     echo 'cp -f /minecraft-template/server.jar /data/server.jar' >> /start.sh && \
     echo 'ls -la /data/server.jar' >> /start.sh && \
     echo 'cd /data' >> /start.sh && \
-    echo 'echo "🏰 Starting Kingdom Server..."' >> /start.sh && \
-    echo 'echo "📋 Plugins: $(ls plugins/*.jar 2>/dev/null | wc -l) installed"' >> /start.sh && \
-    echo 'echo "🌍 World: $(ls world/level.dat 2>/dev/null && echo "Existing" || echo "New")"' >> /start.sh && \
+    echo 'echo "Starting Kingdom Server..."' >> /start.sh && \
+    echo 'echo "Plugins: $(ls plugins/*.jar 2>/dev/null | wc -l) installed"' >> /start.sh && \
+    echo 'echo "World: $(ls world/level.dat 2>/dev/null && echo "Existing" || echo "New")"' >> /start.sh && \
     echo 'exec java -Xms${MEMORY:-2G} -Xmx${MEMORY:-4G} -XX:+UseG1GC -jar server.jar nogui' >> /start.sh && \
     chmod +x /start.sh && \
     chmod 755 /start.sh
