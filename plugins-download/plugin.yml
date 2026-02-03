@@ -1,0 +1,29 @@
+name: SimpleKingdom
+version: '1.0.0'
+main: com.kingdom.SimpleKingdom
+api-version: 1.21
+author: KingdomCraft
+description: Simple medieval kingdom plugin with beautiful text commands and coin system
+commands:
+  kingdom:
+    description: Kingdom information and commands
+    usage: /kingdom
+    permission: kingdom.kingdom.info
+  coins:
+    description: Check your coin balance
+    usage: /coins
+    permission: kingdom.coins.balance
+  knight:
+    description: Knight a player (admin only)
+    usage: /knight <player>
+    permission: kingdom.admin.knight
+permissions:
+  kingdom.kingdom.info:
+    description: Access kingdom information
+    default: true
+  kingdom.coins.balance:
+    description: Check coin balance
+    default: true
+  kingdom.admin.knight:
+    description: Knight players
+    default: op

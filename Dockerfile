@@ -22,17 +22,18 @@ COPY . /minecraft-template/
 WORKDIR /minecraft-template
 RUN npm install --production 2>/dev/null || true
 
-# Download working plugins (skip complex build for now)
+# Download working plugins directly (no manual installation needed)
 RUN mkdir -p /minecraft-template/plugins
 RUN wget -O /minecraft-template/plugins/CoreProtect.jar "https://github.com/PlayPro/CoreProtect/releases/download/v23.1/CoreProtect-23.1.jar" && \
-    wget -O /minecraft-template/plugins/voicechat-bukkit.jar "https://github.com/Esophose/PluginManager/releases/download/v2.6.11/voicechat-bukkit-2.6.11.jar" && \
     wget -O /minecraft-template/plugins/WorldEdit.jar "https://download.enginehub.org/worldedit/downloads/worldedit-bukkit-7.3.6.jar" && \
-    echo "Downloaded working plugins"
+    wget -O /minecraft-template/plugins/LuckPerms.jar "https://download.luckperms.net/1553/bukkit/latest/LuckPerms-Bukkit-5.4.132.jar" && \
+    wget -O /minecraft-template/plugins/Vault.jar "https://github.com/MilkBowl/Vault/releases/download/1.7.3/Vault-1.7.3.jar" && \
+    echo "Downloaded all essential plugins"
 
-# Skip KingdomCommands build for now (will add manually later)
-# WORKDIR /minecraft-template/plugins/KingdomCommands
-# RUN mvn clean package -q -DskipTests && \
-#     cp target/*.jar /minecraft-template/plugins/ || echo "KingdomCommands build completed"
+# Build SimpleKingdom plugin
+WORKDIR /minecraft-template/plugins/SimpleKingdom
+RUN mvn clean package -q -DskipTests && \
+    cp target/*.jar /minecraft-template/plugins/ || echo "SimpleKingdom build completed"
 
 # Download Paper 1.21.1 server JAR (build 133 - using direct API URL)
 RUN wget -O /minecraft-template/server.jar "https://api.papermc.io/v2/projects/paper/versions/1.21.1/builds/133/downloads/paper-1.21.1-133.jar" && \
