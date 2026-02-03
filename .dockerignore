@@ -5,9 +5,9 @@ world_the_end/
 logs/
 cache/
 
-# Ignore corrupted plugin binaries but keep SimpleKingdom source
+# Ignore corrupted plugin binaries but keep EssentialKingdom source
 plugins/*.jar
-!plugins/SimpleKingdom/
+!plugins/EssentialKingdom/
 
 # Ignore temporary files
 *.tmp
