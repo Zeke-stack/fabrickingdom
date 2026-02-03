@@ -15,7 +15,7 @@ ENV RCON_PASSWORD=Kingdom2026SecureRCON!
 RUN mkdir -p /data
 RUN mkdir -p /data/plugins
 
-# Copy server files to a template location first
+# Copy server files to a template location first (plugins excluded by .dockerignore)
 COPY . /minecraft-template/
 
 # Install Node.js dependencies

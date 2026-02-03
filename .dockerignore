@@ -4,6 +4,10 @@ world_nether/
 world_the_end/
 logs/
 cache/
+
+# Ignore corrupted plugins directory
+plugins/
+
 # Ignore temporary files
 *.tmp
 *.temp
