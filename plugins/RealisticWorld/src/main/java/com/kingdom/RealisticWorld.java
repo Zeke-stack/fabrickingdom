@@ -105,7 +105,7 @@ public class RealisticWorld extends JavaPlugin implements Listener {
         
         // Remove other NPCs
         if (getConfig().getBoolean("realistic.removeNPCs", true)) {
-            if (type == EntityType.IRON_GOLEM || type == EntityType.SNOWMAN || type == EntityType.ARMOR_STAND) {
+            if (type == EntityType.IRON_GOLEM || type == EntityType.SNOW_GOLEM || type == EntityType.ARMOR_STAND) {
                 return true;
             }
         }
