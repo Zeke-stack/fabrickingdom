@@ -11,6 +11,9 @@ plugins/*.jar
 !plugins/EarthWrap/
 !plugins/RealisticWorld/
 
+# Keep template directory for world files
+!template/
+
 # Ignore temporary files
 *.tmp
 *.temp
