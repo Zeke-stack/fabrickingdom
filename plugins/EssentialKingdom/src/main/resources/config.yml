@@ -1,0 +1,33 @@
+# EssentialKingdom Configuration File
+kingdom:
+  name: "Minecraftia"
+  motd: "Welcome to the Kingdom!"
+  
+# Plugin settings
+settings:
+  debug: false
+  auto-save: true
+  
+# Economy settings
+economy:
+  starting-coins: 100
+  daily-bonus: 10
+  
+# Rank system
+ranks:
+  peasant:
+    name: "Peasant"
+    prefix: "&7[Peasant]"
+    permissions: []
+  knight:
+    name: "Knight"
+    prefix: "&6[Knight]"
+    permissions: ["kingdom.knight"]
+  noble:
+    name: "Noble"
+    prefix: "&b[Noble]"
+    permissions: ["kingdom.knight", "kingdom.noble"]
+  king:
+    name: "King"
+    prefix: "&4[King]"
+    permissions: ["kingdom.*"]
