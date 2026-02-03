@@ -18,6 +18,10 @@ RUN mkdir -p /data/plugins
 # Copy server files to a template location first (plugins excluded by .dockerignore)
 COPY . /minecraft-template/
 
+# Copy world loader script and make it executable
+COPY load_world.sh /minecraft-template/load_world.sh
+RUN chmod +x /minecraft-template/load_world.sh
+
 # Install Node.js dependencies
 WORKDIR /minecraft-template
 RUN npm install --production 2>/dev/null || true
@@ -116,10 +120,8 @@ RUN echo '#!/bin/sh' > /start.sh && \
     echo '  cp -r /minecraft-template/* /data/' >> /start.sh && \
     echo 'else' >> /start.sh && \
     echo '  echo "Updating files..."' >> /start.sh && \
-    echo '  # Copy template world for realistic Earth' >> /start.sh && \
-    echo '  echo "Copying template world..." >> /start.sh && \
-    echo '  cp -r /minecraft-template/template/world/* /data/world/ 2>/dev/null || echo "Template world copy failed"' >> /start.sh && \
-    echo '  echo "Template world update complete!" >> /start.sh && \
+    echo '  # Load template world' >> /start.sh && \
+    echo '  /minecraft-template/load_world.sh' >> /start.sh && \
     echo '  rm -rf /data/world/datapacks' >> /start.sh && \
     echo '  cp -r /minecraft-template/world/datapacks /data/world/ 2>/dev/null || true' >> /start.sh && \
     echo '  cp /minecraft-template/commands.yml /data/commands.yml 2>/dev/null || true' >> /start.sh && \
