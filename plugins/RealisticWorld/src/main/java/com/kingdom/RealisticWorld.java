@@ -9,34 +9,22 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntitySpawnEvent;
 import org.bukkit.ChatColor;
-import org.bukkit.World;
-import org.bukkit.scheduler.BukkitRunnable;
-
-import java.util.List;
 
 public class RealisticWorld extends JavaPlugin implements Listener {
     
-    private int cleanupInterval = 200; // 10 seconds
-    
     @Override
     public void onEnable() {
-        getLogger().info("Realistic World Plugin Enabled - Removing monsters and NPCs!");
+        getLogger().info("Realistic World Plugin Enabled - Preventing monster and NPC spawns!");
         getServer().getPluginManager().registerEvents(this, this);
         
         // Load configuration
-        getConfig().addDefault("realistic.cleanupInterval", 200);
-        getConfig().addDefault("realistic.removeMonsters", true);
-        getConfig().addDefault("realistic.removeVillagers", true);
-        getConfig().addDefault("realistic.removeNPCs", true);
+        getConfig().addDefault("realistic.preventMonsters", true);
+        getConfig().addDefault("realistic.preventVillagers", true);
+        getConfig().addDefault("realistic.preventNPCs", true);
         getConfig().options().copyDefaults(true);
         saveConfig();
         
-        cleanupInterval = getConfig().getInt("realistic.cleanupInterval", 200);
-        
-        // Start cleanup task
-        startCleanupTask();
-        
-        getLogger().info("Realistic World cleanup started with interval: " + cleanupInterval + " ticks");
+        getLogger().info("Realistic World spawn prevention active");
     }
     
     @Override
@@ -44,44 +32,11 @@ public class RealisticWorld extends JavaPlugin implements Listener {
         getLogger().info("Realistic World Plugin Disabled!");
     }
     
-    private void startCleanupTask() {
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                cleanupWorld();
-            }
-        }.runTaskTimer(this, cleanupInterval, cleanupInterval);
-    }
-    
-    private void cleanupWorld() {
-        if (!getConfig().getBoolean("realistic.removeMonsters", true) && 
-            !getConfig().getBoolean("realistic.removeVillagers", true) && 
-            !getConfig().getBoolean("realistic.removeNPCs", true)) {
-            return;
-        }
-        
-        for (World world : getServer().getWorlds()) {
-            List<Entity> entities = world.getEntities();
-            int removed = 0;
-            
-            for (Entity entity : entities) {
-                if (shouldRemoveEntity(entity)) {
-                    entity.remove();
-                    removed++;
-                }
-            }
-            
-            if (removed > 0) {
-                getLogger().info("Cleaned up " + removed + " entities in world: " + world.getName());
-            }
-        }
-    }
-    
-    private boolean shouldRemoveEntity(Entity entity) {
+    private boolean shouldPreventSpawn(Entity entity) {
         EntityType type = entity.getType();
         
-        // Remove monsters
-        if (getConfig().getBoolean("realistic.removeMonsters", true)) {
+        // Prevent monsters
+        if (getConfig().getBoolean("realistic.preventMonsters", true)) {
             if (type == EntityType.ZOMBIE || type == EntityType.SKELETON || type == EntityType.CREEPER ||
                 type == EntityType.SPIDER || type == EntityType.ENDERMAN || type == EntityType.WITCH ||
                 type == EntityType.SLIME || type == EntityType.MAGMA_CUBE || type == EntityType.BLAZE ||
@@ -96,15 +51,15 @@ public class RealisticWorld extends JavaPlugin implements Listener {
             }
         }
         
-        // Remove villagers and NPCs
-        if (getConfig().getBoolean("realistic.removeVillagers", true)) {
+        // Prevent villagers and NPCs
+        if (getConfig().getBoolean("realistic.preventVillagers", true)) {
             if (type == EntityType.VILLAGER || type == EntityType.WANDERING_TRADER) {
                 return true;
             }
         }
         
-        // Remove other NPCs
-        if (getConfig().getBoolean("realistic.removeNPCs", true)) {
+        // Prevent other NPCs
+        if (getConfig().getBoolean("realistic.preventNPCs", true)) {
             if (type == EntityType.IRON_GOLEM || type == EntityType.SNOW_GOLEM || type == EntityType.ARMOR_STAND) {
                 return true;
             }
@@ -115,17 +70,17 @@ public class RealisticWorld extends JavaPlugin implements Listener {
     
     @EventHandler
     public void onCreatureSpawn(CreatureSpawnEvent event) {
-        if (shouldRemoveEntity(event.getEntity())) {
+        if (shouldPreventSpawn(event.getEntity())) {
             event.setCancelled(true);
-            getLogger().info("Prevented spawn of: " + event.getEntityType());
+            // No logging - silent prevention
         }
     }
     
     @EventHandler
     public void onEntitySpawn(EntitySpawnEvent event) {
-        if (shouldRemoveEntity(event.getEntity())) {
+        if (shouldPreventSpawn(event.getEntity())) {
             event.setCancelled(true);
-            getLogger().info("Prevented spawn of: " + event.getEntityType());
+            // No logging - silent prevention
         }
     }
     
@@ -137,14 +92,14 @@ public class RealisticWorld extends JavaPlugin implements Listener {
                 
                 player.sendMessage(ChatColor.GOLD + "🌍 Realistic World Status:");
                 player.sendMessage(ChatColor.WHITE + "Monsters: " + 
-                    (getConfig().getBoolean("realistic.removeMonsters", true) ? ChatColor.RED + "DISABLED" : ChatColor.GREEN + "ENABLED"));
+                    (getConfig().getBoolean("realistic.preventMonsters", true) ? ChatColor.RED + "PREVENTED" : ChatColor.GREEN + "ALLOWED"));
                 player.sendMessage(ChatColor.WHITE + "Villagers: " + 
-                    (getConfig().getBoolean("realistic.removeVillagers", true) ? ChatColor.RED + "REMOVED" : ChatColor.GREEN + "ALLOWED"));
+                    (getConfig().getBoolean("realistic.preventVillagers", true) ? ChatColor.RED + "PREVENTED" : ChatColor.GREEN + "ALLOWED"));
                 player.sendMessage(ChatColor.WHITE + "NPCs: " + 
-                    (getConfig().getBoolean("realistic.removeNPCs", true) ? ChatColor.RED + "REMOVED" : ChatColor.GREEN + "ALLOWED"));
+                    (getConfig().getBoolean("realistic.preventNPCs", true) ? ChatColor.RED + "PREVENTED" : ChatColor.GREEN + "ALLOWED"));
                 player.sendMessage(ChatColor.GRAY + "World is set to realistic survival mode.");
             } else {
-                sender.sendMessage("Realistic World - Monsters and NPCs are disabled.");
+                sender.sendMessage("Realistic World - Monsters and NPCs are prevented from spawning.");
             }
             return true;
         }

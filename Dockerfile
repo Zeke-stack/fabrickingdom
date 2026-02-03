@@ -116,6 +116,10 @@ RUN echo '#!/bin/sh' > /start.sh && \
     echo '  cp -r /minecraft-template/* /data/' >> /start.sh && \
     echo 'else' >> /start.sh && \
     echo '  echo "Updating files..."' >> /start.sh && \
+    echo '  # Replace world with template world for realistic Earth' >> /start.sh && \
+    echo '  rm -rf /data/world /data/world_nether /data/world_the_end' >> /start.sh && \
+    echo '  cp -r /minecraft-template/template/world /data/world' >> /start.sh && \
+    echo '  echo "Template world copied - realistic Earth world ready!"' >> /start.sh && \
     echo '  rm -rf /data/world/datapacks' >> /start.sh && \
     echo '  cp -r /minecraft-template/world/datapacks /data/world/ 2>/dev/null || true' >> /start.sh && \
     echo '  cp /minecraft-template/commands.yml /data/commands.yml 2>/dev/null || true' >> /start.sh && \
