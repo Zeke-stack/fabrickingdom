@@ -5,8 +5,10 @@ world_the_end/
 logs/
 cache/
 
-# Ignore corrupted plugins directory
-plugins/
+# Ignore corrupted plugin binaries but keep source
+plugins/*.jar
+plugins/*/*.jar
+!plugins/KingdomCommands/
 
 # Ignore temporary files
 *.tmp
