@@ -78,21 +78,9 @@ RUN echo '#!/bin/sh' > /start.sh && \
     echo '  cp -r /minecraft-template/* /data/' >> /start.sh && \
     echo 'else' >> /start.sh && \
     echo '  echo "Updating files..."' >> /start.sh && \
-    echo '  # Load template world directly' >> /start.sh && \
-    echo '  echo "🌍 Loading template world..." >> /start.sh && \
-    echo '  rm -rf /data/world /data/world_nether /data/world_the_end' >> /start.sh && \
-    echo '  if [ -d "/minecraft-template/template/world" ]; then' >> /start.sh && \
-    echo '    echo "✅ Found template world - copying..." >> /start.sh && \
-    echo '    cp -r /minecraft-template/template/world /data/world' >> /start.sh && \
-    echo '    echo "🎉 Template world loaded successfully!" >> /start.sh' >> /start.sh && \
-    echo '  elif [ -d "/minecraft-template/world" ]; then' >> /start.sh && \
-    echo '    echo "✅ Found root template world - copying..." >> /start.sh && \
-    echo '    cp -r /minecraft-template/world /data/world' >> /start.sh && \
-    echo '    echo "🎉 Template world loaded successfully!" >> /start.sh' >> /start.sh && \
-    echo '  else' >> /start.sh && \
-    echo '    echo "❌ No template world found - creating new world" >> /start.sh' >> /start.sh && \
-    echo '  fi' >> /start.sh && \
-    echo '  echo "💾 World data saved and ready!" >> /start.sh && \
+    echo '  # Ensure world directory exists' >> /start.sh && \
+    echo '  mkdir -p /data/world' >> /start.sh && \
+    echo '  echo "� World ready for realistic Earth simulation!" >> /start.sh && \
     echo '  rm -rf /data/world/datapacks' >> /start.sh && \
     echo '  cp -r /minecraft-template/world/datapacks /data/world/ 2>/dev/null || true' >> /start.sh && \
     echo '  cp /minecraft-template/commands.yml /data/commands.yml 2>/dev/null || true' >> /start.sh && \
