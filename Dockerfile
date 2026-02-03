@@ -22,9 +22,11 @@ COPY . /minecraft-template/
 WORKDIR /minecraft-template
 RUN npm install --production 2>/dev/null || true
 
-# Build plugins with Maven properly
-WORKDIR /minecraft-template/plugins
-RUN find . -name "pom.xml" -execdir mvn clean package -q -DskipTests \; 2>/dev/null || echo "Plugin build completed"
+# Download fresh plugins instead of building corrupted ones
+RUN mkdir -p /minecraft-template/plugins
+RUN wget -O /minecraft-template/plugins/CoreProtect.jar "https://github.com/PlayPro/CoreProtect/releases/download/v23.1/CoreProtect-23.1.jar" && \
+    wget -O /minecraft-template/plugins/voicechat-bukkit.jar "https://github.com/Esophose/PluginManager/releases/download/v2.6.11/voicechat-bukkit-2.6.11.jar" && \
+    echo "Downloaded essential plugins"
 
 # Download Paper 1.21.1 server JAR (build 133 - using direct API URL)
 RUN wget -O /minecraft-template/server.jar "https://api.papermc.io/v2/projects/paper/versions/1.21.1/builds/133/downloads/paper-1.21.1-133.jar" && \
