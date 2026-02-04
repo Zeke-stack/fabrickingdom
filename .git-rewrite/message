@@ -1,0 +1,32 @@
+URGENT FIXES: Earth map seed and plugin loading
+
+EARTH MAP FIX:
+- Changed world seed to 8048694775087357441 (Earth map seed)
+- This will generate the Earth map instead of random terrain
+- Players will spawn on Earth continents
+
+PLUGIN LOADING FIXES:
+- Enhanced plugin build with better debugging output
+- Added Java file listing to verify source files exist
+- Added resource file listing to verify plugin.yml exists
+- Added plugin contents verification in JAR
+- Better error handling for missing files
+- Fallback plugin.yml creation if copy fails
+
+RCON IMPROVEMENTS:
+- Increased server startup wait time to 30 seconds
+- Added plugin listing verification on startup
+- Better RCON connection testing and error messages
+- Enhanced debugging for plugin loading issues
+
+SERVER MANAGER FIXES:
+- Server will now wait longer for full startup
+- Better error messages for troubleshooting
+- Plugin status verification
+
+This should fix:
+✓ Earth map generation (not random terrain)
+✓ Plugin loading and functionality
+✓ RCON connection timing issues
+✓ Join messages and tab list
+✓ Kingdom commands working in game
