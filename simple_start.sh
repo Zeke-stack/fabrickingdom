@@ -16,21 +16,19 @@ mkdir -p plugins
 cp /minecraft-template/plugins/*.jar plugins/ 2>/dev/null || true
 echo "✅ Plugins installed: $(ls plugins/*.jar 2>/dev/null | wc -l)"
 
-echo "🌍 Setup: Loading world template..."
-if [ ! -d "world" ]; then
-  if [ -d "/minecraft-template/template/world" ]; then
-    echo "✅ Found template world - loading..."
-    cp -r /minecraft-template/template/world .
-    echo "🎉 EARTH WORLD LOADED FROM TEMPLATE!"
-  else
-    echo "⚠️  No template world found - server will generate new world with seed"
-  fi
+echo "🌍 Setup: FORCING world overwrite from template..."
+rm -rf world world_nether world_the_end
+if [ -d "/minecraft-template/template/world" ]; then
+  echo "✅ Found template world - loading..."
+  cp -r /minecraft-template/template/world .
+  echo "🎉 EARTH WORLD FORCEFULLY LOADED FROM TEMPLATE!"
 else
-  echo "✅ World already exists - using existing world"
+  echo "⚠️  No template world found - server will generate new world with seed"
 fi
 
-echo "📋 Setup: Copying server JAR..."
+echo "📋 Setup: Copying server files..."
 cp -f /minecraft-template/server.jar .
+cp -f /minecraft-template/server.properties . 2>/dev/null || true
 
 echo "🚀 Starting Kingdom Server..."
 echo "Memory: $MEMORY_MIN - $MEMORY_MAX"

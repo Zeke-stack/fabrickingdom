@@ -73,7 +73,7 @@ EXPOSE 8123
 RUN mkdir -p /app/server
 WORKDIR /app/server
 
-# Create startup script for Railway with proper world loading
+# Create startup script for Railway with FORCED world loading
 RUN echo '#!/bin/sh' > /app/start.sh && \
     echo 'set -e' >> /app/start.sh && \
     echo 'MEMORY_MIN=${MEMORY_MIN:-2G}' >> /app/start.sh && \
@@ -82,7 +82,10 @@ RUN echo '#!/bin/sh' > /app/start.sh && \
     echo '[ ! -f eula.txt ] && echo "eula=true" > eula.txt' >> /app/start.sh && \
     echo 'mkdir -p plugins' >> /app/start.sh && \
     echo 'cp /minecraft-template/plugins/*.jar plugins/ 2>/dev/null || true' >> /app/start.sh && \
-    echo 'if [ ! -d "world" ] && [ -d "/minecraft-template/template/world" ]; then cp -r /minecraft-template/template/world . && echo "✅ World loaded from template"; fi' >> /app/start.sh && \
+    echo 'echo "🌍 FORCING world overwrite from template..."' >> /app/start.sh && \
+    echo 'rm -rf world world_nether world_the_end' >> /app/start.sh && \
+    echo 'if [ -d "/minecraft-template/template/world" ]; then cp -r /minecraft-template/template/world . && echo "✅ WORLD FORCEFULLY LOADED FROM TEMPLATE"; else echo "❌ No template world found"; fi' >> /app/start.sh && \
+    echo 'cp /minecraft-template/server.properties . 2>/dev/null || true' >> /app/start.sh && \
     echo 'cp /minecraft-template/server.jar . 2>/dev/null || true' >> /app/start.sh && \
     echo 'exec java -Xms${MEMORY_MIN} -Xmx${MEMORY_MAX} -XX:+UseG1GC -XX:+ParallelRefProcEnabled -XX:MaxGCPauseMillis=200 -XX:+UnlockExperimentalVMOptions -XX:+DisableExplicitGC -XX:+AlwaysPreTouch -XX:G1NewSizePercent=30 -XX:G1MaxNewSizePercent=40 -XX:G1HeapRegionSize=8M -XX:G1ReservePercent=20 -XX:G1HeapWastePercent=5 -XX:G1MixedGCCountTarget=4 -XX:InitiatingHeapOccupancyPercent=15 -XX:G1MixedGCLiveThresholdPercent=90 -XX:G1RSetUpdatingPauseTimePercent=5 -XX:SurvivorRatio=32 -XX:+PerfDisableSharedMem -XX:MaxTenuringThreshold=1 -Dusing.aikars.flags=https://mcflags.emc.gs -Daikars.new.flags=true -jar server.jar nogui' >> /app/start.sh && \
     chmod +x /app/start.sh
