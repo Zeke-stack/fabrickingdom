@@ -14,14 +14,15 @@
 # versions/
 # *.jar
 
-# Keep template directory for Railway deployment
-!template/
+# Exclude large world files but keep template structure
+template/world/
 template/world_nether/
 template/world_the_end/
 template/logs/
 template/cache/
 template/libraries/
 template/versions/
+template/*.jar
 
 # IDE
 .idea/
