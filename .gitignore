@@ -14,8 +14,14 @@
 # versions/
 # *.jar
 
-# Template directory (too large for git)
-template/
+# Keep template directory for Railway deployment
+!template/
+template/world_nether/
+template/world_the_end/
+template/logs/
+template/cache/
+template/libraries/
+template/versions/
 
 # IDE
 .idea/
