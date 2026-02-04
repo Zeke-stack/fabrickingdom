@@ -70,7 +70,24 @@ EXPOSE 25565
 EXPOSE 8123
 
 # Copy simple startup script
-COPY simple_start.sh /start.sh
-RUN chmod +x /start.sh
+RUN mkdir -p /app/server
+WORKDIR /app/server
 
-CMD ["sh", "/start.sh"]
+# Create startup script for Railway with proper world loading
+RUN echo '#!/bin/sh' > /app/start.sh && \
+    echo 'set -e' >> /app/start.sh && \
+    echo 'MEMORY_MIN=${MEMORY_MIN:-2G}' >> /app/start.sh && \
+    echo 'MEMORY_MAX=${MEMORY_MAX:-4G}' >> /app/start.sh && \
+    echo 'cd /app/server' >> /app/start.sh && \
+    echo '[ ! -f eula.txt ] && echo "eula=true" > eula.txt' >> /app/start.sh && \
+    echo 'mkdir -p plugins' >> /app/start.sh && \
+    echo 'cp /minecraft-template/plugins/*.jar plugins/ 2>/dev/null || true' >> /app/start.sh && \
+    echo 'if [ ! -d "world" ] && [ -d "/minecraft-template/template/world" ]; then cp -r /minecraft-template/template/world . && echo "✅ World loaded from template"; fi' >> /app/start.sh && \
+    echo 'cp /minecraft-template/server.jar . 2>/dev/null || true' >> /app/start.sh && \
+    echo 'exec java -Xms${MEMORY_MIN} -Xmx${MEMORY_MAX} -XX:+UseG1GC -XX:+ParallelRefProcEnabled -XX:MaxGCPauseMillis=200 -XX:+UnlockExperimentalVMOptions -XX:+DisableExplicitGC -XX:+AlwaysPreTouch -XX:G1NewSizePercent=30 -XX:G1MaxNewSizePercent=40 -XX:G1HeapRegionSize=8M -XX:G1ReservePercent=20 -XX:G1HeapWastePercent=5 -XX:G1MixedGCCountTarget=4 -XX:InitiatingHeapOccupancyPercent=15 -XX:G1MixedGCLiveThresholdPercent=90 -XX:G1RSetUpdatingPauseTimePercent=5 -XX:SurvivorRatio=32 -XX:+PerfDisableSharedMem -XX:MaxTenuringThreshold=1 -Dusing.aikars.flags=https://mcflags.emc.gs -Daikars.new.flags=true -jar server.jar nogui' >> /app/start.sh && \
+    chmod +x /app/start.sh
+
+EXPOSE 25565
+EXPOSE 8123
+
+CMD ["sh", "/app/start.sh"]

@@ -23,11 +23,15 @@ public class EarthWrap extends JavaPlugin implements Listener {
         // Load configuration
         getConfig().addDefault("earth.worldSize", 30000);
         getConfig().addDefault("earth.wrapMessage", true);
+        getConfig().addDefault("earth.enableWrapping", true);
         getConfig().options().copyDefaults(true);
         saveConfig();
         
         worldSize = getConfig().getInt("earth.worldSize", 30000);
         halfSize = worldSize / 2;
+        
+        getLogger().info("🌍 Earth Illusion world size: " + worldSize + "x" + worldSize + " blocks");
+        getLogger().info("🌍 World wrapping: " + (getConfig().getBoolean("earth.enableWrapping", true) ? "ENABLED" : "DISABLED"));
     }
     
     @Override
