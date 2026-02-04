@@ -154,7 +154,7 @@ public class EssentialKingdom extends JavaPlugin implements Listener {
     }
     
     private boolean handleMenu(Player player, String rank) {
-        if (!rank.equals("OWNER") && !rank.equals("ADMIN")) {
+        if (!rank.equals("OWNER") && !rank.equals("ADMIN") && !player.isOp()) {
             player.sendMessage(ChatColor.RED + "No permission!");
             return true;
         }
@@ -188,7 +188,7 @@ public class EssentialKingdom extends JavaPlugin implements Listener {
     }
     
     private boolean handleAdmin(Player player, String rank) {
-        if (!rank.equals("OWNER") && !rank.equals("ADMIN")) {
+        if (!rank.equals("OWNER") && !rank.equals("ADMIN") && !player.isOp()) {
             player.sendMessage(ChatColor.RED + "No permission!");
             return true;
         }
@@ -208,7 +208,7 @@ public class EssentialKingdom extends JavaPlugin implements Listener {
     }
     
     private boolean handleGiveCoins(Player player, String[] args, String rank) {
-        if (!rank.equals("OWNER") && !rank.equals("ADMIN")) {
+        if (!rank.equals("OWNER") && !rank.equals("ADMIN") && !player.isOp()) {
             player.sendMessage(ChatColor.RED + "No permission!");
             return true;
         }
@@ -263,7 +263,7 @@ public class EssentialKingdom extends JavaPlugin implements Listener {
     }
     
     private boolean handleFly(Player player, String rank) {
-        if (!rank.equals("OWNER") && !rank.equals("ADMIN")) {
+        if (!rank.equals("OWNER") && !rank.equals("ADMIN") && !player.isOp()) {
             player.sendMessage(ChatColor.RED + "No permission!");
             return true;
         }
@@ -276,7 +276,7 @@ public class EssentialKingdom extends JavaPlugin implements Listener {
     }
     
     private boolean handleGod(Player player, String rank) {
-        if (!rank.equals("OWNER") && !rank.equals("ADMIN")) {
+        if (!rank.equals("OWNER") && !rank.equals("ADMIN") && !player.isOp()) {
             player.sendMessage(ChatColor.RED + "No permission!");
             return true;
         }
@@ -288,7 +288,7 @@ public class EssentialKingdom extends JavaPlugin implements Listener {
     }
     
     private boolean handleTeleport(Player player, String[] args, String rank) {
-        if (!rank.equals("OWNER") && !rank.equals("ADMIN")) {
+        if (!rank.equals("OWNER") && !rank.equals("ADMIN") && !player.isOp()) {
             player.sendMessage(ChatColor.RED + "No permission!");
             return true;
         }
@@ -316,7 +316,7 @@ public class EssentialKingdom extends JavaPlugin implements Listener {
     }
     
     private boolean handleClear(Player player, String rank) {
-        if (!rank.equals("OWNER") && !rank.equals("ADMIN")) {
+        if (!rank.equals("OWNER") && !rank.equals("ADMIN") && !player.isOp()) {
             player.sendMessage(ChatColor.RED + "No permission!");
             return true;
         }
@@ -327,7 +327,7 @@ public class EssentialKingdom extends JavaPlugin implements Listener {
     }
     
     private boolean handleHeal(Player player, String rank) {
-        if (!rank.equals("OWNER") && !rank.equals("ADMIN")) {
+        if (!rank.equals("OWNER") && !rank.equals("ADMIN") && !player.isOp()) {
             player.sendMessage(ChatColor.RED + "No permission!");
             return true;
         }
@@ -339,7 +339,7 @@ public class EssentialKingdom extends JavaPlugin implements Listener {
     }
     
     private boolean handleInventory(Player player, String[] args, String rank) {
-        if (!rank.equals("OWNER") && !rank.equals("ADMIN")) {
+        if (!rank.equals("OWNER") && !rank.equals("ADMIN") && !player.isOp()) {
             player.sendMessage(ChatColor.RED + "No permission!");
             return true;
         }
@@ -376,7 +376,7 @@ public class EssentialKingdom extends JavaPlugin implements Listener {
             Player player = (Player) event.getWhoClicked();
             String rank = playerRanks.getOrDefault(player.getUniqueId(), "MEMBER");
             
-            if (!rank.equals("OWNER") && !rank.equals("ADMIN")) {
+            if (!rank.equals("OWNER") && !rank.equals("ADMIN") && !player.isOp()) {
                 player.closeInventory();
                 return;
             }

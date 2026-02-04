@@ -20,9 +20,24 @@ if [ ! -f "eula.txt" ]; then
   fi
   echo "EARTH_WORLD_LOADED=true" > /data/.earth_world_loaded
 else
-  echo "Updating files - keeping existing world..."
-  # Don't touch the world if it already exists
-  if [ -f "/data/.earth_world_loaded" ]; then
+  echo "Updating files - checking Earth world status..."
+  # Force Earth world load if not loaded yet
+  if [ ! -f "/data/.earth_world_loaded" ]; then
+    echo "🌍 Earth world not loaded - forcing load now..."
+    rm -rf /data/world /data/world_nether /data/world_the_end
+    if [ -d "/minecraft-template/template/world" ]; then
+      echo "✅ Found template world - copying..."
+      cp -r /minecraft-template/template/world /data/world
+      echo "🎉 EARTH WORLD LOADED!"
+    elif [ -d "/minecraft-template/world" ]; then
+      echo "✅ Found root template world - copying..."
+      cp -r /minecraft-template/world /data/world
+      echo "🎉 EARTH WORLD LOADED!"
+    else
+      echo "❌ No template world found"
+    fi
+    echo "EARTH_WORLD_LOADED=true" > /data/.earth_world_loaded
+  else
     echo "✅ Earth world already loaded - preserving data"
   fi
   cp /minecraft-template/commands.yml /data/commands.yml 2>/dev/null || true

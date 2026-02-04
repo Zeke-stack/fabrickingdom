@@ -29,11 +29,11 @@ RUN npm install --production 2>/dev/null || true
 # Create working plugins directory and build EssentialKingdom
 RUN mkdir -p /minecraft-template/plugins
 
-# Build EssentialKingdom plugin (temporarily skip due to compilation issues)
-# WORKDIR /minecraft-template/plugins/EssentialKingdom
-# RUN mvn clean package -q -DskipTests && \
-#     cp target/*.jar /minecraft-template/plugins/ && \
-#     echo "EssentialKingdom plugin built successfully"
+# Build EssentialKingdom plugin (economy, ranks, admin commands)
+WORKDIR /minecraft-template/plugins/EssentialKingdom
+RUN mvn clean package -q -DskipTests && \
+    cp target/*.jar /minecraft-template/plugins/ && \
+    echo "EssentialKingdom plugin built successfully"
 
 # Build EarthWrap plugin (world wrapping mechanics)
 WORKDIR /minecraft-template/plugins/EarthWrap
