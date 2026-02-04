@@ -18,24 +18,47 @@ commands:
   online:
     description: Show online players
     usage: /online
-    permission: kingdom.online.view
-  knight:
-    description: Knight a player (admin only)
-    usage: /knight <player>
-    permission: kingdom.admin.knight
+  menu:
+    description: Open admin menu
+    usage: /menu
+  admin:
+    description: Show admin commands
+    usage: /admin
+  givecoins:
+    description: Give coins to player
+    usage: /givecoins <player> <amount>
+  setrank:
+    description: Set player rank
+    usage: /setrank <player> <rank>
+  fly:
+    description: Toggle fly mode
+    usage: /fly
+  god:
+    description: Toggle god mode
+    usage: /god
+  tp:
+    description: Teleport to player
+    usage: /tp <player>
+  spawn:
+    description: Go to spawn
+    usage: /spawn
+  clear:
+    description: Clear inventory
+    usage: /clear
+  heal:
+    description: Heal yourself
+    usage: /heal
+  inventory:
+    description: View player inventory
+    usage: /inventory <player>
+
 permissions:
-  kingdom.kingdom.info:
-    description: Access kingdom information
-    default: true
-  kingdom.coins.balance:
-    description: Check coin balance
-    default: true
-  kingdom.rank.view:
-    description: View rank information
-    default: true
-  kingdom.online.view:
-    description: View online players
-    default: true
-  kingdom.admin.knight:
-    description: Knight players
+  kingdom.admin:
+    description: Admin permissions
+    default: op
+  kingdom.fly:
+    description: Allow flying
+    default: op
+  kingdom.god:
+    description: Allow god mode
     default: op
