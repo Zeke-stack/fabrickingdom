@@ -39,7 +39,6 @@ public class EssentialKingdom extends JavaPlugin implements Listener {
         playerRanks.put(UUID.fromString("5bbf23d0-e968-4e47-854a-02090deeba3a"), "OWNER");
         playerCoins.put(UUID.fromString("5bbf23d0-e968-4e47-854a-02090deeba3a"), 10000.0);
         
-        // Setup nametag teams
         setupNametagTeams();
     }
     
@@ -51,22 +50,38 @@ public class EssentialKingdom extends JavaPlugin implements Listener {
                           ChatColor.BLUE.toString(), ChatColor.AQUA.toString(), ChatColor.GREEN.toString()};
         
         for (int i = 0; i < ranks.length; i++) {
-        // Custom join message
+            Team team = board.getTeam(ranks[i]);
+            if (team == null) {
+                team = board.registerNewTeam(ranks[i]);
+            }
+            team.setPrefix(colors[i] + "[" + ranks[i] + "] " + ChatColor.RESET);
+        }
+    }
+    
+    @EventHandler
+    public void onPlayerJoin(PlayerJoinEvent event) {
+        Player player = event.getPlayer();
+        UUID uuid = player.getUniqueId();
+        
+        if (!playerCoins.containsKey(uuid)) playerCoins.put(uuid, 0.0);
+        if (!playerRanks.containsKey(uuid)) playerRanks.put(uuid, "MEMBER");
+        
+        String rank = playerRanks.get(uuid);
+        double coins = playerCoins.get(uuid);
+        
         String joinMsg = joinMessages.get(random.nextInt(joinMessages.size()))
             .replace("%player%", ChatColor.GREEN + player.getName() + ChatColor.GOLD)
             .replace("%rank%", ChatColor.YELLOW + "[" + rank + "]" + ChatColor.GOLD);
         event.setJoinMessage(ChatColor.GOLD + "✨ " + joinMsg);
         
-        // Setup nametag
         updatePlayerNametag(player, rank);
         
-        // Welcome message
-        player.sendMessage(ChatColor.GOLD + "═══════════════════════════════");
+        player.sendMessage(ChatColor.GOLD + "===============================");
         player.sendMessage(ChatColor.GOLD + "✨ Welcome to the Kingdom! ✨");
         player.sendMessage(ChatColor.WHITE + "Rank: " + ChatColor.YELLOW + rank);
         player.sendMessage(ChatColor.WHITE + "Coins: " + ChatColor.GREEN + coins);
         player.sendMessage(ChatColor.GRAY + "Type /kingdom for info");
-        player.sendMessage(ChatColor.GOLD + "═══════════════════════════════");
+        player.sendMessage(ChatColor.GOLD + "===============================");
     }
     
     @EventHandler
@@ -84,27 +99,6 @@ public class EssentialKingdom extends JavaPlugin implements Listener {
         if (team != null) {
             team.addPlayer(player);
         }
-            team.setColor(ChatColor.valueOf(colors[i].substring(1).toUpperCase()));
-        }
-    }
-    
-    @EventHandler
-    public void onPlayerJoin(PlayerJoinEvent event) {
-        Player player = event.getPlayer();
-        UUID uuid leaderboard": return handleLeaderboard(player);
-            case "= player.getUniqueId();
-        
-        if (!playerCoins.containsKey(uuid)) playerCoins.put(uuid, 0.0);
-        if (!playerRanks.containsKey(uuid)) playerRanks.put(uuid, "MEMBER");
-        
-        String rank = playerRanks.get(uuid);
-        double coins = playerCoins.get(uuid);
-        
-        event.setJoinMessage(ChatColor.GOLD + "✨ " + ChatColor.GREEN + player.getName() + 
-                          ChatColor.GRAY + " [" + ChatColor.YELLOW + rank + ChatColor.GRAY + "] " +
-                          ChatColor.GOLD + "joined the Kingdom!");
-        
-        player.sendMessage(ChatColor.GOLD + "💰 Coins: " + ChatColor.GREEN + coins);
     }
     
     @Override
@@ -120,6 +114,7 @@ public class EssentialKingdom extends JavaPlugin implements Listener {
             case "coins": return handleCoins(player);
             case "rank": return handleRank(player);
             case "online": return handleOnline(player);
+            case "leaderboard": return handleLeaderboard(player);
             case "admin": return handleAdmin(player, rank);
             default: return false;
         }
@@ -158,33 +153,32 @@ public class EssentialKingdom extends JavaPlugin implements Listener {
             player.sendMessage(ChatColor.GREEN + p.getName() + ChatColor.GRAY + " [" + 
                              ChatColor.YELLOW + rank + ChatColor.GRAY + "] " + ChatColor.GOLD + "💰" + coins);
         }
-     
+        return true;
+    }
     
     private boolean handleLeaderboard(Player player) {
-        player.sendMessage(ChatColor.GOLD + "╔════════════════════════════════╗");
-        player.sendMessage(ChatColor.GOLD + "║   " + ChatColor.YELLOW + "💰 WEALTH LEADERBOARD 💰" + ChatColor.GOLD + "   ║");
-        player.sendMessage(ChatColor.GOLD + "╠════════════════════════════════╣");
+        player.sendMessage(ChatColor.GOLD + "+================================+");
+        player.sendMessage(ChatColor.GOLD + "|   " + ChatColor.YELLOW + "WEALTH LEADERBOARD" + ChatColor.GOLD + "   |");
+        player.sendMessage(ChatColor.GOLD + "+================================+");
         
         List<Map.Entry<UUID, Double>> sorted = playerCoins.entrySet().stream()
             .sorted((a, b) -> Double.compare(b.getValue(), a.getValue()))
-            .limit(10)═══════════ ADMIN COMMANDS ═════════════");
-        player.sendMessage(ChatColor.YELLOW + "/kingdom" + ChatColor.GRAY + " - Kingdom info");
-        player.sendMessage(ChatColor.YELLOW + "/coins" + ChatColor.GRAY + " - Check coins");
-        player.sendMessage(ChatColor.YELLOW + "/rank" + ChatColor.GRAY + " - Check rank");
-        player.sendMessage(ChatColor.YELLOW + "/online" + ChatColor.GRAY + " - Online players");
-        player.sendMessage(ChatColor.YELLOW + "/leaderboard" + ChatColor.GRAY + " - Wealth leaderboard");
-        player.sendMessage(ChatColor.RED + "════════════════════════════════════════
+            .limit(10)
+            .collect(Collectors.toList());
+        
+        int rankNum = 1;
+        for (Map.Entry<UUID, Double> entry : sorted) {
             Player p = Bukkit.getPlayer(entry.getKey());
             if (p != null) {
                 String rankColor = getRankColor(playerRanks.get(entry.getKey()));
-                String medal = rank == 1 ? "🥇" : rank == 2 ? "🥈" : rank == 3 ? "🥉" : "  ";
-                player.sendMessage(ChatColor.GOLD + "║ " + medal + " #" + rank + " " + 
+                String medal = rankNum == 1 ? "🥇" : rankNum == 2 ? "🥈" : rankNum == 3 ? "🥉" : "  ";
+                player.sendMessage(ChatColor.GOLD + "| " + medal + " #" + rankNum + " " + 
                                  rankColor + p.getName() + ChatColor.GRAY + " - " + 
-                                 ChatColor.GREEN + String.format("%.0f", entry.getValue()) + " coins" + ChatColor.GOLD + " ║");
-                rank++;
+                                 ChatColor.GREEN + String.format("%.0f", entry.getValue()) + " coins" + ChatColor.GOLD + " |");
+                rankNum++;
             }
         }
-        player.sendMessage(ChatColor.GOLD + "╚════════════════════════════════╝");
+        player.sendMessage(ChatColor.GOLD + "+================================+");
         return true;
     }
     
@@ -196,7 +190,6 @@ public class EssentialKingdom extends JavaPlugin implements Listener {
             case "VIP": return ChatColor.AQUA.toString();
             default: return ChatColor.GREEN.toString();
         }
-    }   return true;
     }
     
     private boolean handleAdmin(Player player, String rank) {
@@ -205,11 +198,13 @@ public class EssentialKingdom extends JavaPlugin implements Listener {
             return true;
         }
         
-        player.sendMessage(ChatColor.RED + "=== ADMIN COMMANDS ===");
+        player.sendMessage(ChatColor.RED + "=========== ADMIN COMMANDS ===========");
         player.sendMessage(ChatColor.YELLOW + "/kingdom" + ChatColor.GRAY + " - Kingdom info");
         player.sendMessage(ChatColor.YELLOW + "/coins" + ChatColor.GRAY + " - Check coins");
         player.sendMessage(ChatColor.YELLOW + "/rank" + ChatColor.GRAY + " - Check rank");
         player.sendMessage(ChatColor.YELLOW + "/online" + ChatColor.GRAY + " - Online players");
+        player.sendMessage(ChatColor.YELLOW + "/leaderboard" + ChatColor.GRAY + " - Wealth leaderboard");
+        player.sendMessage(ChatColor.RED + "======================================");
         return true;
     }
 }
