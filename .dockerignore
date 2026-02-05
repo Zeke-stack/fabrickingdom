@@ -1,3 +1,8 @@
+# Ignore git directory - causes payload too large error
+.git/
+.gitignore
+.git-rewrite/
+
 # Ignore large server files that shouldn't be in Docker build context
 world/
 world_nether/
@@ -5,8 +10,8 @@ world_the_end/
 logs/
 cache/
 
-# Keep template directory for world files
-!template/
+# Exclude entire template directory - too large for deployment
+template/
 
 # Ignore corrupted plugin binaries but keep EssentialKingdom, EarthWrap, and RealisticWorld source
 plugins/*.jar

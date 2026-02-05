@@ -16,14 +16,12 @@ mkdir -p plugins
 cp /minecraft-template/plugins/*.jar plugins/ 2>/dev/null || true
 echo "✅ Plugins installed: $(ls plugins/*.jar 2>/dev/null | wc -l)"
 
-echo "🌍 Setup: FORCING world overwrite from template..."
-rm -rf world world_nether world_the_end
-if [ -d "/minecraft-template/template/world" ]; then
-  echo "✅ Found template world - loading..."
-  cp -r /minecraft-template/template/world .
-  echo "🎉 EARTH WORLD FORCEFULLY LOADED FROM TEMPLATE!"
+echo "🌍 Setup: Checking world on Railway volume..."
+echo "World persists on /app/server between deploys"
+if [ ! -d "world" ]; then
+  echo "⚠️  No world found - will generate new world with seed EarthKingdom2024"
 else
-  echo "⚠️  No template world found - server will generate new world with seed"
+  echo "✅ World found - using existing world from volume"
 fi
 
 echo "📋 Setup: Copying server files..."
